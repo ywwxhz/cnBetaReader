@@ -1,0 +1,37 @@
+package com.ywwxhz.lib.kits;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+/**
+ * Created by ywwxhz on 2014/10/17.
+ */
+public class PrefKit {
+
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static void writeBoolean(Context context, String key, boolean value) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        SharedPreferences.Editor edit = appPrefs.edit();
+        edit.putBoolean(key, value);
+        edit.apply();
+    }
+
+    public static boolean getBoolean(Context context, String key, boolean def) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        return appPrefs.getBoolean(key, def);
+    }
+
+    public static float getLong(Context context, String key, float def) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        return Float.parseFloat(appPrefs.getString(key, Float.toString(def)));
+    }
+
+    public static String getString(Context context, String key, String def) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        return appPrefs.getString(key, def);
+    }
+}

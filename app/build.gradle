@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+project.archivesBaseName = "cnBeta"
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "20.0.0"
+
+    def verName = "1.0"
+    String buildDate = " Build " + new Date().format("yyyyMMddhhmmss")
+
+    defaultConfig {
+        applicationId "com.ywwxhz.cnbetareader"
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 1
+        versionName verName + buildDate
+    }
+
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEY_STROE_FILE"))
+            storePassword System.getenv("KEY_STROE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS_RELEASE")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+        debug {
+            storeFile file(System.getenv("KEY_STROE_FILE"))
+            storePassword System.getenv("KEY_STROE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS_DEBUG")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    def runTasks = gradle.startParameter.taskNames
+    if ('b' in runTasks || 'build' in runTasks) {
+        android.applicationVariants.all { variant ->
+            def file = variant.outputFile
+            variant.outputFile = new File(file.parent, file.name.replace(".apk", ("-" + defaultConfig.versionName + ".apk").replace(" ", "-")))
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile project(':Crouton')
+    compile files('libs/gson-2.2.4.jar')
+    compile project(':FloatingActionButton')
+    compile project(':ActionBar-PullToRefresh')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.loopj.android:android-async-http:1.4.5'
+}

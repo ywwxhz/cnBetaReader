@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/list_item_background"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/comment_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:paddingBottom="5dp"
+        android:singleLine="true"
+        android:textColor="#3c69ce"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/comment_ref"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:lineSpacingExtra="1dp"
+        android:background="@drawable/ref_background"
+        android:padding="5dp"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="1dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp">
+
+        <TextView
+            android:id="@+id/comment_time"
+            style="@style/SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/comment_score"
+            style="@style/SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_score"
+            android:drawablePadding="5dp"
+            android:gravity="right"
+            android:minWidth="40sp" />
+
+        <TextView
+            android:id="@+id/comment_reason"
+            style="@style/SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:drawableLeft="@drawable/ic_reason"
+            android:drawablePadding="5dp"
+            android:gravity="right"
+            android:minWidth="40sp" />
+    </LinearLayout>
+</LinearLayout>

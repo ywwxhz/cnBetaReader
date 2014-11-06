@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_general_category">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_auto_reflush_key"
+            android:summaryOff="@string/pref_auto_reflush_off"
+            android:summaryOn="@string/pref_auto_reflush_on"
+            android:title="@string/pref_auto_reflush_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_auto_page_key"
+            android:summaryOff="@string/pref_auto_page_off"
+            android:summaryOn="@string/pref_auto_page_on"
+            android:title="@string/pref_auto_page_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cache_category">
+        <Preference
+            android:key="@string/pref_cache_path_key"
+            android:title="@string/pref_cache_path_title" />
+        <Preference
+            android:key="@string/pref_cache_clean_key"
+            android:title="@string/pref_cache_clean_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_about_title">
+        <Preference
+            android:summary="@string/pref_about_summary"
+            android:title="@string/pref_about_title" />
+        <Preference
+            android:summary="@string/pref_author_summary"
+            android:title="@string/pref_author_title" />
+        <Preference
+            android:key="@string/pref_version_key"
+            android:title="@string/pref_version_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

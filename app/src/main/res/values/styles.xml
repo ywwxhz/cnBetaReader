@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SubText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#5d5b5b</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="AnimationActivity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_left</item>
+    </style>
+</resources>

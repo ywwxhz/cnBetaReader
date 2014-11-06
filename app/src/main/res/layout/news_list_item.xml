@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_item_background"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp">
+
+    <TextView
+        android:id="@+id/news_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/title_color"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingBottom="3dp">
+
+        <TextView
+            android:id="@+id/news_time"
+            style="@style/SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/news_publisher"
+            style="@style/SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:id="@+id/news_views"
+            style="@style/SubText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_views"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:minWidth="50sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/news_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="none"
+        android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="3" />
+
+</LinearLayout>

@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0, maximum-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="/assets/default/css/m.css?v=201410" />
+<script type="text/javascript" src="/assets/js/jquery.js?v=201410"></script>
+<script type="text/javascript" src="/assets/js/pages/m/init.js?v=201410"></script>
+<title>日本将发行iPhone 6和6 Plus专用贴膜_移动版_cnBeta.COM</title>
+<meta http-equiv="Cache-Control" content="max-age=3600" />
+<meta name="MobileOptimized" content="240" />
+<meta name="apple-touch-fullscreen" content="YES" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="keywords" content="数码,通信,互联网,手机,业界,科技,媒体,资讯,IT新闻,言论平台,CB,cnBeta" />
+<meta name="description" content="cnBeta.COM是互联网IT新闻业界的后起之秀,是国内领先的即时科技资讯站点和网友交流平台。消息速度快，报导立场公正中立，网友讨论气氛浓厚，在IT业界拥有独特的影响力。" />
+<style type="text/css">
+.adslot_1 { width: 320px; height: 100px; }
+@media (min-width:500px) { .adslot_1 { width: 468px; height: 60px; } }
+@media (min-width:800px) { .adslot_1 { width: 728px; height: 90px; } }
+</style>
+</head>
+<body class="cnbeta">
+<div class="ui-body-c" data-role="page" id="page_view">
+    <div class="ui-header ui-bar-a" data-role="header">
+        <div class="header_top">
+            <div class="back"><a class="ui-link" title="首页" data-rel="back" href="javascript:history.back();"><span>返回</span></a></div>
+            <div class="header_top_logo">
+                <a class="ui-link" href="javacript:void(0);">资讯正文</a>
+            </div>
+            <a title="首页" href="/mobile/m/index"><div class="home"><i></i></div></a>
+        </div>
+    </div><!-- /header-->
+    <div data-role="content">
+
+<article id="content_342037" class="article-holder">
+    <header class="article-hd">
+        <h1 class="article-tit">日本将发行iPhone 6和6 Plus专用贴膜</h1>
+        <p class="article-byline">
+            <a class="commnum" href="/comments_342037.htm"><i></i>2</a>
+            <span><a href="http://tech.huanqiu.com/" target="_blank">环球网科技</a>&nbsp;&nbsp;</span>
+        <time class="time">2014-10-31 13:24:14</time></p>
+    </header>
+
+<div style="text-align:left">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 移动版自适应 -->
+<ins class="adsbygoogle adslot_1"
+     style="display:block"
+     data-ad-client="ca-pub-9066977823953139"
+     data-ad-slot="5449907018"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+    <div class="article-summ"><b>摘要：</b>据日本Gizmodo&nbsp;Japan网站10月31日报道，日本Trinity公司即将发售专门为iPhone&nbsp;6/6 Plus专用的贴膜。现在iPhone&nbsp;6/6&nbsp;plus用的贴膜，因比机身小一圈，用户纷纷抱怨贴膜无法将机身全部覆盖的问题。如果使用与屏幕大小符合的贴膜屏幕边缘就会露出来，因此可能无法做到尽如人意。而且贴膜的防护性也不是很好。</div>
+    <div class="articleCont">终于，能够覆盖到屏幕边缘的贴膜登场了。此款贴膜由日本Trinity公司发售，名为“Frame&nbsp;Film”系列。因为可以连曲面的边缘都可以覆盖到，因此能够给予全方位保护手机屏幕。<p>此产品的分为黑白两种颜色。<a data-link="1" href="http://aos.prf.hn/click/camref:100lcC/creativeref:305226" target="_blank">iPhone</a>&nbsp;6款的售价为1400日元(约合人民币78元)，将于&nbsp;10月29日开始发售。iPhone&nbsp;6&nbsp;plus款的售价为1500日元，将于11月7日开始发售。</p><p>iPhone&nbsp;6和iPhone&nbsp;6&nbsp;plus的用户一直期待着苹果日后的技术应用，如今终于被他们等到了，他们一定会感叹，科技可以满足一切。&nbsp;(实习编译：王国宁&nbsp;审稿：王焕&nbsp;王欢)</p><p class="f_center"><img src="http://static.cnbetacdn.com/article/2014/1031/2e336b861ced98b.png" /><br/><a target="_blank" href="http://static.cnbetacdn.com/article/2014/1031/93dada74a9e5b84.jpg"><img src="http://static.cnbetacdn.com/thumb/article/2014/1031/93dada74a9e5b84.jpg_600x600.jpg" /></a><br/><a target="_blank" href="http://static.cnbetacdn.com/article/2014/1031/dd606d696afa96b.jpg"><img src="http://static.cnbetacdn.com/thumb/article/2014/1031/dd606d696afa96b.jpg_600x600.jpg" /></a></p></div>
+
+<div style="text-align:left">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 移动版自适应 -->
+<ins class="adsbygoogle adslot_1"
+     style="display:block"
+     data-ad-client="ca-pub-9066977823953139"
+     data-ad-slot="5449907018"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+</article>
+<section id="commentHolder" class="comment-holder">
+    <header class="titlebar tb-o">
+        <h2 class="titlebar-t"><i></i>热门评论</h2>
+        <a class="titlebar-r commentMore more" href="/comments_342037.htm">&gt;&gt;共有<b>0</b>条评论，显示<b>0</b>条</a>
+    </header>
+    <div class="hotcomments comments">
+            </div>
+    <a href="/comments_342037.htm" class="artBt publishComment">更多评论</a>
+</section>
+<div style="text-align:center">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-9066977823953139";
+/* CBV4首页300x250 #浮4 */
+google_ad_slot = "5176116215";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<script type="text/javascript">setTimeout(function(){var url="http://m.cnbeta.com/mobile/m/v?id=342037&from=m";var g=document.createElement("script");g.async=1;g.src=url;document.body.insertBefore(g,document.body.firstChild);}, 2000);</script>
+</div><!-- /content-->
+    <div class="footer" data-role="footer">
+        <div class="footer_top">
+            <a class="j_backTop gotop" href="javascript:scroll(0,0)" mce_href="javascript:scroll(0,0)">Top</a>
+        </div>
+        <div class="footer_version">
+            <a href="/mobile/m?pinned=wap">文字版</a>
+            <a class="cur">触屏版</a>
+            <a href='http://www.cnbeta.com/'>电脑端</a>
+        </div>
+        <div class="footer_consult">
+        </div>
+        <div class="footer_bottom">
+            <p>&copy; 2003-2014</p>
+        </div>
+    </div><!-- /footer--></div>
+<script charset="utf-8" type="text/javascript">
+//<![CDATA[
+jQuery(function ($) {
+$("#content_342037").imgAutoSize();
+});
+//]]>
+</script>
+<script type="text/javascript">
+/*移动版悬浮通栏*/
+var cpro_id = "u1447794";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/cm.js" type="text/javascript"></script>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-435607-2";
+urchinTracker();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+package com.ywwxhz.lib.handler;
+
+import com.google.gson.reflect.TypeToken;
+import com.ywwxhz.cnbetareader.R;
+
+import org.apache.http.Header;
+
+import java.lang.reflect.Type;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
+/**
+ * Created by ywwxhz on 2014/11/2.
+ */
+public abstract class ExternedGsonHttpResposerHandler<ActionServer extends ActionService, T> extends GsonHttpResponseHandler<T> {
+    protected ActionServer mActionServer;
+    protected Type type;
+
+    protected ExternedGsonHttpResposerHandler(ActionServer mActionServer, TypeToken<T> type) {
+        this.mActionServer = mActionServer;
+        this.type = type.getType();
+    }
+
+    @Override
+    protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
+        cause.printStackTrace();
+        Crouton.makeText(mActionServer.getContext(), R.string.message_data_structure_change, Style.ALERT).show();
+    }
+
+    @Override
+    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        Crouton.makeText(mActionServer.getContext(), R.string.message_no_network, Style.ALERT).show();
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+}

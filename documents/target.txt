@@ -1,0 +1,490 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" >
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="/assets/default/css/article.css?v=201410" />
+<link rel="stylesheet" type="text/css" href="/assets/default/css/base.css?v=201410" />
+<link rel="stylesheet" type="text/css" href="/assets/default/css/front.css?v=201410" />
+<script type="text/javascript" src="/assets/js/html5.js?v=201410"></script>
+<script type="text/javascript" src="/assets/js/jquery.js?v=201410"></script>
+<title>一加 荣耀6 小米4 MX4 2000元旗舰横向评测_Cellphones 手机_cnBeta.COM</title>
+<meta http-equiv="content-language" content="zh-cn" />
+<meta http-equiv="imagetoolbar" content="false" />
+<meta name="keywords" content="Cellphones 手机,一加 荣耀6 小米4 MX4 2000元旗舰横向评测,cnBeta,数码,通信,互联网,手机,业界,科技,媒体,资讯,IT新闻,言论平台,CB,cnBeta" />
+<meta name="description" content="Hello,大家好，我是评测网大米，如果说三年前的小米代表着国产智能手机的异军突起，那么三年后的今天，则是国产全面统治2000元级别市场的到来，从小米的爆发式增长，到华为中兴纷纷建立子品牌，再到一加、锤子等新兴势力突围，纵观这几年智能手机的高速发展，从来没有像2014年这样，在2000元这个价位上有如此高密集的竞争，这也直接导致了三星苹果等传统巨头在国内市场份额的下滑。" />
+<meta name="resource-type" content="document" />
+<meta name="copyright" content="(c)2003-2014 cnBeta.COM" />
+<meta name="author" content="cnBeta" />
+<meta name="robots" content="index, follow" />
+<meta name="revisit-after" content="1 days" />
+<meta name="rating" content="general" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/backend.php" />
+<link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/backend.php?atom" />
+<script type="text/javascript">
+var GV = {JS_ROOT:"/assets/js/", JS_VERSION:"", TOKEN:"e1043a9ed7b6afa12ef2a0439e3661868edc4329",
+    URL:{
+        SINA:"http://widget.weibo.com/relationship/followbutton.php?language=zh_cn&width=136&height=22&uid=2769378403&style=2&btn=red&dpc=1",
+        INDEX:{ALLNEWS: "/more"},
+    },
+    USER:{ID:0,NICK:"",ICON:""}
+};
+</script>
+<!--[if lt IE 9]><![endif]-->
+<script type="text/javascript" src="/assets/js/cb.js?v=201410" charset="utf-8"></script></head>
+<body>
+	<header class="wrapper global_head">
+		<nav class="tiny_bar">
+            <div class="cb_login" id="cb_login"></div>
+			<ul class="cb_rss">
+                <li><a class="mr5" style="color:#bb9502;font-weight:bold" href="/deliver" target="_blank">投递资讯</a>
+                    <a class="mr5" style="font-weight:bold" href="http://m.cnbeta.com/" target="_blank">移动版</a>
+                    <a class="mr5" href="http://www.cnbeta.com/ios" target="_blank">iOS阅读</a>
+                    <a class="mr5" style="font-weight:bold" href="http://www.cnbeta.com/assets/mobile/android.cnbeta.apk" target="_blank">Android客户端</a>
+                    <a href="mailto:ugmbbc@gmail.com?subject=投递资讯：">邮箱爆料</a></li>
+				<li><a href="/backend.php" target="_blank" title="订阅本站资讯"><i class="head icon_feed"></i>订阅资讯</a></li>
+				<li><a href="/commentrss.php" target="_blank" title="订阅本站精彩评论"><i class="head icon_feed"></i>订阅评论</a></li>
+                <li><iframe id="sina_follow" src="" allowtransparency="true" scrolling="no" border="0" frameborder="0" align="absmiddle" style="width:125px;height:22px;border:none;overflow:hidden;"></iframe></li>
+			</ul>
+		</nav>
+		<h1 class="head cnbeta_logo"><a href="/">cnBeta.COM_中文业界资讯站<div id="cnbeta_logo_cover" class="cnbeta_logo_cover"></div></a></h1>
+		<nav class="global_navi">
+            <div id="cb_search">
+                <form action="http://so.cnbeta.com/cse/search" target="_blank">
+                <input name="s" type="hidden" value="14146556968177638016">
+                <input type="text" name="q" size="30" class="search_key">
+                <button type="submit" value="" class="search_btn head">搜索</button></form>
+            </div>
+			<ul class="main_navi fl">
+                                <li class="">
+                    <a href="http://www.cnbeta.com/">首页</a>                                    </li>
+                                <li class="">
+                    <a href="http://www.cnbeta.com/deliver" target="_blank" style="color:#ffcc00;">投稿</a>                                    </li>
+                                <li class="">
+                    <a href="http://job.cnbeta.com/" target="_blank">招聘</a>                                    </li>
+                                <li class="">
+                    <a href="http://www.cnbeta.com/topics/306.htm">互动</a>                                    </li>
+                                <li class=" dropdown">
+                    <a href="http://www.cnbeta.com/topics.htm">主题</a>                                        <ul class="sub_navi" style="display:">
+                                                <li><a href="http://www.cnbeta.com/topics/70.htm">硬件</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/453.htm">人物</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/9.htm">苹果</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/371.htm">三星</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/448.htm">科学</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/379.htm">iPhone</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/436.htm">魅族</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/243.htm">手机</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/519.htm">nubia</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/52.htm">谷歌</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/39.htm">游戏</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/197.htm">索尼</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/45.htm">警告</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/4.htm">微软</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/353.htm">电商</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/281.htm">支付</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/444.htm">Android</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/517.htm">红牛手机</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/85.htm">XBOX</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/439.htm">HTC</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/83.htm">LG</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/260.htm">最新消息</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/487.htm">小米</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/138.htm">通信技术</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/464.htm">iPad</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/411.htm">黑莓</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/469.htm">虚拟现实</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/184.htm">Windows Phone</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/506.htm">Windows 8.1</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics/144.htm">Netbook 上网本 / 平板 / Ultrabook</a></li>
+                                                <li><a href="http://www.cnbeta.com/topics.htm">更多...</a></li>
+                                            </ul>
+                                    </li>
+                                <li class="">
+                    <a href="http://www.cnbeta.com/top10.htm">排行</a>                                    </li>
+                                <li class="">
+                    <a href="http://www.cnbeta.com/about/index.htm">关于</a>                                    </li>
+                			</ul>
+		</nav>
+	</header>
+<script charset="utf-8" type="text/javascript">
+var nav_arrow = $('.main_navi li.dropdown');
+if(nav_arrow.length) {
+    nav_arrow.mouseover(function(){
+        $(this).find('.sub_navi').css({'height':'auto','overflow':'auto'});
+    }).mouseleave(function(){
+        $(this).find('.sub_navi').css({'height':'28px','overflow':'hidden'});
+    });
+}
+</script><section class="wrapper"> <section style="text-align:center;">
+    <!-- 广告位：CBV4-980x90 文章页页头 -->
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "693405";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script></section>
+<div id="left_art" class="left_art left_art_short">
+	<div class="left_art_box good_box" id="good_btn">
+        <a rel="nofollow" title="顶一个" class="" href="javascript:void(0);"><span class="good_label">我顶</span><br><em>--</em></a>
+    </div>
+	<div class="left_art_box fav_box" id="favorite_btn" style="display:none">
+        <a rel="nofollow" title="收藏本文" class="" href="javascript:void(0);"><span class="favorite_label">收藏</span><br><em>--</em></a>
+    </div>
+	<div class="left_art_box cmt_box"><a onclick="return scrollToPosition('comment');" href="javascript:void(0);">评论<br><em class="comment_num">--</em></a></div>
+</div>
+<section class="mt5 main_content">
+    <section class="main_content_left">
+        <article class="cb_box article">
+            <div class="body">
+                <header>
+                    <h2 id="news_title">一加 荣耀6 小米4 MX4 2000元旗舰横向评测</h2>
+                    <a alt="243" id="sign"></a>
+                    <div class="title_bar">
+                        <span class="date">2014-10-31 11:51:07</span>
+                        <span class="counter"><span id="view_num"></span> 次阅读</span>
+                        <span class="counter"><span id="good_num"></span> 次推荐</span>
+                        <span class="where">稿源：大米评测</span>
+                        <span class="discuss"><a onclick="return scrollToPosition('comment');" href="javascript:void(0);"><font style="font-size:12px;color:#c00;" class="comment_num"></font></a> 条评论</span>
+                    </div>
+                </header>
+                <div class="clearfix"></div>
+                <section class="article_content">
+                    <div class="introduction">
+                                                <div style="float:right;margin-left:10px;margin-top:5px;margin-bottom:10px;margin-right:-20px;"><a href="/topics/243.htm" target="_blank"><img title="Cellphones 手机" src="http://static.cnbetacdn.com/topics/cell.gif" /></a></div>
+                                                <p><strong>感谢<a href="http://weibo.com/p/1005051871821935/home?from=page_100505&mod=TAB#place" target="_blank">大米评测</a>的投递</strong><br/></p><p>Hello,大家好，我是评测网大米，如果说三年前的小米代表着国产智能手机的异军突起，那么三年后的今天，则是国产全面统治2000元级别市场的到来，从小米的爆发式增长，到华为中兴纷纷建立子品牌，再到一加、锤子等新兴势力突围，纵观这几年智能手机的高速发展，从来没有像2014年这样，在2000元这个价位上有如此高密集的竞争，这也直接导致了三星苹果等传统巨头在国内市场份额的下滑。</p>                    </div>
+                    <div class="content"><p><embed type="application/x-shockwave-flash" class="edui-faked-video" pluginspage="http://www.macromedia.com/go/getflashplayer" src="http://player.youku.com/player.php/sid/XODE1MTkzMzQ0/v.swf" width="640" height="480" wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true"/></p><p>当然随着市场供应链的不断成熟，早年小米那套，主打硬件配置性价比的策略，早已被各家所取，不再是新机最大的亮点和卖点，因此2014年的国产旗舰在保持
+硬件顶配的同时，各家都打起了工艺设计的口号，那么今天，我们就一起来看看这四台备受关注的2000元国产旗舰，在工艺和设计上到底有了哪些改进，这些改
+进具体到实际使用又表现如何呢？废话不多说，我们马上开始！</p><p><img src="http://static.cnbetacdn.com/article/2014/1031/5cebefe7ab4fd45.jpg" /></p></div>
+                    <div class="clear"></div>
+                                        <div id="googleAd_afc"><script language="javascript" src="/assets/js/pages/google.js"></script></div>
+                                    </section>
+                <div class="clearfix"></div>
+                <section style="text-align:center;padding:0px 10px;">
+                    <!--left1 start--><div class="cbv">
+<p><!-- 广告位：CBV4 580x90 文章页文末 #1 -->
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "774209";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script></p>
+<p><!-- 广告位：CBV4-580x90 文章页文末 #2 -->
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "700021";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script></p>
+<p><script type="text/javascript">/*cnBeta文末580*90*/ var cpro_id = 'u792078';</script>
+<script src="http://cpro.baidu.com/cpro/ui/c.js" type="text/javascript"></script></p>
+<p><!-- 广告位：CBV4 580x90 文章页文末 #3 -->
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "842095";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script></p>
+</div><!--left1 end-->
+                </section>
+                <div class="clearfix" style="margin:0 10px;">
+                    <div class="fl"><span class="author">[责任编辑：ugmbbc]</span></div>
+                    <div class="fr">
+                        <!-- Baidu Button BEGIN -->
+                        <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_bdhome" data-cmd="bdhome" title="分享到百度新首页"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_taobao" data-cmd="taobao" title="分享到我的淘宝"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
+                        <!-- Baidu Button END -->
+                    </div>
+                </div>
+                <div class="rating_box clearfix">
+                    <div class="mod h-bd-box">
+                        <div class="hd"><h3>文章打分</h3></div>
+                    </div>
+                    <div id="rating_box" data-type="rate" class="bd">
+                        <div class="fl rating_title">事件<br />人物</div>
+                        <div class="fl rating_body">
+                            <div class="rating_down">
+                                <ul>
+                                    <li title="垃圾中的战斗机,扣5分" data-score="-5"><a class="r-5">-5</a></li>
+                                    <li title="太垃圾了,扣4分" data-score="-4"><a class="r-4">-4</a></li>
+                                    <li title="傻冒新闻,扣3分" data-score="-3"><a class="r-3">-3</a></li>
+                                    <li title="差劲,扣2分" data-score="-2"><a class="r-2">-2</a></li>
+                                    <li title="不怎么样,扣1分" data-score="-1"><a class="r-1">-1</a></li>
+                                    <li title="平淡,0分" data-score="0"><a class="r0">0</a></li>
+                                </ul>
+                            </div>
+                            <div class="rating_up">
+                                <ul>
+                                    <li title="凑合吧,1分" data-score="1"><a class="r1">1</a></li>
+                                    <li title="还可以,2分" data-score="2"><a class="r2">2</a></li>
+                                    <li title="很不错,3分" data-score="3"><a class="r3">3</a></li>
+                                    <li title="太棒了,4分" data-score="4"><a class="r4">4</a></li>
+                                    <li title="太有才了,满分!" data-score="5"><a class="r5">5</a></li>
+                                </ul>
+                            </div>
+                            <div class="rate_num">
+                                <strong>-5</strong><strong>-4</strong><strong>-3</strong><strong>-2</strong><strong>-1</strong><strong>0</strong><strong>1</strong><strong>2</strong><strong>3</strong><strong>4</strong><strong>5</strong>
+                            </div>
+                            <span class="load"></span>
+                            <div class="rated gray">当前平均分: <span>打分后显示</span></div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="scoring_box" data-type="rate_score" class="bd">
+                        <div class="fl rating_title">资讯<br />质量</div>
+                        <div class="fl rating_body">
+                            <div class="rating_score">
+                                <ul>
+                                    <li title="垃圾中的战斗机,扣5分" data-score="-5"><a class="r-5">-5</a></li>
+                                    <li title="太垃圾了,扣4分" data-score="-4"><a class="r-4">-4</a></li>
+                                    <li title="傻冒新闻,扣3分" data-score="-3"><a class="r-3">-3</a></li>
+                                    <li title="差劲,扣2分" data-score="-2"><a class="r-2">-2</a></li>
+                                    <li title="不怎么样,扣1分" data-score="-1"><a class="r-1">-1</a></li>
+                                    <li title="平淡,0分" data-score="0"><a class="r0">0</a></li>
+                                    <li title="凑合吧,1分" data-score="1"><a class="r1">1</a></li>
+                                    <li title="还可以,2分" data-score="2"><a class="r2">2</a></li>
+                                    <li title="很不错,3分" data-score="3"><a class="r3">3</a></li>
+                                    <li title="太棒了,4分" data-score="4"><a class="r4">4</a></li>
+                                    <li title="太有才了,满分!" data-score="5"><a class="r5">5</a></li>
+                                </ul>
+                            </div>
+                            <div class="rate_num">
+                                <strong>-5</strong><strong>-4</strong><strong>-3</strong><strong>-2</strong><strong>-1</strong><strong>0</strong><strong>1</strong><strong>2</strong><strong>3</strong><strong>4</strong><strong>5</strong>
+                            </div>
+                            <span class="load"></span>
+                            <div class="rated gray">当前平均分: <span>打分后显示</span></div>
+                        </div>
+                    </div>
+                    <div class="total_rated gray" style="">总得分: <em id="total_score" class="num">0</em></div>
+                </div>
+                <div class="navi">
+                    <div class="mod h-bd-box">
+                        <div class="hd"><h3>大家还在看</h3></div>
+                    </div>
+                    <div class="bd">
+                        <div id="bfd_box_vav"></div>
+                        <div class="clearfix"></div>
+                        <div class="other_news"><ul>
+<li><a target = "_blank" href = "http://aos.prf.hn/click/camref:100lcC"><b><font color = "red">Apple Store配件专区上线</font></b></a></li>
+<li><a target="_blank" href="http://m.cnbeta.com/m">cnBeta.COM 移动版全新改版上线</a></li>
+<li><a target="_blank" href="http://www.cnbeta.com/ios">cnBeta.COM iOS客户端</a></li>
+</ul>
+<p><a href="http://cloud.sudu.cn/view/33" target="_blank">免费领取22天华夏名网云服务器</a></p></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <section class="mt5" style="text-align:center;">
+            <!-- 广告位：CBV4-670x150 文章页 -->
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "685246";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script>        </section>
+        <section class="mt5 cber">
+            <a id="comment" name="comment"></a>
+            <header class="blue_bar">网友评论<div class="post_count" style="display:none"></div></header>
+            <div class="cb-thread content_body">
+                <div id="main-commentbox" class="cb-reset post_commt">
+                    <div class="commt-l">
+
+                        <div class="cb-user-info">
+                            <div id="top_reply_logout" class="cb-login-buttons"><p>登录:</p><div class="cb-social-links"><ul class="cb-service-list"><li><a class="cb-service-link cb-sina" rel="nofollow" href="/user/login/sina">微博</a></li><li><a class="cb-service-link cb-qq" rel="nofollow" href="/user/login/qq">QQ</a></li></ul></div></div>
+                            <div id="top_reply_login" class="cb-login" style="display:none">
+                                <a onclick="return false" href="javascript:void(0);" class="cb-avatar"><img src="/assets/images/user/face.png"></a>
+                                <span class="cb-user-name"></span><a class="quitLogin" data-from="article" href="javascript:void(0)">[退出]</a>
+                            </div>
+                        </div>
+                        <div class="cb-replybox" id="cb-replybox">
+                            <form method="post" class="cb-reply-form">
+                            <input type="hidden" value="342017" name="sid">
+                            <input type="hidden" value="0" name="tid">
+                            <span class="cb-tip-error"></span>
+                            <div class="cb-textarea-wrapper cb-rounded-top">
+                                <textarea id="J_reply_textarea_0" placeholder="请输入评论内容" name="message"></textarea>
+                                <pre class="cb-hidden-text"></pre>
+                            </div>
+                            <div class="cb-post-toolbar">
+                                <div class="cb-post-options cb-gradient-bg">
+                                    <span class="cb-sync">
+                                        <input class="cb-sync-checkbox" type="checkbox" value="" name="repost">
+                                        <label for="sync-checkbox">分享到:
+                                        <a class="cb-qqt cb-service-icon-grey" title="腾讯微博" data-service="qq" href="javascript:void(0)" style="display:none"></a>
+                                        <a class="cb-sina cb-service-icon-grey" title="新浪微博" data-service="sina" href="javascript:void(0)" style="display:none"></a></label>
+                                    </span>
+                                </div>
+                                <div class="cb-toolbar-buttons"><a data-emotiontarget="#J_reply_textarea_0" title="插入表情" class="cb-toolbar-button cb-add-emote"></a></div>
+                            </div>
+                            <div class="cb-post-box">
+                                                            <span class="seccode-box">验证码：<input class="form_input" name="seccode" type="text" title="请输入验证码" align="absmiddle" maxlength="4" />
+                                <img id="seccode0" class="seccode" alt="" src="" imgshow="0" style="cursor:pointer;vertical-align:middle;" title="刷新验证码"></span>
+                                <button class="cb-post-button" href="javascript:void(0)" onclick="return false">发布</button>
+                                                        </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="commt-r">
+                        <!-- 广告位：CBV4-250x200 评论框 -->
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "685340";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script>                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="commt_list" style="display:none">
+                    <nav>
+                        <span class="new_cmnt">最新评论</span>
+                    </nav>
+                    <div id="J_commt_list">
+                    </div>
+                    <div style="display:none" class="commt_more" id="J_commt_more"><a onclick="return false;" href="javascript:;">显示更多评论</a></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </section>
+    </section>
+    <aside class="main_content_right">
+        <section class="cber hotcomments none">
+            <header class="yellow_bar"><h4>最热评论</h4></header>
+            <ul class="content_body" id="J_hotcommt_list">
+                <li><div class="comContent"><span><i class="loading16"></i>努力加载中...</span></div></li>
+            </ul>
+            <div class="clear"></div>
+        </section>
+        <section class="mt5" style="text-align:center;">
+            <div class="cbv">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-9066977823953139";
+/* 文章页右300x250 */
+google_ad_slot = "0948614537";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>        </section>
+        <script language="javascript" src="/rank/show.htm?t=20141031"></script>
+        <section class="mt5" style="text-align:center;">
+            <div class="cbv">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-9066977823953139";
+/* CBV4首页300x250 #浮4 */
+google_ad_slot = "5176116215";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<script type="text/javascript">
+     document.write('<a style="display:none!important" id="tanx-a-mm_10007624_104555_13332071"></a>');
+     tanx_s = document.createElement("script");
+     tanx_s.type = "text/javascript";
+     tanx_s.charset = "gbk";
+     tanx_s.id = "tanx-s-mm_10007624_104555_13332071";
+     tanx_s.async = true;
+     tanx_s.src = "http://p.tanx.com/ex?i=mm_10007624_104555_13332071";
+     tanx_h = document.getElementsByTagName("head")[0];
+     if(tanx_h)tanx_h.insertBefore(tanx_s,tanx_h.firstChild);
+</script>        </section>
+        		<section class="mt5 cber" style="display:none">
+			<header class="blue_bar">招聘</header>
+			<div class="content_body cber_body" id="job_box"></div>
+			<div class="clear"></div>
+		</section>
+        <section class="mt5" id="fixed_area" style="text-align:center;">
+            <script type="text/javascript">
+     document.write('<a style="display:none!important" id="tanx-a-mm_10007624_104555_13330265"></a>');
+     tanx_s = document.createElement("script");
+     tanx_s.type = "text/javascript";
+     tanx_s.charset = "gbk";
+     tanx_s.id = "tanx-s-mm_10007624_104555_13330265";
+     tanx_s.async = true;
+     tanx_s.src = "http://p.tanx.com/ex?i=mm_10007624_104555_13330265";
+     tanx_h = document.getElementsByTagName("head")[0];
+     if(tanx_h)tanx_h.insertBefore(tanx_s,tanx_h.firstChild);
+</script>
+<div id="fixed_body">
+<script type="text/javascript" >BAIDU_CLB_SLOT_ID = "693418";</script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/o.js"></script>
+<script type="text/javascript">
+/*文章页右300x250 #2*/
+var cpro_id = "u817900";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</div>        </section>
+    </aside>
+    <div class="clear"></div>
+</section>
+<section class="mt5" style="text-align:left;">
+    <script type="text/javascript">
+    /*980x150 文章页底部*/
+    var cpro_id = "u1634592";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script></section>
+<script charset="utf-8" type="text/javascript">
+//<![CDATA[
+//]]>
+</script>
+</section>
+<footer class="mt5 wrapper" id="footer">
+    <p>除非特别注明，本站所有文章均不代表本站观点。报道中出现的商标属于其合法持有人。<strong>请遵守理性，宽容，换位思考的原则。</strong></p>
+    <p>合作媒体与供稿人：
+        <a href="http://www.apppoo.com/">安卓应用谱</a>&nbsp;<a href="http://weibo.com/ictech">C科技</a>&nbsp;<a href="http://news.mydrivers.com/">驱动之家</a>&nbsp;<a href="http://www.bio360.net/">生物360</a>&nbsp;<a href="http://google.org.cn/">谷奥</a>&nbsp;<a href="http://www.feng.com/">威锋网</a>&nbsp;<a href="http://www.huxiu.com/">虎嗅网</a>&nbsp;<a href="http://www.yseeker.com/">品味雅虎</a>&nbsp;<a href="http://www.ownlinux.org/">Ownlinux</a><br />&nbsp;<a href="http://www.leica.org.cn/">中文摄影杂志</a>&nbsp;<a href="http://www.geekpark.net/">极客公园</a>&nbsp;<a href="http://www.macx.cn/">MacX</a>&nbsp;<a href="http://imcn.me/">IMCN</a>&nbsp;<a href="http://www.kejimeixue.com/">科技美学</a>&nbsp;<a href="http://www.leiphone.com/">雷锋网</a>    </p>
+    <p>本站由<a href="http://www.verycloud.cn/" target="_blank">VeryCloud</a>云分发提供CDN加速
+        <span class="sep">|</span> 部分节点提供: <a href="http://www.whozen.com/" target="_blank">互城网络</a>
+        <span class="sep">|</span><a href="http://www.sudu.cn/?suduckey=532" target="_blank">华夏名网</a>
+        <span class="sep">|</span><a href="http://www.hypo.cn/" target="_blank">海波网络</a>
+        <span class="sep">|</span><a href="http://www.wdw6.com/" target="_blank">万达网络</a>
+    </p>
+    <p>&copy;2003-2014 cnBeta <a href="http://www.miibeian.gov.cn" target="_blank"></a>&nbsp;
+    <a href="/about/index.htm" target="_blank">关于我们</a>&nbsp;
+    <a href="/about/cooperation.htm" target="_blank">广告招租</a>&nbsp;
+    <a href="mailto:ugmbbc@gmail.com" target="_blank">报告不适当内容</a></p>
+    <span class="powered">Powered by cnBeta.COM | Created by ceallan</span>
+</footer>
+<div class="clear"></div>
+<div class="goToTop" id="backToTop"><a rel="nofollow" href="javascript:void(0)" class="toTop"></a></div><script charset="utf-8" type="text/javascript">
+//<![CDATA[
+CB.use('jquery','common',function(){
+GV.COMMENTS = {CMNTDICT:{},CMNTLIST:{},HOTLIST:{},PAGE:1,MORENUM:100,SHOWNUM:0,MOREPAGE:1,POSTED:0,CLICKED:0};
+GV.DETAIL = {SID:"342017",POST_URL:"/comment",POST_VIEW_URL:"/cmt",EMOTION_URL:"/comment?op=emotion",SN:"5d036"};
+CB.use('cookie','lazyload','article','lagou',function(){
+    $(".content img").lazyload({effect:"fadeIn",failurelimit:5});
+	$.cmtOnload(".commt_list"); //show
+    /* comment */
+	$.cbPublish("#main-commentbox"); //post
+    GV.EMOTION = {};
+    GV.EMOTION.PAGE_SIZE = 30;//单页表情数
+    GV.EMOTION.SHOW_SIZE = 2;//显示表情数
+    GV.EMOTION.EMO_DATA = [{"category":"\u5927\u7ae0\u9c7c","emotion":[{"sign":"[s:\u7231\u5fc3]","url":"\/assets\/images\/emotion\/octopus\/01.gif","name":"\u7231\u5fc3"},{"sign":"[s:\u6c57]","url":"\/assets\/images\/emotion\/octopus\/02.gif","name":"\u6c57"},{"sign":"[s:\u9ed1]","url":"\/assets\/images\/emotion\/octopus\/03.gif","name":"\u9ed1"},{"sign":"[s:\u52a0\u73ed]","url":"\/assets\/images\/emotion\/octopus\/04.gif","name":"\u52a0\u73ed"},{"sign":"[s:\u8d31\u7b11]","url":"\/assets\/images\/emotion\/octopus\/05.gif","name":"\u8d31\u7b11"},{"sign":"[s:\u60ca\u8bb6]","url":"\/assets\/images\/emotion\/octopus\/06.gif","name":"\u60ca\u8bb6"},{"sign":"[s:\u62a0\u9f3b]","url":"\/assets\/images\/emotion\/octopus\/07.gif","name":"\u62a0\u9f3b"},{"sign":"[s:\u54ed]","url":"\/assets\/images\/emotion\/octopus\/08.gif","name":"\u54ed"},{"sign":"[s:\u55b7]","url":"\/assets\/images\/emotion\/octopus\/09.gif","name":"\u55b7"},{"sign":"[s:\u6c99\u53d1]","url":"\/assets\/images\/emotion\/octopus\/10.gif","name":"\u6c99\u53d1"},{"sign":"[s:\u751f\u6c14]","url":"\/assets\/images\/emotion\/octopus\/11.gif","name":"\u751f\u6c14"},{"sign":"[s:\u53cc\u8d1f\u4e94]","url":"\/assets\/images\/emotion\/octopus\/12.gif","name":"\u53cc\u8d1f\u4e94"},{"sign":"[s:\u7b11]","url":"\/assets\/images\/emotion\/octopus\/13.gif","name":"\u7b11"},{"sign":"[s:\u6655]","url":"\/assets\/images\/emotion\/octopus\/14.gif","name":"\u6655"}]}];
+    /* baidu share */
+    window._bd_share_config={"common":{"bdSnsKey":{'tsina':'696316965','tqq':'a75e1c5904c842b7','t163':'','tsohu':''},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    /* BFD fetch */
+    window["_BFD"] = window["_BFD"] || {};
+    _BFD.BFD_INFO = {"page_type" : "detail"};
+});
+/* lazy js */
+(function($) {
+if($("#fixed_area").length > 0 && $("#fixed_body").length > 0) {
+    fixed_top = $("#fixed_area").offset().top;
+    $(window).scroll(function(){var scrolla=$(window).scrollTop(), dis=parseInt(fixed_top)-parseInt(scrolla);if(dis <= 0)$("#fixed_body").removeClass().addClass("fixed_right");if(dis>0)$("#fixed_body").removeClass("fixed_right");});
+}
+    /* WeiBo */
+    $("#sina_follow").attr("src", GV.URL.SINA);
+    /* BFD_INIT */
+    window["_BFD"] = window["_BFD"] || {};
+    _BFD.client_id = "Czhongwenyejiezx";
+    _BFD.script = document.createElement("script");
+    _BFD.script.type = "text/javascript";
+    _BFD.script.async = true;
+    _BFD.script.charset = "utf-8";
+    _BFD.script.src = (('https:' == document.location.protocol?'https://ssl-static1':'http://static1')+'.baifendian.com/service/zhongwenyejiezx/zhongwenyejiezx.js');
+    document.getElementsByTagName("head")[0].appendChild(_BFD.script);
+
+})(jQuery);
+});
+//]]>
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?4216c57ef1855492a9281acd553f8a6e";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-435607-2";
+urchinTracker();
+</script><script>
+var cpro_id = 'u1605317';
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/i.js"></script>
+</body>
+</html>

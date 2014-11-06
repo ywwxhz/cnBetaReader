@@ -1,0 +1,31 @@
+{
+    "state": "success",
+    "message": "",
+    "result": {
+        "list": [
+            {
+                "sid": "342477", //文章id
+                "topic": "39",//话题id
+                "aid": "ugmbbc",//编辑
+                "title": "《刺客信条: 大革命》新预告 Arno穿越来到二战时期",
+                "hometext": "<p>离《刺客信条：大革命》正式发布还有不到两周的时间，育碧近日公布了一段神秘的游戏预告，视频展示了游戏中的某个故事章节，而社会背景居然不是法国大革命时期，而是第二次世界大战。</p>",
+                "comments": "5",//评论数
+                "counter": "930",//浏览数
+                "good": "0",//推荐数
+                "bad": "0",
+                "score": "0",//事件分
+                "ratings": "0",
+                "score_story": "0",//质量分
+                "ratings_story": "0",
+                "inputtime": "2014-11-02 20:56:23",
+                "thumb": "http://static.cnbetacdn.com/thumb/mini/article/2014/1102/358d8bbb2dfd148.jpg_100x100.jpg",
+                "url_show": "/articles/342477.htm",
+                "rate_sum": 0//几次打分
+            }
+        ],
+        "pager": "",
+        "auto": 1,
+        "type": "all",
+        "page": 1
+    }
+}
