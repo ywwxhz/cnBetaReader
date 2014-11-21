@@ -31,6 +31,7 @@ public class NewsDetailActivity extends ExtendBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mService.getWebView().destroy();
+        System.gc();
     }
 
     @Override
@@ -50,6 +51,9 @@ public class NewsDetailActivity extends ExtendBaseActivity {
                 break;
             case R.id.menu_view_in_browser:
                 mService.viewInBrowser();
+                break;
+            case R.id.menu_reflush:
+                mService.makeRequest();
                 break;
         }
         return super.onOptionsItemSelected(item);

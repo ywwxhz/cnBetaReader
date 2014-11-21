@@ -14,9 +14,10 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            FileCacheKit.getInstance(getExternalCacheDir());
+            FileCacheKit.getInstance(getExternalFilesDir("cache"));
         } else {
             FileCacheKit.getInstance(this);
         }
+        MyCrashHandler.getInstance().init(this);
     }
 }

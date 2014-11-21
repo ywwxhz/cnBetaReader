@@ -2,11 +2,13 @@ package com.ywwxhz.service;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
@@ -75,6 +77,9 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new NewsListAdapter(mContext, new ArrayList<NewsItem>());
+        TextView view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
+        view.setText("类型：全部新闻");
+        this.mListView.addHeaderView(view, null, false);
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();
         this.mLoader.setAdapter(mAdapter);
         this.mLoader.setOnScrollListener(this.actionButton.getListViewOnScrollListener());
@@ -92,7 +97,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(NewsListService.this.mContext, NewsDetailActivity.class);
-                intent.putExtra(NewsDetailService.NEWS_ITEM_KEY, mAdapter.getDataSetItem(i));
+                intent.putExtra(NewsDetailService.NEWS_ITEM_KEY, mAdapter.getDataSetItem(i - 1));
                 NewsListService.this.mContext.startActivity(intent);
             }
         });
@@ -212,7 +217,11 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     }
 
     private void showToastAndCache(int size) {
-        Crouton.makeText(mContext, mContext.getString(R.string.message_new_news, size), Style.INFO).show();
+        if (size != 0) {
+            Crouton.makeText(mContext, mContext.getString(R.string.message_new_news, size), Style.INFO).show();
+        } else {
+            Crouton.makeText(mContext, mContext.getString(R.string.message_no_new_news), Style.CONFIRM).show();
+        }
         FileCacheKit.getInstance().putAsync("newsList".hashCode() + "", Toolkit.getGson().toJson(mAdapter.getDataSet().subList(0, 40)), "list", null);
     }
 

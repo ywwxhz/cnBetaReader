@@ -91,13 +91,15 @@ public class DataCleanManager {
         }
     }
 
-    public static long getAllFileSize(Context context){
+    public static long getAllCacheSize(Context context){
         long size = 0;
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
             size+= FileKit.getFolderSize(context.getExternalCacheDir());
         }
+        size+=FileKit.getFolderSize(context.getFilesDir().getPath()+ "/../webview");
         size+=FileKit.getFolderSize(context.getFilesDir().getPath()+ "/../app_webview");
         size+=FileKit.getFolderSize(context.getCacheDir());
+        size+=FileCacheKit.getInstance().getCacheSize();
         return size;
     }
 

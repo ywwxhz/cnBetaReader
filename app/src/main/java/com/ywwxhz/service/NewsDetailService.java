@@ -37,20 +37,22 @@ public class NewsDetailService extends ActionService {
     private int margin = 0;
     private WebView mWebView;
     private Activity mContext;
+    private boolean hascontent;
     private NewsItem mNewsItem;
     private ProgressBar mProgressBar;
     private FloatingActionButton mActionButtom;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{width: 100%%;height: auto;}a{text-decoration: none;color:#2f7cad;}" +
-            "iframe{width: 100%%;height:auto}.image{float:right;padding:2pt;width:50pt;height:auto}.content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;}" +
+            "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{max-width: 100%%;height: auto;}a{text-decoration: none;color:#2f7cad;}" +
+            "iframe{width: 100%%;height:auto}.image{float:right;padding:3pt;width:50pt;height:auto}.content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;}" +
             ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
-            ".content{padding-top:10pt;font-size: 13pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 30pt;}" +
+            ".content{padding-top:10pt;font-size: 12pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 30pt;}" +
             "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">稿源： %s<span style=\"float: right\">%s</span></div>" +
             "<hr/><div class=\"introduce\"><img src=\"%s\" class=\"image\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0){a.onclick=function(){return false;}}}</script></body></html>";
 
     public NewsDetailService(Activity mContext) {
+        this.hascontent = false;
         this.mContext = mContext;
         this.mNetKit = new NetKit(mContext);
         this.mContext.setContentView(R.layout.activity_detail);
@@ -59,11 +61,27 @@ public class NewsDetailService extends ActionService {
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
             mContext.setTitle("详情：" + mNewsItem.getTitle());
-            makeRequest();
+            NewsItem mNews = FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class);
+            if (mNews == null) {
+                makeRequest();
+            } else {
+                hascontent = true;
+                mNewsItem = mNews;
+                blindData(mNews);
+            }
         } else {
             Toast.makeText(mContext, "缺少必要参数", Toast.LENGTH_SHORT).show();
             mContext.finish();
         }
+    }
+
+    private void blindData(NewsItem mNews) {
+        String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
+                , mNews.getIcon(), mNews.getHometext(), mNews.getContent());
+        mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
+        mWebView.setVisibility(View.VISIBLE);
+        mActionButtom.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     private void initView() {
@@ -98,64 +116,59 @@ public class NewsDetailService extends ActionService {
         });
     }
 
-    private void makeRequest() {
-        NewsItem mNews = FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class);
-        if (mNews == null) {
-            mNetKit.getNewsBySid(mNewsItem.getSid() + "", new TextHttpResponseHandler() {
+    public void makeRequest() {
 
-                @Override
-                public void onStart() {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    loadFail.setVisibility(View.GONE);
-                }
+        mNetKit.getNewsBySid(mNewsItem.getSid() + "", new TextHttpResponseHandler() {
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            @Override
+            public void onStart() {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mWebView.setVisibility(View.GONE);
+                loadFail.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if(!hascontent) {
                     loadFail.setVisibility(View.VISIBLE);
                     mActionButtom.setVisibility(View.GONE);
                     Toast.makeText(mContext, R.string.message_no_network, Toast.LENGTH_SHORT).show();
+                }else{
+                    blindData(mNewsItem);
+                    mWebView.setVisibility(View.VISIBLE);
+                    Toast.makeText(mContext, R.string.message_no_network, Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    if (Configure.STANDRA_PATTERN.matcher(responseString).find()) {
-                        Matcher iconMatcher = Configure.ICON_PATTERN.matcher(responseString);
-                        if (iconMatcher.find())
-                            mNewsItem.setIcon(iconMatcher.group(1));
-                        Matcher snMatcher = Configure.SN_PATTERN.matcher(responseString);
-                        if (snMatcher.find())
-                            mNewsItem.setSN(snMatcher.group(1));
-                        Matcher contentMatcher = Configure.CONTENT_PATTERN.matcher(responseString);
-                        if (contentMatcher.find())
-                            mNewsItem.setContent(contentMatcher.group(1));
-                        Matcher fromMatcher = Configure.FROM_PATTERN.matcher(responseString);
-                        if (fromMatcher.find())
-                            mNewsItem.setFrom(fromMatcher.group(2));
-                        String data = String.format(Locale.CHINA, webTemplate, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime()
-                                , mNewsItem.getIcon(), mNewsItem.getHometext(), mNewsItem.getContent());
-                        mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
-                        mActionButtom.setVisibility(View.VISIBLE);
-                        FileCacheKit.getInstance().putAsync(mNewsItem.getSid() + "", Toolkit.getGson().toJson(mNewsItem), null);
-                    } else {
-                        onFailure(statusCode, headers, responseString, new RuntimeException());
-                    }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                if (Configure.STANDRA_PATTERN.matcher(responseString).find()) {
+                    Matcher iconMatcher = Configure.ICON_PATTERN.matcher(responseString);
+                    if (iconMatcher.find())
+                        mNewsItem.setIcon(iconMatcher.group(1));
+                    Matcher snMatcher = Configure.SN_PATTERN.matcher(responseString);
+                    if (snMatcher.find())
+                        mNewsItem.setSN(snMatcher.group(1));
+                    Matcher contentMatcher = Configure.CONTENT_PATTERN.matcher(responseString);
+                    if (contentMatcher.find())
+                        mNewsItem.setContent(contentMatcher.group(1));
+                    Matcher fromMatcher = Configure.FROM_PATTERN.matcher(responseString);
+                    if (fromMatcher.find())
+                        mNewsItem.setFrom(fromMatcher.group(2));
+                    blindData(mNewsItem);
+                    hascontent = true;
+                    FileCacheKit.getInstance().putAsync(mNewsItem.getSid() + "", Toolkit.getGson().toJson(mNewsItem), null);
+                } else {
+                    onFailure(statusCode, headers, responseString, new RuntimeException());
                 }
+            }
 
-                @Override
-                public void onFinish() {
-                    mProgressBar.setVisibility(View.GONE);
-                    mContext.invalidateOptionsMenu();
-                }
-            });
-        } else {
-            mNewsItem = mNews;
-            String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                    , mNews.getIcon(), mNews.getHometext(), mNews.getContent());
-            mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
-            mActionButtom.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mContext.invalidateOptionsMenu();
-        }
+            @Override
+            public void onFinish() {
+                mProgressBar.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     public NewsItem getNewsItem() {

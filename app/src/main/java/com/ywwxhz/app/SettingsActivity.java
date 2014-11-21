@@ -57,14 +57,15 @@ public class SettingsActivity extends ExtendBaseActivity {
             findPreference(getString(R.string.pref_cache_path_key))
                     .setSummary(mFileCacheKit.getCacheDir().getAbsolutePath());
             Preference preference = findPreference(getString(R.string.pref_cache_clean_key));
-            preference.setSummary(Formatter.formatFileSize(getActivity(),DataCleanManager.getAllFileSize(getActivity())));
+            preference.setSummary(Formatter.formatFileSize(getActivity(),DataCleanManager.getAllCacheSize(getActivity())));
             preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    mFileCacheKit.cleanCache();
                     DataCleanManager.cleanExternalCache(getActivity());
                     DataCleanManager.cleanInternalCache(getActivity());
                     DataCleanManager.cleanWebViewCache(getActivity());
-                    preference.setSummary(Formatter.formatFileSize(getActivity(), DataCleanManager.getAllFileSize(getActivity())));
+                    preference.setSummary(Formatter.formatFileSize(getActivity(), DataCleanManager.getAllCacheSize(getActivity())));
                     return true;
                 }
             });

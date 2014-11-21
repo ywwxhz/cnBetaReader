@@ -6,6 +6,4 @@
         android:title="反对"/>
     <item android:id="@+id/comment_report"
         android:title="举报"/>
-    <item android:id="@+id/comment_replay"
-        android:title="回复"/>
 </menu>

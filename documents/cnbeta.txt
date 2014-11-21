@@ -29,10 +29,10 @@
 
 评论支持、反对 http://www.cnbeta.com/comment
 	参数列表：
-				op	against 反对 support 支持
+				op	against 反对 support 支持 report 举报
 				sid 新闻sid
 				tid 评论id
-				csrf_token 需要与Cookie中的csrf_token相同，用于防御跨站请求伪造,可以从token中取
+				csrf_token 需要与Cookie中的csrf_token相同，用于防御跨站请求伪造,可以从评论列表token中取。
 	请求方式：post
 	headers:  
 				Referer=http://www.cnbeta.com/
@@ -43,7 +43,7 @@
 参数列表：
 				op	publish
 				sid 新闻sid
-				tid 用于回复评论时使用id 0为普通评论 
+				tid 用于回复目标评论的tid 0为普通评论 
 				sync ？不知道
 				content 内容 最大320字
 				seccode 验证码 需要请求连接后获取

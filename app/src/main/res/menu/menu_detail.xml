@@ -11,6 +11,9 @@
             <item
                 android:id="@+id/menu_view_in_browser"
                 android:title="@string/menu_view_in_browser" />
+            <item
+                android:id="@+id/menu_reflush"
+                android:title="@string/menu_reflush" />
         </menu>
     </item>
 </menu>

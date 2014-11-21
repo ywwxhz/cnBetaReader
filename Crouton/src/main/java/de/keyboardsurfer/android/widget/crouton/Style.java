@@ -29,9 +29,9 @@ public class Style {
 
     public static final int NOT_SET = -1;
 
-    public static final int holoRedLight = 0xffff4444;
-    public static final int holoGreenLight = 0xff99cc00;
-    public static final int holoBlueLight = 0xff33b5e5;
+    public static final int holoRedLight = 0xD0ff4444;
+    public static final int holoGreenLight = 0xD099cc00;
+    public static final int holoBlueLight = 0xD033b5e5;
 
     /**
      * Default style for alerting the user.

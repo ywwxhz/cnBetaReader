@@ -3,6 +3,7 @@ package com.ywwxhz.service;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,9 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
         this.mTextView = (TextView) mContext.findViewById(R.id.loadFail);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
+        TextView type = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
+        type.setText("全部评论");
+        this.mListView.addHeaderView(type, null, false);
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new CommentListAdapter(mContext, new ArrayList<CommentItem>());
         this.handler = new CommentListHandler(this, new TypeToken<ResponseObject<CommentListObject>>() {
@@ -108,9 +112,9 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     }
 
     private void makeRequest() {
-        mListView.setOnItemClickListener(null);
-        mTextView.setVisibility(View.GONE);
-        mNetKit.getCommentBySnAndSid(sn, sid + "", handler);
+        this.mListView.setOnItemClickListener(null);
+        this.mTextView.setVisibility(View.GONE);
+        this.mNetKit.getCommentBySnAndSid(sn, sid + "", handler);
     }
 
     @Override
@@ -144,35 +148,35 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             item.setRefContent(sb.toString());
         }
         if (cmntlist.size() > 0) { //针对加载缓存和普通访问
-            mAdapter.setDataSet(cmntlist);
+            this.mAdapter.setDataSet(cmntlist);
             if(!isClosed&&!fromCache) {
-                token = commentListObject.getToken();
-                mListView.setOnItemClickListener(listener);
-                actionButton.setVisibility(View.VISIBLE);
+                this.token = commentListObject.getToken();
+                this.mListView.setOnItemClickListener(listener);
+                this.actionButton.setVisibility(View.VISIBLE);
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
             }
         } else if (cmntlist.size() != commentListObject.getComment_num()) { //针对超时关平的新闻评论
             Crouton.makeText(mContext, R.string.message_comment_close, Style.ALERT).show();
-            actionButton.setVisibility(View.GONE);
-            mPullToRefreshLayout.setEnabled(false);
+            this.actionButton.setVisibility(View.GONE);
+            this.mPullToRefreshLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
-                mTextView.setText(R.string.message_comment_close);
-                mTextView.setVisibility(View.VISIBLE);
+                this.mTextView.setText(R.string.message_comment_close);
+                this.mTextView.setVisibility(View.VISIBLE);
             }
         } else {//针对暂时无评论的情况
-            actionButton.setVisibility(View.VISIBLE);
-            mTextView.setText(R.string.message_no_comment);
-            mTextView.setVisibility(View.VISIBLE);
+            this.actionButton.setVisibility(View.VISIBLE);
+            this.mTextView.setText(R.string.message_no_comment);
+            this.mTextView.setVisibility(View.VISIBLE);
         }
-        if (!fromCache && !isClosed) {
+        if (!fromCache) {
             Crouton.makeText(mContext, R.string.message_flush_success, Style.INFO).show();
         }
     }
 
     public void setLoadFinish() {
-        mProgressBar.setVisibility(View.GONE);
-        mPullToRefreshLayout.setRefreshComplete();
-        mAdapter.notifyDataSetChanged();
+        this.mProgressBar.setVisibility(View.GONE);
+        this.mPullToRefreshLayout.setRefreshComplete();
+        this.mAdapter.notifyDataSetChanged();
     }
 
     public boolean callOnFailure(boolean isWebChange, boolean isCommentClose) {
@@ -186,8 +190,8 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             } else return !isCommentClose;
         } else {
             if (!isCommentClose) {
-                mTextView.setText(R.string.message_no_network);
-                mTextView.setVisibility(View.VISIBLE);
+                this.mTextView.setText(R.string.message_no_network);
+                this.mTextView.setVisibility(View.VISIBLE);
                 return false;
             } else {
                 return true;
@@ -207,7 +211,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     private AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ExtendPopMenu menu = new ExtendPopMenu(mContext,view,mAdapter.getDataSetItem(position),token);
+            ExtendPopMenu menu = new ExtendPopMenu(mContext,view,mAdapter.getDataSetItem(position-1),token);
             menu.show();
         }
     };
@@ -241,10 +245,6 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                             action = REPORT;
                             mNetKit.setCommentAction("report",sid+"",citem.getTid(),csrf_token,chandler);
                             break;
-                        case R.id.comment_replay:
-                            NewCommentFragment fragment = NewCommentFragment.getInstance(sid,citem.getTid(),csrf_token);
-                            fragment.show(mContext.getFragmentManager(),"new comment");
-                            break;
                     }
                     return true;
                 }
@@ -273,7 +273,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                             actionString = "举报";
                         }
                         mAdapter.notifyDataSetChanged();
-                        Toast.makeText(mContext,"评论"+actionString+"成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext,actionString+"成功",Toast.LENGTH_SHORT).show();
                     }else{
                         throw new Exception();
                     }
