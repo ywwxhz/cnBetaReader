@@ -6,9 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Looper;
 import android.os.Process;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,15 +77,6 @@ public class MyCrashHandler implements UncaughtExceptionHandler {
                 File f = mContext.getExternalFilesDir("Logs");// 获取SD卡目录
                 fileDir = new File(f, "crash-"
                         + dataFormat.format(new Date()) + ".txt");
-                //使用Toast来显示异常信息
-                new Thread() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        Toast.makeText(mContext, "软件已崩溃，崩溃日志路径：" + fileDir.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                        Looper.loop();
-                    }
-                }.start();
 
                 StringBuilder stringBuilder = new StringBuilder();
                 // 1.获取当前程序的版本号. 版本的id
