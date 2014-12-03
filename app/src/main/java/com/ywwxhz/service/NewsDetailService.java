@@ -7,11 +7,11 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.app.NewsCommentActivity;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.NewsItem;
@@ -39,7 +39,7 @@ public class NewsDetailService extends ActionService {
     private Activity mContext;
     private boolean hascontent;
     private NewsItem mNewsItem;
-    private ProgressBar mProgressBar;
+    private ProgressWheel mProgressBar;
     private FloatingActionButton mActionButtom;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
@@ -88,7 +88,7 @@ public class NewsDetailService extends ActionService {
         this.vg = mContext.findViewById(R.id.content);
         this.loadFail = mContext.findViewById(R.id.loadFail);
         this.mWebView = (WebView) mContext.findViewById(R.id.webview);
-        this.mProgressBar = (ProgressBar) mContext.findViewById(R.id.loading);
+        this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
         this.mActionButtom = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mActionButtom.setOnClickListener(new View.OnClickListener() {
             @Override

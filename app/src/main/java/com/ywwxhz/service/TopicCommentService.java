@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.adapter.TopicCommentAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.ResponseObject;
@@ -37,7 +37,7 @@ public class TopicCommentService extends ActionService implements OnRefreshListe
     private Activity mContext;
     private ListView mListView;
     private PagedLoader mLoader;
-    private ProgressBar mProgressBar;
+    private ProgressWheel mProgressBar;
     private TopicCommentAdapter mAdapter;
     private PullToRefreshLayout mPullToRefreshLayout;
     private PagedLoader.OnLoadListener loadListener = new PagedLoader.OnLoadListener() {
@@ -53,7 +53,7 @@ public class TopicCommentService extends ActionService implements OnRefreshListe
         this.mContext = mContext;
         this.mNetKit = new NetKit(mContext);
         this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
-        this.mProgressBar = (ProgressBar) mContext.findViewById(R.id.loading);
+        this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
         this.mAdapter = new TopicCommentAdapter(mContext, new ArrayList<TopicComment>());
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();

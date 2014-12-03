@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
 import com.melnykov.fab.FloatingActionButton;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.adapter.NewsListAdapter;
 import com.ywwxhz.app.NewsDetailActivity;
 import com.ywwxhz.app.SettingsActivity;
@@ -49,7 +49,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     private Activity mContext;
     private ListView mListView;
     private PagedLoader mLoader;
-    private ProgressBar mProgressBar;
+    private ProgressWheel mProgressBar;
     private NewsListAdapter mAdapter;
     private FloatingActionButton actionButton;
     private PullToRefreshLayout mPullToRefreshLayout;
@@ -73,7 +73,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.mContext = mContext;
         this.mNetKit = new NetKit(mContext);
         this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
-        this.mProgressBar = (ProgressBar) mContext.findViewById(R.id.loading);
+        this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new NewsListAdapter(mContext, new ArrayList<NewsItem>());

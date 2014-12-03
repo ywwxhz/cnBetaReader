@@ -112,6 +112,11 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     }
 
     private void makeRequest() {
+        if(mAdapter.getDataSet().size()==0){
+            mProgressBar.setVisibility(View.VISIBLE);
+        }else{
+            mProgressBar.setVisibility(View.GONE);
+        }
         this.mListView.setOnItemClickListener(null);
         this.mTextView.setVisibility(View.GONE);
         this.mNetKit.getCommentBySnAndSid(sn, sid + "", handler);
