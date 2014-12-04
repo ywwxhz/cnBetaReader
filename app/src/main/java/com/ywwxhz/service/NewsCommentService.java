@@ -133,6 +133,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
 
     public void callOnLoadingSuccess(CommentListObject commentListObject, boolean fromCache, boolean isClosed) {
         if (commentListObject == null) {
+            Crouton.makeText(mContext, "发生错误请重试 ...(｡•ˇ‸ˇ•｡) ...", Style.ALERT).show();
             return;
         }
         ArrayList<CommentItem> cmntlist = commentListObject.getCmntlist();

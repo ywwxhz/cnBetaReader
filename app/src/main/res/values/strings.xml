@@ -4,17 +4,17 @@
     <string name="settings">设置</string>
     <string name="app_name">cnBeta 业界资讯</string>
     <string name="choise_browser">选择浏览器</string>
-    <string name="load_fail">加载失败 T^T ,点击重试。</string>
+    <string name="load_fail">加载失败 ,点击重试。</string>
 
     <string name="share_templates">我觉得这篇新闻不错 %1$s (%2$s) 分享自cnBeta 业界资讯。</string>
 
-    <string name="message_no_comment">暂无评论 -_- </string>
-    <string name="message_no_network">无网络或连接超时 T^T </string>
-    <string name="message_flush_success">加载成功 （*^_^*）</string>
-    <string name="message_new_news">新增%d条新闻 （*^_^*）</string>
-    <string name="message_no_new_news">暂时没有新的新闻  (..•˘_˘•..)</string>
-    <string name="message_load_from_cache">无可用网络，加载之前的缓存 ( &gt;﹏&lt;。)～</string>
-    <string name="message_data_structure_change">网站又改版啦。。请联系开发者。</string>
+    <string name="message_no_comment">暂无评论</string>
+    <string name="message_no_network">无网络或连接超时   ε٩(๑> ₃ &lt;)۶ з  </string>
+    <string name="message_flush_success">加载成功  *\\(๑• ₃ •๑)*</string>
+    <string name="message_new_news">新增%d条新闻  *\\(๑• ₃ •๑)*</string>
+    <string name="message_no_new_news">暂时没有新的新闻  (๑•́ ₃ •̀๑)</string>
+    <string name="message_load_from_cache">无可用网络，加载之前的缓存  ( &gt;﹏&lt;。)～</string>
+    <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。请联系开发者。 </string>
 
     <string name="menu_reflush">刷新</string>
     <string name="menu_share">分享链接</string>
