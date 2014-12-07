@@ -99,7 +99,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                 .insertLayoutInto((ViewGroup) mContext.findViewById(android.R.id.content))
                 .theseChildrenArePullable(mListView)
                 .listener(this)
-                .options(Options.create().scrollDistance(0.2f).build())
+                .options(Options.create().scrollDistance(0.2f).refreshOnUp(true).build())
                 .setup(mPullToRefreshLayout);
         mListView.postDelayed(new Runnable() {
             @Override
@@ -134,6 +134,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     public void callOnLoadingSuccess(CommentListObject commentListObject, boolean fromCache, boolean isClosed) {
         if (commentListObject == null) {
             Crouton.makeText(mContext, "发生错误请重试 ...(｡•ˇ‸ˇ•｡) ...", Style.ALERT).show();
+            callOnFailure(false,isClosed);
             return;
         }
         ArrayList<CommentItem> cmntlist = commentListObject.getCmntlist();

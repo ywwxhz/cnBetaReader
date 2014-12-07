@@ -13,8 +13,8 @@
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/loading"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         app:barColor="#5588FF"
         app:progressIndeterminate="true" />

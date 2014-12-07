@@ -1,5 +1,7 @@
 package com.ywwxhz.lib.handler;
 
+import android.util.Log;
+
 import com.google.gson.reflect.TypeToken;
 import com.ywwxhz.cnbetareader.R;
 
@@ -24,6 +26,7 @@ public abstract class ExternedGsonHttpResposerHandler<ActionServer extends Actio
 
     @Override
     protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
+        Log.e(this.getClass().getSimpleName(),responseString);
         cause.printStackTrace();
         Crouton.makeText(mActionServer.getContext(), R.string.message_data_structure_change, Style.ALERT).show();
     }

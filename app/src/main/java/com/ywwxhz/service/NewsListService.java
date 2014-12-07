@@ -105,7 +105,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                 .insertLayoutInto((ViewGroup) mContext.findViewById(android.R.id.content))
                 .theseChildrenArePullable(mListView)
                 .listener(this)
-                .options(Options.create().scrollDistance(0.2f).build())
+                .options(Options.create().scrollDistance(0.2f).refreshOnUp(true).build())
                 .setup(mPullToRefreshLayout);
         loadDataOnStartUp();
     }
