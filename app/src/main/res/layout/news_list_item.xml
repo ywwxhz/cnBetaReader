@@ -14,9 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:shadowRadius="2"
+        android:shadowColor="#20000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
         android:singleLine="true"
         android:textColor="@color/title_color"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:text="aaaaa" />
 
     <LinearLayout
         android:layout_width="match_parent"

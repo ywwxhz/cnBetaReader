@@ -17,6 +17,7 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         app:barColor="#5588FF"
+        app:rimColor="#E1E8EC"
         app:progressIndeterminate="true" />
 
     <TextView

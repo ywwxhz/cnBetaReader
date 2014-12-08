@@ -44,7 +44,7 @@ public class NewsDetailService extends ActionService {
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{max-width: 100%%;height: auto;}a{text-decoration: none;color:#2f7cad;}" +
-            "iframe{width: 100%%;height:auto}.image{float:right;padding:3pt;width:50pt;height:auto}.content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;}" +
+            "iframe{width: 100%%;height:auto}.image{float:right;padding:3pt;width:50pt;height:auto}.content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;text-shadow: rgba(20, 115, 175, 0.28) 1pt 1pt 1px;}" +
             ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
             ".content{padding-top:10pt;font-size: 12pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 30pt;}" +
             "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">稿源： %s<span style=\"float: right\">%s</span></div>" +
