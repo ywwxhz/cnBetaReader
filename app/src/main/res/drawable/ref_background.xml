@@ -2,5 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/ref_background_active" android:state_activated="true" />
     <item android:drawable="@drawable/ref_background_active" android:state_pressed="true" />
+    <item android:drawable="@drawable/ref_background_active" android:state_selected="true" />
     <item android:drawable="@drawable/ref_background_normal" />
 </selector>

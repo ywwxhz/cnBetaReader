@@ -13,6 +13,8 @@ import org.apache.http.Header;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicHeader;
 
+import java.net.SocketTimeoutException;
+
 /**
  * Created by ywwxhz on 2014/10/17.
  */
@@ -20,6 +22,10 @@ public class NetKit {
 
     private AsyncHttpClient mClient;
     private Context mContext;
+
+    static {
+        AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
+    }
 
     public NetKit(Context context) {
         this.mContext = context;

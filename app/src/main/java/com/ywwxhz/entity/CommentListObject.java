@@ -7,20 +7,20 @@ import java.util.HashMap;
  * Created by ywwxhz on 2014/11/2.
  */
 public class CommentListObject {
-    //    private ArrayList<CommentItem> hotlist = new ArrayList<CommentItem>();
+    private ArrayList<CommentItem> hotlist = new ArrayList<CommentItem>();
     private ArrayList<CommentItem> cmntlist = new ArrayList<CommentItem>();
     private HashMap<String, CommentItem> cmntstore = new HashMap<String, CommentItem>();
     private int comment_num;
     private String token;
     private int page;
 
-//    public ArrayList<CommentItem> getHotlist() {
-//        return hotlist;
-//    }
-//
-//    public void setHotlist(ArrayList<CommentItem> hotlist) {
-//        this.hotlist = hotlist;
-//    }
+    public ArrayList<CommentItem> getHotlist() {
+        return hotlist;
+    }
+
+    public void setHotlist(ArrayList<CommentItem> hotlist) {
+        this.hotlist = hotlist;
+    }
 
     public ArrayList<CommentItem> getCmntlist() {
         return cmntlist;
