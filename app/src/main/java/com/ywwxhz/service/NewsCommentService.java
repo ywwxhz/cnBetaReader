@@ -48,7 +48,6 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     public static final String SN_KEY = "key_sn";
     public static final String SID_KEY = "key_sid";
     public static final String TITLE_KEY = "key_title";
-    private final NetKit mNetKit;
     private final CommentListHandler handler;
     private final CommentListAdapter mAdapter;
     private int sid;
@@ -68,7 +67,6 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             Toast.makeText(mContext, "缺失token", Toast.LENGTH_SHORT).show();
             mContext.finish();
         }
-        mNetKit = new NetKit(mContext);
         mContext.setTitle("评论：" + bundle.getString(TITLE_KEY));
         this.sn = bundle.getString(SN_KEY);
         this.sid = bundle.getInt(SID_KEY);
@@ -119,7 +117,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         }
         this.mListView.setOnItemClickListener(null);
         this.mTextView.setVisibility(View.GONE);
-        this.mNetKit.getCommentBySnAndSid(sn, sid + "", handler);
+        NetKit.getInstance().getCommentBySnAndSid(sn, sid + "", handler);
     }
 
     @Override
@@ -258,15 +256,15 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                     switch (item.getItemId()){
                         case R.id.comment_support:
                             action = SUPPORT;
-                            mNetKit.setCommentAction("support",sid+"",citem.getTid(),csrf_token,chandler);
+                            NetKit.getInstance().setCommentAction("support",sid+"",citem.getTid(),csrf_token,chandler);
                             break;
                         case R.id.comment_against:
                             action = AGAINST;
-                            mNetKit.setCommentAction("against",sid+"",citem.getTid(),csrf_token,chandler);
+                            NetKit.getInstance().setCommentAction("against",sid+"",citem.getTid(),csrf_token,chandler);
                             break;
                         case R.id.comment_report:
                             action = REPORT;
-                            mNetKit.setCommentAction("report",sid+"",citem.getTid(),csrf_token,chandler);
+                            NetKit.getInstance().setCommentAction("report",sid+"",citem.getTid(),csrf_token,chandler);
                             break;
                     }
                     return true;

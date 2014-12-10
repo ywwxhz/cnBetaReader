@@ -33,7 +33,6 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class TopicCommentService extends ActionService implements OnRefreshListener {
     private int current;
-    private NetKit mNetKit;
     private Activity mContext;
     private ListView mListView;
     private PagedLoader mLoader;
@@ -51,7 +50,6 @@ public class TopicCommentService extends ActionService implements OnRefreshListe
 
     public TopicCommentService(final Activity mContext) {
         this.mContext = mContext;
-        this.mNetKit = new NetKit(mContext);
         this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
         this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
@@ -107,7 +105,7 @@ public class TopicCommentService extends ActionService implements OnRefreshListe
     }
 
     private void makeRequest() {
-        mNetKit.getTopicComment((current + 1)+"", handlerInterface);
+        NetKit.getInstance().getTopicComment((current + 1)+"", handlerInterface);
     }
 
     public void callLoadSuccess(ArrayList<TopicComment> topicComments, boolean from) {

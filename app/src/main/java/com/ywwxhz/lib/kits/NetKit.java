@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.ResponseHandlerInterface;
+import com.ywwxhz.app.MyApplication;
 import com.ywwxhz.lib.Configure;
 
 import org.apache.http.Header;
@@ -20,22 +21,21 @@ import java.net.SocketTimeoutException;
  */
 public class NetKit {
 
+    private static NetKit instance;
     private AsyncHttpClient mClient;
-    private Context mContext;
 
     static {
         AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
     }
 
-    public NetKit(Context context) {
-        this.mContext = context;
+    private NetKit() {
         mClient = new AsyncHttpClient();
         mClient.setCookieStore(new BasicCookieStore());
         mClient.setUserAgent("Mozilla/5.0 (Linux; Android 4.2.1; zh-CN; Nexus 4 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
     }
 
-    public static int getConnectedType(Context context) {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+    public static int getConnectedType() {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) MyApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
         if (mNetworkInfo != null && mNetworkInfo.isAvailable()) {
@@ -44,24 +44,31 @@ public class NetKit {
         return -1;
     }
 
+    public static NetKit getInstance() {
+        if(instance == null){
+            instance = new NetKit();
+        }
+        return instance;
+    }
+
     public void getNewslistByPage(String sid, int page, ResponseHandlerInterface handlerInterface) {
-        mClient.get(mContext, Configure.buildNewsListUrl("all", page + "", sid), getAuthHeader(), null, handlerInterface);
+        mClient.get(MyApplication.getInstance(), Configure.buildNewsListUrl("all", page + "", sid), getAuthHeader(), null, handlerInterface);
     }
 
     public void getRealtimeNews(String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(mContext, Configure.buildNewsListUrl("realtime", "1", sid), getAuthHeader(), null, handlerInterface);
+        mClient.get(MyApplication.getInstance(), Configure.buildNewsListUrl("realtime", "1", sid), getAuthHeader(), null, handlerInterface);
     }
 
     public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(mContext, Configure.buildArticleUrl(sid), getAuthHeader(), null, handlerInterface);
+        mClient.get(MyApplication.getInstance(), Configure.buildArticleUrl(sid), getAuthHeader(), null, handlerInterface);
     }
 
     public void getTopicComment(String page, ResponseHandlerInterface handlerInterface) {
-        mClient.get(mContext, Configure.buildNewsListUrl("jhcomment",page,""), getAuthHeader(), null, handlerInterface);
+        mClient.get(MyApplication.getInstance(), Configure.buildNewsListUrl("jhcomment",page,""), getAuthHeader(), null, handlerInterface);
     }
 
     public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(mContext, Configure.buildCommentUrl(sid, sn), getAuthHeader(), null, handlerInterface);
+        mClient.get(MyApplication.getInstance(), Configure.buildCommentUrl(sid, sn), getAuthHeader(), null, handlerInterface);
     }
 
     public void setCommentAction(String op, String sid, String tid ,String csrf_token, ResponseHandlerInterface handlerInterface) {
@@ -70,7 +77,7 @@ public class NetKit {
         params.add("sid",sid);
         params.add("tid",tid);
         params.add("csrf_token",csrf_token);
-        mClient.post(mContext, Configure.COMMENT_VIEW, getAuthHeader(), params,"application/x-www-form-urlencoded; charset=UTF-8", handlerInterface);
+        mClient.post(MyApplication.getInstance(), Configure.COMMENT_VIEW, getAuthHeader(), params,"application/x-www-form-urlencoded; charset=UTF-8", handlerInterface);
     }
 
     private Header[] getAuthHeader() {
@@ -82,7 +89,7 @@ public class NetKit {
     }
 
     public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) mContext
+        ConnectivityManager cm = (ConnectivityManager) MyApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {
             //如果仅仅是用来判断网络连接
@@ -99,16 +106,16 @@ public class NetKit {
         return false;
     }
 
-    public boolean isWifiConnected() {
-        ConnectivityManager cm = (ConnectivityManager) mContext
+    public static boolean isWifiConnected() {
+        ConnectivityManager cm = (ConnectivityManager) MyApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkINfo = cm.getActiveNetworkInfo();
         return networkINfo != null
                 && networkINfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
-    public boolean isMobileConnected() {
-        ConnectivityManager cm = (ConnectivityManager) mContext
+    public static boolean isMobileConnected() {
+        ConnectivityManager cm = (ConnectivityManager) MyApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkINfo = cm.getActiveNetworkInfo();
         return networkINfo != null

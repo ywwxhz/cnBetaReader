@@ -33,7 +33,6 @@ public class NewsDetailService extends ActionService {
     public static final String NEWS_ITEM_KEY = "key_news_item";
     private View vg;
     private View loadFail;
-    private NetKit mNetKit;
     private int margin = 0;
     private WebView mWebView;
     private Activity mContext;
@@ -54,9 +53,7 @@ public class NewsDetailService extends ActionService {
     public NewsDetailService(Activity mContext) {
         this.hascontent = false;
         this.mContext = mContext;
-        this.mNetKit = new NetKit(mContext);
         this.mContext.setContentView(R.layout.activity_detail);
-        this.mContext.getActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
@@ -102,7 +99,7 @@ public class NewsDetailService extends ActionService {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(true);
-        if (mNetKit.isWifiConnected()) {
+        if (NetKit.isWifiConnected()) {
             settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         } else {
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
@@ -118,7 +115,7 @@ public class NewsDetailService extends ActionService {
 
     public void makeRequest() {
 
-        mNetKit.getNewsBySid(mNewsItem.getSid() + "", new TextHttpResponseHandler() {
+        NetKit.getInstance().getNewsBySid(mNewsItem.getSid() + "", new TextHttpResponseHandler() {
 
             @Override
             public void onStart() {

@@ -44,7 +44,6 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class NewsListService extends ActionService implements OnRefreshListener {
     private int current;
-    private NetKit mNetKit;
     private boolean hasCached;
     private Activity mContext;
     private ListView mListView;
@@ -64,14 +63,13 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             if (mAdapter.getCount() > 0) {
                 sid = mAdapter.getDataSetItem(mAdapter.getCount() - 1).getSid() + "";
             }
-            mNetKit.getNewslistByPage(sid, current + 1, newsPage);
+            NetKit.getInstance().getNewslistByPage(sid, current + 1, newsPage);
         }
     };
 
     public NewsListService(final Activity mContext) {
         this.hasCached = false;
         this.mContext = mContext;
-        this.mNetKit = new NetKit(mContext);
         this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
         this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
@@ -173,7 +171,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             handlerInterface = realtimeNews;
             sid = mAdapter.getDataSetItem(0).getSid() + "";
         }
-        mNetKit.getRealtimeNews(sid, handlerInterface);
+        NetKit.getInstance().getRealtimeNews(sid, handlerInterface);
     }
 
     public void callRealTimeNewsLoadSuccess(List<NewsItem> itemListes) {
