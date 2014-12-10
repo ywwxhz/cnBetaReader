@@ -3,6 +3,7 @@ package com.ywwxhz.service;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -19,6 +20,7 @@ import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.handler.ActionService;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
+import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
 import org.apache.http.Header;
@@ -99,6 +101,9 @@ public class NewsDetailService extends ActionService {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(true);
+        if(Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !PrefKit.getBoolean(mContext,mContext.getString(R.string.pref_hardware_accelerated_key),true)) {
+            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         if (NetKit.isWifiConnected()) {
             settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         } else {

@@ -9,10 +9,11 @@
     <string name="share_templates">我觉得这篇新闻不错 %1$s (%2$s) 分享自cnBeta 业界资讯。</string>
 
     <string name="message_no_comment">暂无评论</string>
-    <string name="message_no_network">无网络或连接超时   ε٩(๑> ₃ &lt;)۶ з  </string>
-    <string name="message_flush_success">加载成功  *\\(๑• ₃ •๑)*</string>
+    <string name="message_comment_close">评论已关闭</string>
     <string name="message_new_news">新增%d条新闻  *\\(๑• ₃ •๑)*</string>
+    <string name="message_flush_success">加载成功  *\\(๑• ₃ •๑)*</string>
     <string name="message_no_new_news">暂时没有新的新闻  (๑•́ ₃ •̀๑)</string>
+    <string name="message_no_network">无网络或连接超时   ε٩(๑> ₃ &lt;)۶ з  </string>
     <string name="message_load_from_cache">无可用网络，加载之前的缓存  ( &gt;﹏&lt;。)～</string>
     <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。请联系开发者。 </string>
 
@@ -41,6 +42,8 @@
     <string name="pref_auto_reflush_key">autoReflush</string>
     <string name="pref_auto_reflush_off">手动刷新列表</string>
     <string name="pref_about_summary">cnBeta 第三方新闻客户端</string>
-    <string name="message_comment_close">评论已关闭</string>
+    <string name="pref_hardware_accelerated_title">WebView硬件加速</string>
+    <string name="pref_hardware_accelerated_key">hardwareAccelerated</string>
+    <string name="pref_hardware_accelerated_summary">只针对Android 4.4 有效。\n原因:Android 4.4 系统WebView硬件加速不完善，在加载大量图片后会造成界面卡死和程序崩溃。可以通过此关闭硬件加速副作用是会照成WebView滑动卡顿。目前没有其他完美的解决方案。</string>
 
 </resources>

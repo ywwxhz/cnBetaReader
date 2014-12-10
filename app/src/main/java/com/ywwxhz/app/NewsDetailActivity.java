@@ -35,6 +35,18 @@ public class NewsDetailActivity extends ExtendBaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mService.getWebView().onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mService.getWebView().onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         return super.onCreateOptionsMenu(menu);

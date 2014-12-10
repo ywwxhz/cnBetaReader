@@ -93,8 +93,7 @@ public class FileKit {
                     size = size + aFileList.length();
                 }
             }
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception ignored){
         }
         return size;
     }
@@ -111,8 +110,7 @@ public class FileKit {
                     size = size + aFileList.length();
                 }
             }
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception ignored){
         }
         return size;
     }
