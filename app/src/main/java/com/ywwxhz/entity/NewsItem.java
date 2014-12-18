@@ -1,28 +1,18 @@
 package com.ywwxhz.entity;
 
-import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 
 public class NewsItem implements Serializable {
 
-    @Expose
     private int sid;
     private String SN;
-    @Expose
     private String aid;
-    private String icon;
-    @Expose
     private String thumb;
     private String from;
-    @Expose
     private String title;
     private String content;
-    @Expose
     private String hometext;
-    @Expose
     private int counter;
-    @Expose
     private String inputtime;
 
     public int getSid() {
@@ -47,14 +37,6 @@ public class NewsItem implements Serializable {
 
     public void setAid(String aid) {
         this.aid = aid;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getThumb() {

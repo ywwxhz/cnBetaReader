@@ -1,17 +1,12 @@
 package com.ywwxhz.entity;
 
-import com.google.gson.annotations.Expose;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsListObject {
 
-    @Expose
     private List<NewsItem> list = new ArrayList<NewsItem>();
-    @Expose
     private String type;
-    @Expose
     private Integer page;
 
     /**

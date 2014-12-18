@@ -15,10 +15,6 @@ public class Configure {
     public static final String COMMENT_VIEW = BASE_URL +"/comment";
     public static final Pattern STANDRA_PATTERN = Pattern.compile("cnBeta\\.COM_中文业界资讯站");
     public static final Pattern SN_PATTERN = Pattern.compile("SN:\"(.{5})\"");
-    public static final Pattern TITLE_PATTERN = Pattern.compile("<h2 id=\"news_title\">(.*?)</h2>");
-    public static final Pattern CONTENT_PATTERN = Pattern.compile("<div class=\"content\">(.*?)</div>", Pattern.DOTALL);
-    public static final Pattern FROM_PATTERN = Pattern.compile("<span class=\"where\"> ?稿源：(<a .*?>)?(.*?)(</a>)?</span>");
-    public static final Pattern ICON_PATTERN = Pattern.compile("<a href=\"/topics/\\d+.htm\" target=\"_blank\"><img title=\".*?\" src=\"(.*?)\" /></a>");
 
     public static String buildNewsListUrl(String type, String page, String sid) {
         return String.format(Locale.CHINA, NEWS_LIST_URL, type, page, sid);

@@ -24,6 +24,9 @@ import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
 import org.apache.http.Header;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -45,11 +48,12 @@ public class NewsDetailService extends ActionService {
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{max-width: 100%%;height: auto;}a{text-decoration: none;color:#2f7cad;}" +
-            "iframe{width: 100%%;height:auto}.image{float:right;padding:3pt;width:50pt;height:auto}.content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;text-shadow: rgba(20, 115, 175, 0.28) 1pt 1pt 1pt;}" +
+            "iframe{width: 100%%;height:auto}.introduce img{padding:3pt;width:50pt;height:auto}.introduce p{margin:0}.introduce div{margin: 0px !important;}" +
+            ".content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;text-shadow: rgba(20, 115, 175, 0.28) 1pt 1pt 1pt;}" +
             ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
             ".content{padding-top:10pt;font-size: 12pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 30pt;}" +
-            "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">稿源： %s<span style=\"float: right\">%s</span></div>" +
-            "<hr/><div class=\"introduce\"><img src=\"%s\" class=\"image\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
+            "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
+            "<hr/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0){a.onclick=function(){return false;}}}</script></body></html>";
 
     public NewsDetailService(Activity mContext) {
@@ -76,7 +80,7 @@ public class NewsDetailService extends ActionService {
 
     private void blindData(NewsItem mNews) {
         String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                , mNews.getIcon(), mNews.getHometext(), mNews.getContent());
+                ,mNews.getHometext(), mNews.getContent());
         mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
         mActionButtom.setVisibility(View.VISIBLE);
@@ -145,18 +149,14 @@ public class NewsDetailService extends ActionService {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 if (Configure.STANDRA_PATTERN.matcher(responseString).find()) {
-                    Matcher iconMatcher = Configure.ICON_PATTERN.matcher(responseString);
-                    if (iconMatcher.find())
-                        mNewsItem.setIcon(iconMatcher.group(1));
+                    Document doc = Jsoup.parse(responseString);
+                    Elements newsHeadlines = doc.select(".body");
+                    mNewsItem.setFrom(newsHeadlines.select(".where").html());
+                    mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
+                    mNewsItem.setContent(newsHeadlines.select(".content").html());
                     Matcher snMatcher = Configure.SN_PATTERN.matcher(responseString);
                     if (snMatcher.find())
                         mNewsItem.setSN(snMatcher.group(1));
-                    Matcher contentMatcher = Configure.CONTENT_PATTERN.matcher(responseString);
-                    if (contentMatcher.find())
-                        mNewsItem.setContent(contentMatcher.group(1));
-                    Matcher fromMatcher = Configure.FROM_PATTERN.matcher(responseString);
-                    if (fromMatcher.find())
-                        mNewsItem.setFrom(fromMatcher.group(2));
                     blindData(mNewsItem);
                     hascontent = true;
                     FileCacheKit.getInstance().putAsync(mNewsItem.getSid() + "", Toolkit.getGson().toJson(mNewsItem), null);
