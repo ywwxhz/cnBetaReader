@@ -175,8 +175,9 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                 this.mListView.setOnItemClickListener(listener);
                 this.actionButton.setVisibility(View.VISIBLE);
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
+                Crouton.makeText(mContext, R.string.message_flush_success, Style.INFO).show();
             }
-        } else if (cmntlist.size() != commentListObject.getComment_num()) { //针对超时关平的新闻评论
+        } else if (commentListObject.getOpen()==0||cmntlist.size() != commentListObject.getComment_num()) { //针对超时关平的新闻评论
             Crouton.makeText(mContext, R.string.message_comment_close, Style.ALERT).show();
             this.actionButton.setVisibility(View.GONE);
             this.mPullToRefreshLayout.setEnabled(false);
@@ -185,12 +186,10 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                 this.mTextView.setVisibility(View.VISIBLE);
             }
         } else {//针对暂时无评论的情况
+            Crouton.makeText(mContext, R.string.message_no_comment, Style.INFO).show();
             this.actionButton.setVisibility(View.VISIBLE);
             this.mTextView.setText(R.string.message_no_comment);
             this.mTextView.setVisibility(View.VISIBLE);
-        }
-        if (!fromCache) {
-            Crouton.makeText(mContext, R.string.message_flush_success, Style.INFO).show();
         }
     }
 

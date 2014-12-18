@@ -43,6 +43,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * Created by ywwxhz on 2014/11/1.
  */
 public class NewsListService extends ActionService implements OnRefreshListener {
+    private int topSid;
     private int current;
     private boolean hasCached;
     private Activity mContext;
@@ -113,6 +114,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         });
         mProgressBar.setVisibility(View.VISIBLE);
         if (newsList != null) {
+            topSid = PrefKit.getInt(mContext,"sid",newsList.get(0).getSid());
             mAdapter.setDataSet(newsList);
             mLoader.notifyDataSetChanged();
             this.hasCached = true;
@@ -169,24 +171,38 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             handlerInterface = newsPage;
         } else {
             handlerInterface = realtimeNews;
-            sid = mAdapter.getDataSetItem(0).getSid() + "";
+            sid = topSid + "";
         }
         NetKit.getInstance().getRealtimeNews(sid, handlerInterface);
     }
 
     public void callRealTimeNewsLoadSuccess(List<NewsItem> itemListes) {
         List<NewsItem> ds = mAdapter.getDataSet();
+        int count=0;
         for (NewsItem item : itemListes) {
             item.setHometext(item.getHometext().replaceAll("<.*?>", ""));
-            ds.add(0, item);
+            if(topSid < item.getSid()){
+                ds.add(0, item);
+                topSid = item.getSid();
+                count++;
+            }
         }
-        showToastAndCache(itemListes.size());
+        PrefKit.writeInt(mContext,"sid",topSid);
+        showToastAndCache(count);
     }
 
     public void callNewsPageLoadSuccess(NewsListObject listPage) {
         List<NewsItem> itemList = listPage.getList();
         List<NewsItem> dataSet = mAdapter.getDataSet();
+        if (!hasCached) {
+            topSid = itemList.get(0).getSid();
+        }
         for (NewsItem item : itemList) {
+            if (!hasCached) {
+                if(topSid <= item.getSid()){
+                    topSid = item.getSid();
+                }
+            }
             item.setHometext(item.getHometext().replaceAll("<.*?>", ""));
         }
 
@@ -206,12 +222,13 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             }
         } else {
             dataSet.addAll(itemList);
+            if (!hasCached) {
+                hasCached = true;
+                PrefKit.writeInt(mContext,"sid",topSid);
+                showToastAndCache(itemList.size());
+            }
         }
         current = listPage.getPage();
-        if (!hasCached) {
-            hasCached = true;
-            showToastAndCache(itemList.size());
-        }
     }
 
     private void showToastAndCache(int size) {

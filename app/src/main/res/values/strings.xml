@@ -44,6 +44,6 @@
     <string name="pref_about_summary">cnBeta 第三方新闻客户端</string>
     <string name="pref_hardware_accelerated_title">WebView硬件加速</string>
     <string name="pref_hardware_accelerated_key">hardwareAccelerated</string>
-    <string name="pref_hardware_accelerated_summary">只针对Android 4.4 有效。\n原因:Android 4.4 系统WebView硬件加速不完善，在加载大量图片后会造成界面卡死和程序崩溃。可以通过此关闭硬件加速副作用是会照成WebView滑动卡顿。目前没有其他完美的解决方案。</string>
+    <string name="pref_hardware_accelerated_summary">只针对Android 4.4 有效。\n原因:Android 4.4 系统WebView硬件加速不完善，在加载大量图片后会造成界面卡死和程序崩溃。可以通过此关闭硬件加速。副作用是会造成WebView滑动卡顿。目前没有其他完美的解决方案。</string>
 
 </resources>

@@ -20,6 +20,7 @@ public class PrefKit {
         edit.apply();
     }
 
+
     public static boolean getBoolean(Context context, String key, boolean def) {
         SharedPreferences appPrefs = getSharedPreferences(context);
         return appPrefs.getBoolean(key, def);
@@ -33,5 +34,17 @@ public class PrefKit {
     public static String getString(Context context, String key, String def) {
         SharedPreferences appPrefs = getSharedPreferences(context);
         return appPrefs.getString(key, def);
+    }
+
+    public static void writeInt(Context context, String key, int value) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        SharedPreferences.Editor edit = appPrefs.edit();
+        edit.putInt(key, value);
+        edit.apply();
+    }
+
+    public static int getInt(Context context, String key, int def) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        return appPrefs.getInt(key, def);
     }
 }
