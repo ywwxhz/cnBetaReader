@@ -7,9 +7,10 @@
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:listSelector="@android:color/transparent"
         android:divider="@null"
         android:dividerHeight="0dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@android:color/transparent"
         android:padding="5dp" />
 
     <com.pnikosis.materialishprogress.ProgressWheel
@@ -18,11 +19,11 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         app:barColor="#5588FF"
-        app:rimColor="#E1E8EC"
         app:barWidth="3dp"
-        app:rimWidth="3dp"
         app:circleRadius="30dp"
-        app:progressIndeterminate="true" />
+        app:progressIndeterminate="true"
+        app:rimColor="#E1E8EC"
+        app:rimWidth="3dp" />
 
     <TextView
         android:id="@+id/loadFail"
@@ -40,6 +41,8 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:alpha="0.8"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:fab_colorNormal="@color/color_normal"
+        app:fab_colorPressed="@color/color_passed" />
 
 </merge>

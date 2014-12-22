@@ -19,7 +19,7 @@ public class NormalNewsListHandler extends ExternedGsonHttpResposerHandler<NewsL
     @Override
     public void onSuccess(int statusCode, Header[] headers, String responseString, ResponseObject<NewsListObject> object) {
         if ("success".equals(object.getState())) {
-            mActionServer.callNewsPageLoadSuccess(object.getResult());
+            mActionServer.get().callNewsPageLoadSuccess(object.getResult());
         } else {
             onError(statusCode, headers, responseString, new Exception("load news list fail"));
         }
@@ -27,6 +27,6 @@ public class NormalNewsListHandler extends ExternedGsonHttpResposerHandler<NewsL
 
     @Override
     public void onFinish() {
-        mActionServer.setLoadFinish();
+        mActionServer.get().setLoadFinish();
     }
 }

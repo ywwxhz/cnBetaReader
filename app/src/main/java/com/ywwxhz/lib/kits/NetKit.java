@@ -23,6 +23,7 @@ public class NetKit {
 
     private static NetKit instance;
     private AsyncHttpClient mClient;
+    private static final String CONTENT_TYPE="application/x-www-form-urlencoded";
 
     static {
         AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
@@ -52,23 +53,31 @@ public class NetKit {
     }
 
     public void getNewslistByPage(String sid, int page, ResponseHandlerInterface handlerInterface) {
-        mClient.get(MyApplication.getInstance(), Configure.buildNewsListUrl("all", page + "", sid), getAuthHeader(), null, handlerInterface);
+        RequestParams params = new RequestParams();
+        params.add("type","all");
+        params.add("page",page+"");
+        params.add("sid",sid);
+        params.add("_",System.currentTimeMillis()+"");
+        mClient.get(MyApplication.getInstance(), Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
     }
 
     public void getRealtimeNews(String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(MyApplication.getInstance(), Configure.buildNewsListUrl("realtime", "1", sid), getAuthHeader(), null, handlerInterface);
+        RequestParams params = new RequestParams();
+        params.add("type","realtime");
+        params.add("page",1+"");
+        params.add("sid",sid);
+        params.add("_",System.currentTimeMillis()+"");
+        mClient.get(MyApplication.getInstance(), Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
     }
 
     public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
         mClient.get(MyApplication.getInstance(), Configure.buildArticleUrl(sid), getAuthHeader(), null, handlerInterface);
     }
 
-    public void getTopicComment(String page, ResponseHandlerInterface handlerInterface) {
-        mClient.get(MyApplication.getInstance(), Configure.buildNewsListUrl("jhcomment",page,""), getAuthHeader(), null, handlerInterface);
-    }
-
     public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(MyApplication.getInstance(), Configure.buildCommentUrl(sid, sn), getAuthHeader(), null, handlerInterface);
+        RequestParams params = new RequestParams();
+        params.add("op","1,"+sid+","+sn);
+        mClient.post(MyApplication.getInstance(), Configure.COMMENT_URL, getAuthHeader(), params,CONTENT_TYPE, handlerInterface);
     }
 
     public void setCommentAction(String op, String sid, String tid ,String csrf_token, ResponseHandlerInterface handlerInterface) {
@@ -77,7 +86,7 @@ public class NetKit {
         params.add("sid",sid);
         params.add("tid",tid);
         params.add("csrf_token",csrf_token);
-        mClient.post(MyApplication.getInstance(), Configure.COMMENT_VIEW, getAuthHeader(), params,"application/x-www-form-urlencoded; charset=UTF-8", handlerInterface);
+        mClient.post(MyApplication.getInstance(), Configure.COMMENT_VIEW, getAuthHeader(), params,CONTENT_TYPE, handlerInterface);
     }
 
     private Header[] getAuthHeader() {

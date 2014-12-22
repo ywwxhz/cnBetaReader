@@ -27,14 +27,9 @@
     <string name="pref_version_title">版本</string>
     <string name="pref_version_key">version</string>
     <string name="pref_general_category">通用</string>
-    <string name="pref_cache_category">缓存设置</string>
-    <string name="pref_cache_path_key">cachePath</string>
     <string name="pref_auto_page_on">自动加载更多</string>
     <string name="pref_author_summary">远望の无限</string>
-    <string name="pref_cache_path_title">缓存位置</string>
     <string name="pref_auto_page_off">手动加载更多</string>
-    <string name="pref_cache_clean_title">清理缓存</string>
-    <string name="pref_cache_clean_key">cleanCache</string>
     <string name="pref_auto_page_key">autoPageLoad</string>
     <string name="pref_auto_reflush_title">自动刷新</string>
     <string name="pref_auto_page_title">自动加载更多</string>
@@ -45,5 +40,11 @@
     <string name="pref_hardware_accelerated_title">WebView硬件加速</string>
     <string name="pref_hardware_accelerated_key">hardwareAccelerated</string>
     <string name="pref_hardware_accelerated_summary">只针对Android 4.4 有效。\n原因:Android 4.4 系统WebView硬件加速不完善，在加载大量图片后会造成界面卡死和程序崩溃。可以通过此关闭硬件加速。副作用是会造成WebView滑动卡顿。目前没有其他完美的解决方案。</string>
+    <string name="pref_show_list_news_image_key">showListImage</string>
+    <string name="pref_show_list_news_image_title">显示列表图片</string>
+    <string name="pref_show_list_news_image_summary">新闻是否列表显示图片</string>
+    <string name="pref_debug_key">debug</string>
+    <string name="pref_debug_title">调试模式</string>
+    <string name="pref_debug_summary">启用调试模式(重启生效)</string>
 
 </resources>

@@ -5,10 +5,13 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ywwxhz.app.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.NewsItem;
+import com.ywwxhz.lib.kits.PrefKit;
 
 import java.util.List;
 
@@ -47,6 +50,14 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         } else {
             counter = item.getCounter() + "";
         }
+        if (PrefKit.getBoolean(view.getContext(),view.getContext().getString(R.string.pref_show_list_news_image_key), true) && item.getThumb().contains("thumb")) {
+            hoder.news_image_hoder.setVisibility(View.VISIBLE);
+            MyApplication.getPicasso().load(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""))
+                    .resize(800,320).centerCrop().placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
+                    .into(hoder.news_image);
+        } else {
+            hoder.news_image_hoder.setVisibility(View.GONE);
+        }
         hoder.news_views.setText(counter);
         if (item.getHometext() != null) {
             hoder.news_summary.setText(Html.fromHtml(item.getHometext()));
@@ -60,6 +71,8 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         TextView news_views;
         TextView news_summary;
         TextView news_publisher;
+        ImageView news_image;
+        View news_image_hoder;
 
         public ViewHoder(View view) {
             this.news_time = (TextView) view.findViewById(R.id.news_time);
@@ -67,6 +80,8 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             this.news_views = (TextView) view.findViewById(R.id.news_views);
             this.news_summary = (TextView) view.findViewById(R.id.news_summary);
             this.news_publisher = (TextView) view.findViewById(R.id.news_publisher);
+            this.news_image = (ImageView) view.findViewById(R.id.news_image);
+            this.news_image_hoder = view.findViewById(R.id.news_image_hoder);
         }
     }
 }

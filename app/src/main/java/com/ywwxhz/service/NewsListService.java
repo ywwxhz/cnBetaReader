@@ -207,7 +207,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         }
 
         if (dataSet.size() >= 40) {
-            int firstSid = dataSet.get(dataSet.size() - 40).getSid();
+            int firstSid = dataSet.get(dataSet.size() - 5).getSid();
             int lastSid = dataSet.get(dataSet.size() - 1).getSid();
             if (itemList.get(0).getSid() > firstSid) {
                 dataSet.addAll(itemList);

@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:shadowRadius="2"
+        android:paddingBottom="5dp"
         android:shadowColor="#20000000"
         android:shadowDx="3"
         android:shadowDy="3"
-        android:paddingBottom="5dp"
+        android:shadowRadius="2"
         android:singleLine="true"
         android:textColor="#3c69ce"
         android:textSize="16sp" />
@@ -25,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
-        android:lineSpacingExtra="1dp"
         android:background="@drawable/ref_background"
+        android:lineSpacingExtra="1dp"
         android:padding="5dp"
         android:textSize="13sp" />
 
@@ -46,8 +46,8 @@
         android:paddingTop="2dp">
 
         <TextView
-            android:id="@+id/comment_time"
             style="@style/SubText"
+            android:id="@+id/comment_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,8 +55,8 @@
             android:singleLine="true" />
 
         <TextView
-            android:id="@+id/comment_score"
             style="@style/SubText"
+            android:id="@+id/comment_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_score"
@@ -65,8 +65,8 @@
             android:minWidth="40sp" />
 
         <TextView
-            android:id="@+id/comment_reason"
             style="@style/SubText"
+            android:id="@+id/comment_reason"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

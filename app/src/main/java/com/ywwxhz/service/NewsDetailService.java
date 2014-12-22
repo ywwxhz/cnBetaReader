@@ -1,10 +1,14 @@
 package com.ywwxhz.service;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.ywwxhz.app.MediaActivity;
 import com.ywwxhz.app.NewsCommentActivity;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.NewsItem;
@@ -47,19 +52,23 @@ public class NewsDetailService extends ActionService {
     private FloatingActionButton mActionButtom;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{max-width: 100%%;height: auto;}a{text-decoration: none;color:#2f7cad;}" +
-            "iframe{width: 100%%;height:auto}.introduce img{padding:3pt;width:50pt;height:auto}.introduce p{margin:0}.introduce div{margin: 0px !important;}" +
-            ".content embed{width: 100%%;height:auto;}.title{font-size: 18pt;color: #1473af;text-shadow: rgba(20, 115, 175, 0.28) 1pt 1pt 1pt;}" +
+            "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{max-width: 100%% !important;height: auto; !important}a{text-decoration: none;color:#2f7cad;}" +
+            ".content p iframe{width: 100%% !important;height:auto !important}.introduce img{padding:3pt;width:50pt;height:auto}.introduce p{margin:0}.introduce div{margin: 0px !important;}" +
+            ".content embed{width: 100%% !important;height:auto; !important}.title{font-size: 18pt;color: #1473af;text-shadow: rgba(20, 115, 175, 0.28) 1pt 1pt 1pt;}" +
             ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
             ".content{padding-top:10pt;font-size: 12pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 30pt;}" +
             "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
             "<hr/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
-            "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0){a.onclick=function(){return false;}}}</script></body></html>";
+            "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");" +
+            "for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0)" +
+            "{a.onclick=function(){return false;}}}; var videos = document.getElementsByTagName('video');for(var i=0;i<videos.length;i++){videos[i].onclick=function(){ window.Video.showToast(this.src);return false;}}</script></body></html>";
+    private Handler myHandler;
 
     public NewsDetailService(Activity mContext) {
         this.hascontent = false;
         this.mContext = mContext;
         this.mContext.setContentView(R.layout.activity_detail);
+        this.myHandler = new Handler();
         initView();
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
@@ -105,6 +114,9 @@ public class NewsDetailService extends ActionService {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
         if(Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !PrefKit.getBoolean(mContext,mContext.getString(R.string.pref_hardware_accelerated_key),true)) {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
@@ -113,6 +125,8 @@ public class NewsDetailService extends ActionService {
         } else {
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
+        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.addJavascriptInterface(new JavaScriptInterface(mContext),"Video");
         this.loadFail.setClickable(true);
         this.loadFail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +134,28 @@ public class NewsDetailService extends ActionService {
                 makeRequest();
             }
         });
+    }
+
+
+    public class JavaScriptInterface {
+        Context mContext;
+
+        JavaScriptInterface(Context c) {
+            mContext = c;
+        }
+
+        @JavascriptInterface
+        public void showToast(String webMessage){
+            final String msgeToast = webMessage;
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(mContext, MediaActivity.class);
+                    intent.putExtra("videoUrl",msgeToast);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
     }
 
     public void makeRequest() {

@@ -7,7 +7,7 @@ android {
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     def verName = "1.0.2"
-    String buildDate = " Build " + new Date().format("yyyyMMddhhmmss")
+    String buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
 
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
@@ -64,5 +64,6 @@ dependencies {
     compile project(':materialish-progress')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.loopj.android:android-async-http:1.4.6'
+    compile 'com.squareup.picasso:picasso:2.4.0'
     compile files('libs/jsoup-1.8.1.jar')
 }

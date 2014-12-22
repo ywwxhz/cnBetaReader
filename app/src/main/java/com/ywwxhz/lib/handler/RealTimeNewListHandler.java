@@ -21,7 +21,7 @@ public class RealTimeNewListHandler extends ExternedGsonHttpResposerHandler<News
     @Override
     public void onSuccess(int statusCode, Header[] headers, String responseString, ResponseObject<ArrayList<NewsItem>> object) {
         if ("success".equals(object.getState())) {
-            mActionServer.callRealTimeNewsLoadSuccess(object.getResult());
+            mActionServer.get().callRealTimeNewsLoadSuccess(object.getResult());
         } else {
             onError(statusCode, headers, responseString, new Exception("load realtime error"));
         }
@@ -29,6 +29,6 @@ public class RealTimeNewListHandler extends ExternedGsonHttpResposerHandler<News
 
     @Override
     public void onFinish() {
-        mActionServer.setLoadFinish();
+        mActionServer.get().setLoadFinish();
     }
 }

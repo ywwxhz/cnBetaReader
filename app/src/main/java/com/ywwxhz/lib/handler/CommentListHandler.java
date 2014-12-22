@@ -18,12 +18,12 @@ public class CommentListHandler extends ExternedGsonHttpResposerHandler<NewsComm
 
     @Override
     public void onSuccess(int statusCode, Header[] headers, String responseString, ResponseObject<CommentListObject> object) {
-        mActionServer.callOnLoadingSuccess(object.getResult(), false, false);
+        mActionServer.get().callOnLoadingSuccess(object.getResult(), false, false);
     }
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-        if (!mActionServer.callOnFailure(false, false)) {
+        if (!mActionServer.get().callOnFailure(false, false)) {
             super.onFailure(statusCode, headers, responseString, throwable);
         }
     }
@@ -31,11 +31,11 @@ public class CommentListHandler extends ExternedGsonHttpResposerHandler<NewsComm
     @Override
     protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
         super.onError(statusCode, headers, responseString, cause);
-        mActionServer.callOnFailure(true, true);
+        mActionServer.get().callOnFailure(true, true);
     }
 
     @Override
     public void onFinish() {
-        mActionServer.setLoadFinish();
+        mActionServer.get().setLoadFinish();
     }
 }
