@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.view.View;
@@ -174,36 +175,45 @@ public class NewsDetailService extends ActionService {
                 if(!hascontent) {
                     loadFail.setVisibility(View.VISIBLE);
                     mActionButtom.setVisibility(View.GONE);
-                    Toast.makeText(mContext, R.string.message_no_network, Toast.LENGTH_SHORT).show();
                 }else{
                     blindData(mNewsItem);
                     mWebView.setVisibility(View.VISIBLE);
-                    Toast.makeText(mContext, R.string.message_no_network, Toast.LENGTH_SHORT).show();
                 }
+                mProgressBar.setVisibility(View.GONE);
+                Toast.makeText(mContext, R.string.message_no_network, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 if (Configure.STANDRA_PATTERN.matcher(responseString).find()) {
-                    Document doc = Jsoup.parse(responseString);
-                    Elements newsHeadlines = doc.select(".body");
-                    mNewsItem.setFrom(newsHeadlines.select(".where").html());
-                    mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
-                    mNewsItem.setContent(newsHeadlines.select(".content").html());
-                    Matcher snMatcher = Configure.SN_PATTERN.matcher(responseString);
-                    if (snMatcher.find())
-                        mNewsItem.setSN(snMatcher.group(1));
-                    blindData(mNewsItem);
-                    hascontent = true;
-                    FileCacheKit.getInstance().putAsync(mNewsItem.getSid() + "", Toolkit.getGson().toJson(mNewsItem), null);
+                    new AsyncTask<String,Integer,Boolean>(){
+
+                        @Override
+                        protected Boolean doInBackground(String... params) {
+                            Document doc = Jsoup.parse(params[0]);
+                            Elements newsHeadlines = doc.select(".body");
+                            mNewsItem.setFrom(newsHeadlines.select(".where").html());
+                            mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
+                            mNewsItem.setContent(newsHeadlines.select(".content").html());
+                            Matcher snMatcher = Configure.SN_PATTERN.matcher(params[0]);
+                            if (snMatcher.find())
+                                mNewsItem.setSN(snMatcher.group(1));
+                            hascontent = true;
+                            FileCacheKit.getInstance().putAsync(mNewsItem.getSid() + "", Toolkit.getGson().toJson(mNewsItem), null);
+                            return true;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean result) {
+                            if (result) {
+                                blindData(mNewsItem);
+                            }
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }.execute(responseString);
                 } else {
                     onFailure(statusCode, headers, responseString, new RuntimeException());
                 }
-            }
-
-            @Override
-            public void onFinish() {
-                mProgressBar.setVisibility(View.GONE);
             }
         });
 

@@ -6,15 +6,16 @@ android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
-    def verName = "1.0.2"
+    def verName = "1.0.3"
     String buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
 
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
         minSdkVersion 15
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 3
+        versionCode 4
         versionName verName + buildDate
+        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
     }
 
 

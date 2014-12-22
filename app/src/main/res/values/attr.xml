@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ProportionLinearLayout">
+        <attr name="pl_Reversal" format="boolean" />
+        <attr name="pl_proportion" format="float" />
+    </declare-styleable>
+</resources>
