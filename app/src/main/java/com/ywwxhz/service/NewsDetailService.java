@@ -118,7 +118,7 @@ public class NewsDetailService extends ActionService {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        if(Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !PrefKit.getBoolean(mContext,mContext.getString(R.string.pref_hardware_accelerated_key),true)) {
+        if(!PrefKit.getBoolean(mContext,mContext.getString(R.string.pref_hardware_accelerated_key),true)) {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         if (NetKit.isWifiConnected()) {

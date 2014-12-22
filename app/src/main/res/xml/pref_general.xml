@@ -18,6 +18,13 @@
             android:key="@string/pref_show_list_news_image_key"
             android:title="@string/pref_show_list_news_image_title"
             android:summary="@string/pref_show_list_news_image_summary"/>
+        <Preference
+            android:key="@string/pref_clean_cache_key"
+            android:title="@string/pref_clean_cache_title" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_advience_categroy">
         <CheckBoxPreference android:defaultValue="false"
             android:key="@string/pref_debug_key"
             android:title="@string/pref_debug_title"
@@ -27,12 +34,6 @@
             android:key="@string/pref_hardware_accelerated_key"
             android:summary="@string/pref_hardware_accelerated_summary"
             android:title="@string/pref_hardware_accelerated_title" />
-        <Preference
-            android:key="@string/pref_clean_cache_key"
-            android:summary="@string/pref_clean_cache_summary"
-            android:title="@string/pref_clean_cache_title" />
-
-
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_about_title">
         <Preference
