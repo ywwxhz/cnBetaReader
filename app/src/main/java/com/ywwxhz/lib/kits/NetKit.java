@@ -23,7 +23,7 @@ public class NetKit {
 
     private static NetKit instance;
     private AsyncHttpClient mClient;
-    private static final String CONTENT_TYPE="application/x-www-form-urlencoded";
+    private static final String CONTENT_TYPE="application/x-www-form-urlencoded; charset=UTF-8";
 
     static {
         AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
@@ -61,7 +61,7 @@ public class NetKit {
     }
 
     public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(MyApplication.getInstance(), Configure.buildArticleUrl(sid), getAuthHeader(), null, handlerInterface);
+        mClient.get(MyApplication.getInstance(), Configure.buildArticleUrl(sid), handlerInterface);
     }
 
     public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
@@ -80,7 +80,13 @@ public class NetKit {
     }
 
     private Header[] getAuthHeader() {
-        return new Header[]{new BasicHeader("Referer", "http://www.cnbeta.com/"), new BasicHeader("X-Requested-With", "XMLHttpRequest")};
+        return new Header[]{
+                new BasicHeader("Referer", "http://www.cnbeta.com/"),
+                new BasicHeader("Accept","application/json, text/javascript, */*; q=0.01"),
+                new BasicHeader("Accept-Encoding","gzip, deflate"),
+                new BasicHeader("Origin","http://www.cnbeta.com"),
+                new BasicHeader("X-Requested-With", "XMLHttpRequest")
+        };
     }
 
     public AsyncHttpClient getClient() {

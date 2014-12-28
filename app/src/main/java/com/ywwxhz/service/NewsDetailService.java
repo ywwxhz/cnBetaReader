@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -90,10 +91,15 @@ public class NewsDetailService extends ActionService {
 
     private void blindData(NewsItem mNews) {
         String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                ,mNews.getHometext(), mNews.getContent());
+                , mNews.getHometext(), mNews.getContent());
         mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
-        mActionButtom.setVisibility(View.VISIBLE);
+        mActionButtom.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+            }
+        }, 200);
         mProgressBar.setVisibility(View.GONE);
     }
 
@@ -109,16 +115,18 @@ public class NewsDetailService extends ActionService {
                 commentAction();
             }
         });
+        mActionButtom.setScaleX(0);
+        mActionButtom.setScaleY(0);
         WebSettings settings = mWebView.getSettings();
         settings.setSupportZoom(false);
         settings.setAllowFileAccess(true);
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(true);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        if(!PrefKit.getBoolean(mContext,mContext.getString(R.string.pref_hardware_accelerated_key),true)) {
+        if (!PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_hardware_accelerated_key), true)) {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         if (NetKit.isWifiConnected()) {
@@ -127,7 +135,7 @@ public class NewsDetailService extends ActionService {
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
         mWebView.setWebChromeClient(new WebChromeClient());
-        mWebView.addJavascriptInterface(new JavaScriptInterface(mContext),"Video");
+        mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Video");
         this.loadFail.setClickable(true);
         this.loadFail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,13 +154,13 @@ public class NewsDetailService extends ActionService {
         }
 
         @JavascriptInterface
-        public void showToast(String webMessage){
+        public void showToast(String webMessage) {
             final String msgeToast = webMessage;
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(mContext, MediaActivity.class);
-                    intent.putExtra("videoUrl",msgeToast);
+                    intent.putExtra("videoUrl", msgeToast);
                     mContext.startActivity(intent);
                 }
             });
@@ -172,10 +180,9 @@ public class NewsDetailService extends ActionService {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if(!hascontent) {
+                if (!hascontent) {
                     loadFail.setVisibility(View.VISIBLE);
-                    mActionButtom.setVisibility(View.GONE);
-                }else{
+                } else {
                     blindData(mNewsItem);
                     mWebView.setVisibility(View.VISIBLE);
                 }
@@ -186,7 +193,7 @@ public class NewsDetailService extends ActionService {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 if (Configure.STANDRA_PATTERN.matcher(responseString).find()) {
-                    new AsyncTask<String,Integer,Boolean>(){
+                    new AsyncTask<String, Integer, Boolean>() {
 
                         @Override
                         protected Boolean doInBackground(String... params) {

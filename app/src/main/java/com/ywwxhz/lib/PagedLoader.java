@@ -8,7 +8,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ywwxhz.adapter.BaseAdapter;
@@ -19,7 +18,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     private TextView finallyTextView;
     private ListAdapter adapter;
     private ListView listView;
-    private ProgressBar progressBar;
+    private View progressBar;
     // ListView底部View
     private View moreView;
     // 最后可见条目的索引
@@ -226,7 +225,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
                     pagedLoader.listView, false);
             pagedLoader.normalTextView = (TextView) pagedLoader.moreView.findViewById(R.id.bt_load);
             pagedLoader.finallyTextView = (TextView) pagedLoader.moreView.findViewById(R.id.bt_finally);
-            pagedLoader.progressBar = (ProgressBar) pagedLoader.moreView.findViewById(R.id.pg);
+            pagedLoader.progressBar = pagedLoader.moreView.findViewById(R.id.pg);
         }
 
         public static Builder getInstance(Context context) {

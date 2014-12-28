@@ -7,6 +7,7 @@ public class NewsItem implements Serializable {
     private int sid;
     private String SN;
     private String thumb;
+    private String largeImage;
     private String from;
     private String title;
     private String content;
@@ -37,6 +38,14 @@ public class NewsItem implements Serializable {
 
     public void setThumb(String thumb) {
         this.thumb = thumb;
+    }
+
+    public String getLargeImage() {
+        return largeImage;
+    }
+
+    public void setLargeImage(String largeImage) {
+        this.largeImage = largeImage;
     }
 
     public String getFrom() {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -84,6 +85,8 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                 mContext.startActivityForResult(intent, 100);
             }
         });
+        this.actionButton.setScaleX(0);
+        this.actionButton.setScaleY(0);
         this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -114,6 +117,12 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             this.hasCached = false;
         }
         this.current = 1;
+        this.actionButton.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+            }
+        }, 200);
     }
 
     public void onResume() {
@@ -162,14 +171,17 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         List<NewsItem> itemList = listPage.getList();
         List<NewsItem> dataSet = mAdapter.getDataSet();
         for (NewsItem item : itemList) {
-            item.setHometext(item.getHometext().replaceAll("<.*?>", ""));
+            item.setHometext(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", ""));
+            if(item.getThumb().contains("thumb")) {
+                item.setLargeImage(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""));
+            }
         }
 
-        if (!hasCached||listPage.getPage()==1) {
+        if (!hasCached || listPage.getPage() == 1) {
             hasCached = true;
             mAdapter.setDataSet(itemList);
             showToastAndCache(itemList);
-        }else{
+        } else {
             dataSet.addAll(itemList);
         }
         current = listPage.getPage();
@@ -181,14 +193,14 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     }
 
     public void setLoadFinish() {
-        if(mLoader.getLoading()) {
+        if (mLoader.getLoading()) {
             mLoader.setLoading(false);
         }
         mLoader.notifyDataSetChanged();
-        if(mProgressBar.getVisibility()==View.VISIBLE) {
+        if (mProgressBar.getVisibility() == View.VISIBLE) {
             mProgressBar.setVisibility(View.GONE);
         }
-        if(mPullToRefreshLayout.isRefreshing()) {
+        if (mPullToRefreshLayout.isRefreshing()) {
             mPullToRefreshLayout.setRefreshComplete();
         }
     }

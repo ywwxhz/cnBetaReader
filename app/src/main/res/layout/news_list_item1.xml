@@ -36,8 +36,8 @@
 
             <LinearLayout
                 android:id="@+id/news_image_hoder"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp">
 
@@ -75,23 +75,21 @@
             <TextView
                 style="@style/SubText"
                 android:id="@+id/news_comments"
-                android:layout_width="wrap_content"
+                android:layout_width="50sp"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_comments"
                 android:drawablePadding="2dp"
                 android:gravity="center"
-                android:minWidth="45sp"
                 android:paddingRight="2dp" />
 
             <TextView
                 style="@style/SubText"
                 android:id="@+id/news_views"
-                android:layout_width="wrap_content"
+                android:layout_width="56sp"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_views"
                 android:drawablePadding="2dp"
-                android:gravity="center"
-                android:minWidth="55sp" />
+                android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

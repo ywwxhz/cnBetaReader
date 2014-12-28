@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -93,6 +94,8 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                 fragment.show(mContext.getFragmentManager(),"new comment");
             }
         });
+        this.actionButton.setScaleX(0);
+        this.actionButton.setScaleY(0);
         ActionBarPullToRefresh.from(mContext)
                 .insertLayoutInto((ViewGroup) mContext.findViewById(android.R.id.content))
                 .theseChildrenArePullable(mListView)
@@ -173,13 +176,17 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             if(!isClosed&&!fromCache) {
                 this.token = commentListObject.getToken();
                 this.mListView.setOnItemClickListener(listener);
-                this.actionButton.setVisibility(View.VISIBLE);
+                this.actionButton.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+                    }
+                }, 200);
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
                 Crouton.makeText(mContext, R.string.message_flush_success, Style.INFO).show();
             }
-        } else if (commentListObject.getOpen()==0||cmntlist.size() != commentListObject.getComment_num()) { //针对超时关平的新闻评论
+        } else if (commentListObject.getOpen()==0) { //针对关平的新闻评论
             Crouton.makeText(mContext, R.string.message_comment_close, Style.ALERT).show();
-            this.actionButton.setVisibility(View.GONE);
             this.mPullToRefreshLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
                 this.mTextView.setText(R.string.message_comment_close);
@@ -187,7 +194,12 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             }
         } else {//针对暂时无评论的情况
             Crouton.makeText(mContext, R.string.message_no_comment, Style.INFO).show();
-            this.actionButton.setVisibility(View.VISIBLE);
+            this.actionButton.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+                }
+            }, 200);
             this.mTextView.setText(R.string.message_no_comment);
             this.mTextView.setVisibility(View.VISIBLE);
         }

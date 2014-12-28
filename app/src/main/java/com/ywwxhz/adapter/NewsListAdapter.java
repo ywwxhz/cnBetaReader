@@ -1,7 +1,6 @@
 package com.ywwxhz.adapter;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +21,11 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
 
     private int layout;
     private boolean showLarge;
+    private boolean showImage;
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
         showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
+        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
         if(showLarge) {
             layout =  R.layout.news_list_item;
         }else{
@@ -61,11 +62,13 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             comment = item.getComments() + "";
         }
         hoder.news_comment.setText(comment);
-        if (PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true)) {
-            hoder.news_image_hoder.setVisibility(View.VISIBLE);
+        if (showImage) {
+            if(hoder.news_image_hoder.getVisibility() == View.GONE) {
+                hoder.news_image_hoder.setVisibility(View.VISIBLE);
+            }
             if(showLarge){
-                if (item.getThumb().contains("thumb")) {
-                    MyApplication.getPicasso().load(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""))
+                if (item.getLargeImage()!=null) {
+                    MyApplication.getPicasso().load(item.getLargeImage())
                             .placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
                             .into(hoder.news_image);
                 }else{
@@ -77,12 +80,18 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
                         .into(hoder.news_image);
             }
         } else {
-            hoder.news_image_hoder.setVisibility(View.GONE);
+            if(hoder.news_image_hoder.getVisibility() == View.VISIBLE) {
+                hoder.news_image_hoder.setVisibility(View.GONE);
+            }
         }
-        if (item.getHometext() != null) {
-            hoder.news_summary.setText(Html.fromHtml(item.getHometext()));
-        }
+        hoder.news_summary.setText(item.getHometext());
         return view;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
     }
 
     class ViewHoder {
