@@ -14,15 +14,16 @@ public abstract class BaseAdapter<E> extends android.widget.BaseAdapter {
 
     protected final LayoutInflater infater;
     protected List<E> items;
+    protected Context context;
 
     public BaseAdapter(Context context, List<E> items) {
-        infater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this(context);
         this.items = items;
     }
 
     public BaseAdapter(Context context) {
-        infater = (LayoutInflater) context
+        this.context = context;
+        this.infater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

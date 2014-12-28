@@ -6,12 +6,12 @@ public class NewsItem implements Serializable {
 
     private int sid;
     private String SN;
-    private String aid;
     private String thumb;
     private String from;
     private String title;
     private String content;
     private String hometext;
+    private int comments;
     private int counter;
     private String inputtime;
 
@@ -29,14 +29,6 @@ public class NewsItem implements Serializable {
 
     public void setSN(String SN) {
         this.SN = SN;
-    }
-
-    public String getAid() {
-        return aid;
-    }
-
-    public void setAid(String aid) {
-        this.aid = aid;
     }
 
     public String getThumb() {
@@ -77,6 +69,14 @@ public class NewsItem implements Serializable {
 
     public void setHometext(String hometext) {
         this.hometext = hometext;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 
     public int getCounter() {

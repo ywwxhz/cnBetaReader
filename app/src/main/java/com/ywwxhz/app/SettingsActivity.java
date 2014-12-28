@@ -39,9 +39,17 @@ public class SettingsActivity extends ExtendBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            setResult(0);
             this.finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(0);
+        this.finish();
     }
 
     public static class GeneralPreference extends PreferenceFragment {

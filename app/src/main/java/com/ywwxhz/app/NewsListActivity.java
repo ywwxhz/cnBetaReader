@@ -1,5 +1,6 @@
 package com.ywwxhz.app;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -83,5 +84,11 @@ public class NewsListActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         System.exit(0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mService.onReturn(requestCode,resultCode);
     }
 }

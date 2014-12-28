@@ -18,6 +18,12 @@
             android:key="@string/pref_show_list_news_image_key"
             android:title="@string/pref_show_list_news_image_title"
             android:summary="@string/pref_show_list_news_image_summary"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="@string/pref_show_list_news_image_key"
+            android:key="@string/pref_show_large_image_key"
+            android:title="@string/pref_show_large_image_title"
+            android:summary="@string/pref_show_large_image_summary"/>
         <Preference
             android:key="@string/pref_clean_cache_key"
             android:title="@string/pref_clean_cache_title" />

@@ -20,12 +20,16 @@ import java.util.List;
  */
 public class NewsListAdapter extends BaseAdapter<NewsItem> {
 
+    private int layout;
+    private boolean showLarge;
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
-    }
-
-    public NewsListAdapter(Context context) {
-        super(context);
+        showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
+        if(showLarge) {
+            layout =  R.layout.news_list_item;
+        }else{
+            layout = R.layout.news_list_item1;
+        }
     }
 
     @Override
@@ -33,7 +37,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         ViewHoder hoder;
         View view;
         if (convertView == null || convertView.getTag() == null) {
-            view = infater.inflate(R.layout.news_list_item, parent, false);
+            view = infater.inflate(layout, parent, false);
             hoder = new ViewHoder(view);
             view.setTag(hoder);
         } else {
@@ -42,7 +46,6 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         }
         NewsItem item = getDataSetItem(position);
         hoder.news_title.setText(item.getTitle());
-        hoder.news_publisher.setText(item.getAid());
         hoder.news_time.setText(item.getInputtime());
         String counter;
         if (item.getCounter() > 9999) {
@@ -50,15 +53,32 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         } else {
             counter = item.getCounter() + "";
         }
-        if (PrefKit.getBoolean(view.getContext(),view.getContext().getString(R.string.pref_show_list_news_image_key), true) && item.getThumb().contains("thumb")) {
+        hoder.news_views.setText(counter);
+        String comment;
+        if (item.getComments() > 999) {
+            comment = "999+";
+        } else {
+            comment = item.getComments() + "";
+        }
+        hoder.news_comment.setText(comment);
+        if (PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true)) {
             hoder.news_image_hoder.setVisibility(View.VISIBLE);
-            MyApplication.getPicasso().load(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""))
-                    .resize(800,320).centerCrop().placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
-                    .into(hoder.news_image);
+            if(showLarge){
+                if (item.getThumb().contains("thumb")) {
+                    MyApplication.getPicasso().load(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""))
+                            .placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
+                            .into(hoder.news_image);
+                }else{
+                    hoder.news_image_hoder.setVisibility(View.GONE);
+                }
+            }else{
+                MyApplication.getPicasso().load(item.getThumb())
+                        .placeholder(R.drawable.imagehoder_sm).error(R.drawable.imagehoder_error_sm)
+                        .into(hoder.news_image);
+            }
         } else {
             hoder.news_image_hoder.setVisibility(View.GONE);
         }
-        hoder.news_views.setText(counter);
         if (item.getHometext() != null) {
             hoder.news_summary.setText(Html.fromHtml(item.getHometext()));
         }
@@ -70,7 +90,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         TextView news_title;
         TextView news_views;
         TextView news_summary;
-        TextView news_publisher;
+        TextView news_comment;
         ImageView news_image;
         View news_image_hoder;
 
@@ -79,7 +99,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             this.news_title = (TextView) view.findViewById(R.id.news_title);
             this.news_views = (TextView) view.findViewById(R.id.news_views);
             this.news_summary = (TextView) view.findViewById(R.id.news_summary);
-            this.news_publisher = (TextView) view.findViewById(R.id.news_publisher);
+            this.news_comment = (TextView) view.findViewById(R.id.news_comments);
             this.news_image = (ImageView) view.findViewById(R.id.news_image);
             this.news_image_hoder = view.findViewById(R.id.news_image_hoder);
         }

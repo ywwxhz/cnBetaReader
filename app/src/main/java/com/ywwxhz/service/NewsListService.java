@@ -23,7 +23,6 @@ import com.ywwxhz.entity.ResponseObject;
 import com.ywwxhz.lib.PagedLoader;
 import com.ywwxhz.lib.handler.ActionService;
 import com.ywwxhz.lib.handler.NormalNewsListHandler;
-import com.ywwxhz.lib.handler.RealTimeNewListHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -43,7 +42,6 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * Created by ywwxhz on 2014/11/1.
  */
 public class NewsListService extends ActionService implements OnRefreshListener {
-    private int topSid;
     private int current;
     private boolean hasCached;
     private Activity mContext;
@@ -53,18 +51,12 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     private NewsListAdapter mAdapter;
     private FloatingActionButton actionButton;
     private PullToRefreshLayout mPullToRefreshLayout;
-    private ResponseHandlerInterface realtimeNews = new RealTimeNewListHandler(this, new TypeToken<ResponseObject<ArrayList<NewsItem>>>() {
-    });
     private ResponseHandlerInterface newsPage = new NormalNewsListHandler(this, new TypeToken<ResponseObject<NewsListObject>>() {
     });
     private PagedLoader.OnLoadListener loadListener = new PagedLoader.OnLoadListener() {
         @Override
         public void onLoading(PagedLoader pagedLoader, boolean isAutoLoad) {
-            String sid = "";
-            if (mAdapter.getCount() > 0) {
-                sid = mAdapter.getDataSetItem(mAdapter.getCount() - 1).getSid() + "";
-            }
-            NetKit.getInstance().getNewslistByPage(sid, current + 1, newsPage);
+            NetKit.getInstance().getNewslistByPage(current + 1, newsPage);
         }
     };
 
@@ -89,7 +81,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, SettingsActivity.class);
-                mContext.startActivity(intent);
+                mContext.startActivityForResult(intent, 100);
             }
         });
         this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -114,16 +106,14 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         });
         mProgressBar.setVisibility(View.VISIBLE);
         if (newsList != null) {
-            topSid = PrefKit.getInt(mContext,"sid",newsList.get(0).getSid());
+            hasCached = true;
             mAdapter.setDataSet(newsList);
             mLoader.notifyDataSetChanged();
-            this.hasCached = true;
-            this.current = 1;
             mProgressBar.setVisibility(View.GONE);
         } else {
             this.hasCached = false;
-            this.current = 0;
         }
+        this.current = 1;
     }
 
     public void onResume() {
@@ -134,7 +124,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                     mPullToRefreshLayout.setRefreshing(true);
                     onRefreshStarted(null);
                 }
-            }, 300);
+            }, 400);
         }
         if (PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_page_key), true)) {
             this.mLoader.setMode(PagedLoader.Mode.AUTO_LOAD);
@@ -165,89 +155,49 @@ public class NewsListService extends ActionService implements OnRefreshListener 
 
     @Override
     public void onRefreshStarted(View view) {
-        ResponseHandlerInterface handlerInterface;
-        String sid = "";
-        if (mAdapter.getCount() == 0) {
-            handlerInterface = newsPage;
-        } else {
-            handlerInterface = realtimeNews;
-            sid = topSid + "";
-        }
-        NetKit.getInstance().getRealtimeNews(sid, handlerInterface);
-    }
-
-    public void callRealTimeNewsLoadSuccess(List<NewsItem> itemListes) {
-        List<NewsItem> ds = mAdapter.getDataSet();
-        int count=0;
-        for (NewsItem item : itemListes) {
-            item.setHometext(item.getHometext().replaceAll("<.*?>", ""));
-            if(topSid < item.getSid()){
-                ds.add(0, item);
-                topSid = item.getSid();
-                count++;
-            }
-        }
-        PrefKit.writeInt(mContext,"sid",topSid);
-        showToastAndCache(count);
+        NetKit.getInstance().getNewslistByPage(1, newsPage);
     }
 
     public void callNewsPageLoadSuccess(NewsListObject listPage) {
         List<NewsItem> itemList = listPage.getList();
         List<NewsItem> dataSet = mAdapter.getDataSet();
-        if (!hasCached) {
-            topSid = itemList.get(0).getSid();
-        }
         for (NewsItem item : itemList) {
-            if (!hasCached) {
-                if(topSid <= item.getSid()){
-                    topSid = item.getSid();
-                }
-            }
             item.setHometext(item.getHometext().replaceAll("<.*?>", ""));
         }
 
-        if (dataSet.size() >= 40) {
-            int firstSid = dataSet.get(dataSet.size() - 5).getSid();
-            int lastSid = dataSet.get(dataSet.size() - 1).getSid();
-            if (itemList.get(0).getSid() > firstSid) {
-                dataSet.addAll(itemList);
-            } else {
-                for (NewsItem item : itemList) {
-                    int currentSid = item.getSid();
-                    if (currentSid >= lastSid) {
-                        continue;
-                    }
-                    dataSet.add(item);
-                }
-            }
-        } else {
+        if (!hasCached||listPage.getPage()==1) {
+            hasCached = true;
+            mAdapter.setDataSet(itemList);
+            showToastAndCache(itemList);
+        }else{
             dataSet.addAll(itemList);
-            if (!hasCached) {
-                hasCached = true;
-                PrefKit.writeInt(mContext,"sid",topSid);
-                showToastAndCache(itemList.size());
-            }
         }
         current = listPage.getPage();
     }
 
-    private void showToastAndCache(int size) {
-        if (size != 0) {
-            Crouton.makeText(mContext, mContext.getString(R.string.message_new_news, size), Style.INFO).show();
-        } else {
-            Crouton.makeText(mContext, mContext.getString(R.string.message_no_new_news), Style.CONFIRM).show();
-        }
-        FileCacheKit.getInstance().putAsync("newsList".hashCode() + "", Toolkit.getGson().toJson(mAdapter.getDataSet().subList(0, 40)), "list", null);
+    private void showToastAndCache(List<NewsItem> itemList) {
+        Crouton.makeText(mContext, mContext.getString(R.string.message_flush_success), Style.INFO).show();
+        FileCacheKit.getInstance().putAsync("newsList".hashCode() + "", Toolkit.getGson().toJson(itemList), "list", null);
     }
 
     public void setLoadFinish() {
-        mLoader.setLoading(false);
+        if(mLoader.getLoading()) {
+            mLoader.setLoading(false);
+        }
         mLoader.notifyDataSetChanged();
-        mProgressBar.setVisibility(View.GONE);
-        mPullToRefreshLayout.setRefreshComplete();
+        if(mProgressBar.getVisibility()==View.VISIBLE) {
+            mProgressBar.setVisibility(View.GONE);
+        }
+        if(mPullToRefreshLayout.isRefreshing()) {
+            mPullToRefreshLayout.setRefreshComplete();
+        }
     }
 
     public View getFloatButtom() {
         return actionButton;
+    }
+
+    public void onReturn(int request, int response) {
+        mLoader.notifyDataSetChanged();
     }
 }

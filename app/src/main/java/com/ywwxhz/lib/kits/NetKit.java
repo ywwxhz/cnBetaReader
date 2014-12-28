@@ -52,20 +52,10 @@ public class NetKit {
         return instance;
     }
 
-    public void getNewslistByPage(String sid, int page, ResponseHandlerInterface handlerInterface) {
+    public void getNewslistByPage(int page, ResponseHandlerInterface handlerInterface) {
         RequestParams params = new RequestParams();
         params.add("type","all");
         params.add("page",page+"");
-        params.add("sid",sid);
-        params.add("_",System.currentTimeMillis()+"");
-        mClient.get(MyApplication.getInstance(), Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
-    }
-
-    public void getRealtimeNews(String sid, ResponseHandlerInterface handlerInterface) {
-        RequestParams params = new RequestParams();
-        params.add("type","realtime");
-        params.add("page",1+"");
-        params.add("sid",sid);
         params.add("_",System.currentTimeMillis()+"");
         mClient.get(MyApplication.getInstance(), Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
     }

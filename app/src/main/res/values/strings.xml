@@ -8,14 +8,12 @@
 
     <string name="share_templates">我觉得这篇新闻不错 %1$s (%2$s) 分享自cnBeta 业界资讯。</string>
 
-    <string name="message_no_comment">暂无评论</string>
+    <string name="message_no_comment">暂无评论，快抢沙发吧。</string>
     <string name="message_comment_close">评论已关闭</string>
-    <string name="message_new_news">新增%d条新闻  *\\(๑• ₃ •๑)*</string>
     <string name="message_flush_success">加载成功  *\\(๑• ₃ •๑)*</string>
-    <string name="message_no_new_news">暂时没有新的新闻  (๑•́ ₃ •̀๑)</string>
     <string name="message_no_network">无网络或连接超时   ε٩(๑> ₃ &lt;)۶ з  </string>
     <string name="message_load_from_cache">无可用网络，加载之前的缓存  ( &gt;﹏&lt;。)～</string>
-    <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。请联系开发者。 </string>
+    <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。快联系联系开发者吧。 </string>
 
     <string name="menu_reflush">刷新</string>
     <string name="menu_share">分享链接</string>
@@ -45,9 +43,12 @@
     <string name="pref_show_list_news_image_summary">新闻是否列表显示图片</string>
     <string name="pref_debug_key">debug</string>
     <string name="pref_debug_title">调试模式</string>
-    <string name="pref_debug_summary">启用调试模式(重启生效)</string>
+    <string name="pref_debug_summary">启用调试模式(重启应用生效)</string>
     <string name="pref_clean_cache_key">cleanCache</string>
     <string name="pref_clean_cache_title">清理应用缓存</string>
     <string name="pref_advience_categroy">高级</string>
+    <string name="pref_show_large_image_key">largeImage</string>
+    <string name="pref_show_large_image_title">显示大图</string>
+    <string name="pref_show_large_image_summary">新闻列表显示大图(重启应用生效)</string>
 
 </resources>
