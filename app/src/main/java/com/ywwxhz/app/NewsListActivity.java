@@ -22,6 +22,7 @@ public class NewsListActivity extends BaseActivity {
     @Override
     protected void createView(Bundle savedInstanceState) {
         setContentView(R.layout.list_layout);
+        getActionBar().setDisplayShowHomeEnabled(true);
         mService = new NewsListService(this);
         padding = mService.getListView().getPaddingLeft();
     }

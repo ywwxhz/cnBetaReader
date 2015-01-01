@@ -13,6 +13,7 @@ public class Configure {
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
     public static final String COMMENT_URL = BASE_URL + "/cmt";
     public static final String COMMENT_VIEW = BASE_URL +"/comment";
+    public static final String SECOND_VIEW = BASE_URL+"/captcha.htm";
     public static final Pattern STANDRA_PATTERN = Pattern.compile("cnBeta\\.COM_中文业界资讯站");
     public static final Pattern SN_PATTERN = Pattern.compile("SN:\"(.{5})\"");
 

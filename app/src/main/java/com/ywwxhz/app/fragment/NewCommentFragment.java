@@ -1,6 +1,8 @@
 package com.ywwxhz.app.fragment;
 
 import android.app.DialogFragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,12 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.lib.Configure;
+import com.ywwxhz.lib.kits.NetKit;
+import com.ywwxhz.lib.kits.UIKit;
 
-import java.util.Locale;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by ywwxhz on 2014/11/5.
@@ -28,8 +38,11 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
     private String tid;
     private String token;
     private EditText content;
-    private TextView textCount;
+    private EditText seccode;
     private View send;
+    private View progress;
+    private ImageView seccodeImage;
+    private boolean flushing = false;
 
     public static NewCommentFragment getInstance(int sid, String tid, String token) {
         NewCommentFragment fragment = new NewCommentFragment();
@@ -63,8 +76,10 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         if (getDialog() != null) {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         }
-        textCount = (TextView) view.findViewById(R.id.text_count);
         content = (EditText) view.findViewById(R.id.push_content);
+        seccode = (EditText) view.findViewById(R.id.seccode);
+        seccodeImage = (ImageView) view.findViewById(R.id.seccodeImage);
+        progress = view.findViewById(R.id.seccodeProgress);
         content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,12 +87,11 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 320) {
+                if (s.length() == 0) {
                     send.setEnabled(false);
                 } else {
                     send.setEnabled(true);
                 }
-                textCount.setText(String.format(Locale.CHINA, "%s / 320", s.length()));
             }
 
             @Override
@@ -86,6 +100,70 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         });
         send = view.findViewById(R.id.send);
         send.setOnClickListener(this);
+        reflushscecode();
+        seccodeImage.setOnClickListener(reflushscecode);
+        progress.setOnClickListener(reflushscecode);
+    }
+
+    private View.OnClickListener reflushscecode = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            reflushscecode();
+        }
+    };
+
+    private void reflushscecode(){
+        if(!flushing) {
+            flushing = true;
+            seccodeImage.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            RequestParams params = new RequestParams();
+            params.put("refresh", 1);
+            params.put("_", System.currentTimeMillis());
+            NetKit.getInstance().getClient().get(getActivity(), Configure.SECOND_VIEW, NetKit.getAuthHeader(), params,
+                    new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                String url = response.getString("url");
+                                NetKit.getInstance().getClient().get(getActivity(), Configure.BASE_URL + url, NetKit.getAuthHeader()
+                                        , null, new BinaryHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
+                                        //工厂对象的decodeByteArray把字节转换成Bitmap对象
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
+                                        //设置图片
+                                        seccodeImage.setImageBitmap(bitmap);
+                                        seccodeImage.setVisibility(View.VISIBLE);
+                                        progress.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
+                                        error.printStackTrace();
+                                        showToast("获取验证码失败");
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        flushing = false;
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                showToast("获取验证码失败");
+                                flushing = false;
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            showToast("获取验证码失败");
+                            flushing = false;
+                        }
+                    }
+            );
+        }
     }
 
     @Override
@@ -93,21 +171,71 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         super.onStart();
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        getDialog().getWindow().setLayout(dm.widthPixels, getDialog().getWindow().getAttributes().height);
+        int width=dm.widthPixels;
+        if(width > UIKit.dip2px(getActivity(),450)){
+            width = UIKit.dip2px(getActivity(),450);
+        }
+        getDialog().getWindow().setLayout(width, getDialog().getWindow().getAttributes().height);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.send) {
-            //todo:
-            String action;
-            if ("0".equals(tid)) {
-                action = "发布";
-            } else {
-                action = "回复";
+            if(seccode.getText().length()==4) {
+                RequestParams params = new RequestParams();
+                params.put("op", "publish");
+                params.put("content", content.getText().toString());
+                params.put("sid", sid);
+                params.put("pid", tid);
+                params.put("seccode", seccode.getText().toString());
+                params.put("csrf_token", token);
+                NetKit.getInstance().getClient().post(getActivity(), Configure.COMMENT_VIEW,
+                        NetKit.getAuthHeader(), params, NetKit.CONTENT_TYPE,
+                        new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                System.out.println("statusCode = [" + statusCode + "], response = [" + response + "]");
+                                try {
+                                    if ("success".equals(response.getString("state"))) {
+                                        String action;
+                                        if ("0".equals(tid)) {
+                                            action = "发布";
+                                        } else {
+                                            action = "回复";
+                                        }
+                                        showToast(action + "成功");
+                                        dismiss();
+                                    } else if ("error".equals(response.getString("state"))){
+                                        showToast(response.getString("error")+"");
+                                    }else{
+                                        throw new JSONException("response error");
+                                    }
+                                } catch (JSONException e) {
+                                    onFailure(statusCode, headers, e, response);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                throwable.printStackTrace();
+                                String action;
+                                if ("0".equals(tid)) {
+                                    action = "发布";
+                                } else {
+                                    action = "回复";
+                                }
+                                showToast(action + "失败");
+                            }
+                        }
+                );
+            }else{
+                showToast("验证码不能为空");
             }
-            Toast.makeText(getActivity(), action + "成功", Toast.LENGTH_SHORT).show();
-            dismiss();
+
         }
+    }
+
+    private void showToast(String message){
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 }

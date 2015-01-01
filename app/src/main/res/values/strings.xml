@@ -2,11 +2,11 @@
 <resources>
 
     <string name="settings">设置</string>
-    <string name="app_name">cnBeta 业界资讯</string>
+    <string name="app_name">cnBeta 中文业界资讯</string>
     <string name="choise_browser">选择浏览器</string>
     <string name="load_fail">加载失败 ,点击重试。</string>
 
-    <string name="share_templates">我觉得这篇新闻不错 %1$s (%2$s) 分享自cnBeta 业界资讯。</string>
+    <string name="share_templates">我觉得这篇新闻不错 %1$s (%2$s) 分享自cnBeta 中文业界资讯。</string>
 
     <string name="message_no_comment">暂无评论，快抢沙发吧。</string>
     <string name="message_comment_close">评论已关闭</string>
@@ -21,13 +21,13 @@
 
 
     <string name="pref_about_title">关于</string>
-    <string name="pref_author_title">作者</string>
     <string name="pref_version_title">版本</string>
+    <string name="pref_author_title">开发者</string>
     <string name="pref_version_key">version</string>
     <string name="pref_general_category">通用</string>
     <string name="pref_auto_page_on">自动加载更多</string>
     <string name="pref_author_summary">远望の无限</string>
-    <string name="pref_auto_page_off">手动加载更多</string>
+    <string name="pref_auto_page_off">点击加载更多</string>
     <string name="pref_auto_page_key">autoPageLoad</string>
     <string name="pref_auto_reflush_title">自动刷新</string>
     <string name="pref_auto_page_title">自动加载更多</string>

@@ -92,11 +92,12 @@ public class NewsDetailService extends ActionService {
     private void blindData(NewsItem mNews) {
         String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
                 , mNews.getHometext(), mNews.getContent());
-        mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
+        mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
         mActionButtom.postDelayed(new Runnable() {
             @Override
             public void run() {
+                mActionButtom.setVisibility(View.VISIBLE);
                 mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
             }
         }, 200);

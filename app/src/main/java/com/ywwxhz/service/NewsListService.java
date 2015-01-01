@@ -2,6 +2,7 @@ package com.ywwxhz.service;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new NewsListAdapter(mContext, new ArrayList<NewsItem>());
         TextView view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
-        view.setText("类型：全部新闻");
+        view.setText("类型：全部资讯");
         this.mListView.addHeaderView(view, null, false);
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();
         this.mLoader.setAdapter(mAdapter);
@@ -120,13 +121,14 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.actionButton.postDelayed(new Runnable() {
             @Override
             public void run() {
+                actionButton.setVisibility(View.VISIBLE);
                 actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
             }
         }, 200);
     }
 
     public void onResume() {
-        if (!hasCached || PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_reflush_key), true)) {
+        if (!hasCached || PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_reflush_key), false)) {
             mListView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -135,7 +137,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                 }
             }, 400);
         }
-        if (PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_page_key), true)) {
+        if (PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_page_key), false)) {
             this.mLoader.setMode(PagedLoader.Mode.AUTO_LOAD);
         } else {
             this.mLoader.setMode(PagedLoader.Mode.CLICK_TO_LOAD);
@@ -171,7 +173,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         List<NewsItem> itemList = listPage.getList();
         List<NewsItem> dataSet = mAdapter.getDataSet();
         for (NewsItem item : itemList) {
-            item.setHometext(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", ""));
+            item.setHometext(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")).toString());
             if(item.getThumb().contains("thumb")) {
                 item.setLargeImage(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""));
             }

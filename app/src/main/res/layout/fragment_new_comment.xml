@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,25 +11,53 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:gravity="top|left"
-        android:hint="评论内容"
+        android:hint="尽情的开喷吧。。"
         android:lines="5"
         android:padding="10dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#999"/>
+
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/seccode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="验证码"
+            android:maxLength="4"
+            android:inputType="textPhonetic"
+            android:singleLine="true" />
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/seccodeProgress"
+            android:layout_width="0dp"
+            app:progressIndeterminate="true"
+            app:barWidth="2dp"
+            app:rimWidth="2dp"
+            app:barColor="@color/statusColor"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/seccodeImage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:scaleType="fitCenter" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@android:color/black"
         android:gravity="right">
-
-        <TextView
-            android:id="@+id/text_count"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="0 / 320"
-            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/send"
@@ -37,6 +66,7 @@
             android:background="?android:attr/listChoiceBackgroundIndicator"
             android:drawableLeft="@android:drawable/ic_menu_send"
             android:drawablePadding="5dp"
+            android:enabled="false"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="发布"

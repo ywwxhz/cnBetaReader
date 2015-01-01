@@ -69,6 +69,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             if(showLarge){
                 if (item.getLargeImage()!=null) {
                     MyApplication.getPicasso().load(item.getLargeImage())
+                            .fit().centerCrop()
                             .placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
                             .into(hoder.news_image);
                 }else{

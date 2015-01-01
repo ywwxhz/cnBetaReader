@@ -34,6 +34,8 @@ public abstract class ExternedGsonHttpResposerHandler<ActionServer extends Actio
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        Log.e(this.getClass().getSimpleName(),responseString+"");
+        throwable.printStackTrace();
         Crouton.makeText(mActionServer.get().getContext(), R.string.message_no_network, Style.ALERT).show();
     }
 

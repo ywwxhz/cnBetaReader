@@ -13,7 +13,7 @@ public class CommentListObject {
     private int comment_num;
     private String token;
     private int page;
-    private Integer open;
+    private int open;
 
     public ArrayList<CommentItem> getHotlist() {
         return hotlist;
@@ -63,7 +63,7 @@ public class CommentListObject {
         this.page = page;
     }
 
-    public Integer getOpen() {
+    public int getOpen() {
         return open;
     }
 

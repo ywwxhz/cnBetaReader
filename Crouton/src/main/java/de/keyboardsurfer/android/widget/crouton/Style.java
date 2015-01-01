@@ -31,7 +31,7 @@ public class Style {
 
     public static final int holoRedLight = 0xD0ff4444;
     public static final int holoGreenLight = 0xD099cc00;
-    public static final int holoBlueLight = 0xD033b5e5;
+    public static final int holoBlueLight = 0xD011659a;
 
     /**
      * Default style for alerting the user.

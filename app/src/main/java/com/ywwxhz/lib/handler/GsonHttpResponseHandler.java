@@ -17,7 +17,11 @@ public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler
         if (statusCode == 200) {
             try {
                 T e = Toolkit.getGson().fromJson(responseString, getType());
-                onSuccess(statusCode, headers, responseString, e);
+                if(e!=null) {
+                    onSuccess(statusCode, headers, responseString, e);
+                }else{
+                    onFailure(statusCode,headers,responseString,new RuntimeException("response empty"));
+                }
             } catch (Exception e) {
                 onError(statusCode, headers, responseString, e);
             }

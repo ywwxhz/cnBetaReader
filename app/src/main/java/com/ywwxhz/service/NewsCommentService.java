@@ -133,11 +133,6 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     }
 
     public void callOnLoadingSuccess(CommentListObject commentListObject, boolean fromCache, boolean isClosed) {
-        if (commentListObject == null) {
-            Crouton.makeText(mContext, "发生错误请重试 ...(｡•ˇ‸ˇ•｡) ...", Style.ALERT).show();
-            callOnFailure(false,isClosed);
-            return;
-        }
         ArrayList<CommentItem> cmntlist = commentListObject.getCmntlist();
         HashMap<String, CommentItem> cmntstore = commentListObject.getCmntstore();
         for (CommentItem item : cmntlist) {
@@ -179,6 +174,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                 this.actionButton.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        actionButton.setVisibility(View.VISIBLE);
                         actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
                     }
                 }, 200);
@@ -197,6 +193,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             this.actionButton.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    actionButton.setVisibility(View.VISIBLE);
                     actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
                 }
             }, 200);
@@ -285,8 +282,8 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         }
         private JsonHttpResponseHandler chandler = new JsonHttpResponseHandler() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Toast.makeText(mContext,"提交失败",Toast.LENGTH_LONG).show();
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Toast.makeText(mContext,"操作失败",Toast.LENGTH_LONG).show();
                 throwable.printStackTrace();
             }
 

@@ -41,4 +41,8 @@ public class MyApplication extends Application {
     public static MyApplication getInstance() {
         return instance;
     }
+
+    public Boolean getDebug() {
+        return debug;
+    }
 }

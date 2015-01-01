@@ -5,5 +5,7 @@
     <item android:id="@+id/comment_against"
         android:title="反对"/>
     <item android:id="@+id/comment_report"
+        android:enabled="false"
+        android:visible="false"
         android:title="举报"/>
 </menu>

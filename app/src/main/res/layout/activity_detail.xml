@@ -37,6 +37,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:alpha="0.8"
+        android:visibility="gone"
         android:src="@drawable/ic_comment"
         app:fab_colorNormal="@color/color_normal"
         app:fab_colorPressed="@color/color_passed" />

@@ -2,17 +2,37 @@
 
 <resources>
 
-    <style name="Theme.Basic" parent="@android:style/Theme.DeviceDefault.Light">
+    <style name="Theme.Basic" parent="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Basic</item>
         <item name="android:actionModeStyle">@style/ActionBar.Solid.Basic</item>
+        <item name="android:actionBarWidgetTheme">@style/ActionBar.Widget</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:textColor">#474747</item>
         <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+        <item name="ptrHeaderStyle">@style/pullHeadStyle</item>
     </style>
 
-    <style name="ActionBar.Solid.Basic" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar" />
+
+    <style name="ActionBar.Widget">
+        <item name="android:listPopupWindowStyle">@android:style/Widget.Holo.Light.ListPopupWindow
+        </item>
+        <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>
+    </style>
+
+    <style name="ActionBar.Solid.Basic" parent="@android:style/Widget.DeviceDefault.ActionBar.Solid">
+        <item name="android:titleTextStyle">@style/ActionBar.Title</item>
+        <item name="android:subtitleTextStyle">@style/ActionBar.SubTitle</item>
         <item name="android:background">@drawable/ab_solid_basic</item>
         <item name="android:logo">@drawable/ic_logo</item>
+    </style>
+
+    <style name="ActionBar.Title" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="ActionBar.SubTitle" parent="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle.Inverse">
+        <item name="android:textColor">#fff</item>
     </style>
 
     <style name="Theme.Basic.NoAnim" parent="Theme.Basic">
@@ -22,6 +42,17 @@
 
     <style name="Theme.Basic.Video" parent="@android:style/Theme.DeviceDefault.Light">
         <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="pullHeadStyle">
+        <item name="ptrProgressBarColor">#11659a</item>
+        <item name="ptrSmoothProgressBarStyle">@style/smoothStyle</item>
+    </style>
+
+    <style name="smoothStyle" parent="SmoothProgressBar">
+        <item name="spb_color">#11659a</item>
+        <item name="spb_mirror_mode">true</item>
+        <item name="spb_reversed">true</item>
     </style>
 
 
