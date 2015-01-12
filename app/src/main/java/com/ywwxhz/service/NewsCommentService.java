@@ -3,11 +3,13 @@ package com.ywwxhz.service;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -28,6 +30,7 @@ import com.ywwxhz.lib.handler.CommentListHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
+import com.ywwxhz.lib.kits.UIKit;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -58,6 +61,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     private Activity mContext;
     private ListView mListView;
     private TextView mTextView;
+    private TextView mFoot;
     private FloatingActionButton actionButton;
     private PullToRefreshLayout mPullToRefreshLayout;
 
@@ -77,7 +81,16 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
         TextView type = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
         type.setText("全部评论");
+        this.mFoot = new TextView(mContext);
+        mFoot.setText("--- The End ---");
+        mFoot.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mFoot.setGravity(Gravity.CENTER);
+        mFoot.setTextSize(16);
+        int padding = UIKit.dip2px(mContext,5);
+        mFoot.setPadding(padding,padding,padding,padding);
+        mFoot.setVisibility(View.GONE);
         this.mListView.addHeaderView(type, null, false);
+        this.mListView.addFooterView(mFoot,null,false);
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new CommentListAdapter(mContext, new ArrayList<CommentItem>());
         this.handler = new CommentListHandler(this, new TypeToken<ResponseObject<CommentListObject>>() {
@@ -186,10 +199,14 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             this.mPullToRefreshLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
                 this.mTextView.setText(R.string.message_comment_close);
+                this.mListView.setVisibility(View.GONE);
                 this.mTextView.setVisibility(View.VISIBLE);
             }
         } else {//针对暂时无评论的情况
             Crouton.makeText(mContext, R.string.message_no_comment, Style.INFO).show();
+            if(mAdapter.getCount()!=0) {
+                this.mListView.setVisibility(View.GONE);
+            }
             this.actionButton.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -206,6 +223,9 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         this.mProgressBar.setVisibility(View.GONE);
         this.mPullToRefreshLayout.setRefreshComplete();
         this.mAdapter.notifyDataSetChanged();
+        if(mAdapter.getCount()>0){
+            mFoot.setVisibility(View.VISIBLE);
+        }
     }
 
     public boolean callOnFailure(boolean isWebChange, boolean isCommentClose) {

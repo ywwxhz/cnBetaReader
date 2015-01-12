@@ -15,7 +15,6 @@ import com.ywwxhz.service.NewsListService;
 
 public class NewsListActivity extends BaseActivity {
 
-    private int padding;
     private int margin;
     private NewsListService mService;
 
@@ -24,7 +23,6 @@ public class NewsListActivity extends BaseActivity {
         setContentView(R.layout.list_layout);
         getActionBar().setDisplayShowHomeEnabled(true);
         mService = new NewsListService(this);
-        padding = mService.getListView().getPaddingLeft();
     }
 
     @Override
@@ -54,12 +52,12 @@ public class NewsListActivity extends BaseActivity {
 
     @Override
     protected UIKit.PaddingMode getPaddingMode() {
-        return UIKit.PaddingMode.ALL_SAME;
+        return UIKit.PaddingMode.NONE;
     }
 
     @Override
     protected int[] getPadding() {
-        return new int[]{padding};
+        return null;
     }
 
     @Override

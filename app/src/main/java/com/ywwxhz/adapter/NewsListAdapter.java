@@ -47,21 +47,9 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         }
         NewsItem item = getDataSetItem(position);
         hoder.news_title.setText(item.getTitle());
+        hoder.news_views.setText(item.getCounter());
         hoder.news_time.setText(item.getInputtime());
-        String counter;
-        if (item.getCounter() > 9999) {
-            counter = "9999+";
-        } else {
-            counter = item.getCounter() + "";
-        }
-        hoder.news_views.setText(counter);
-        String comment;
-        if (item.getComments() > 999) {
-            comment = "999+";
-        } else {
-            comment = item.getComments() + "";
-        }
-        hoder.news_comment.setText(comment);
+        hoder.news_comment.setText(item.getComments());
         if (showImage) {
             if(hoder.news_image_hoder.getVisibility() == View.GONE) {
                 hoder.news_image_hoder.setVisibility(View.VISIBLE);
@@ -77,7 +65,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
                 }
             }else{
                 MyApplication.getPicasso().load(item.getThumb())
-                        .placeholder(R.drawable.imagehoder_sm).error(R.drawable.imagehoder_error_sm)
+                        .placeholder(R.drawable.imagehoder_sm).noFade().error(R.drawable.imagehoder_error_sm)
                         .into(hoder.news_image);
             }
         } else {

@@ -12,10 +12,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:paddingBottom="5dp"
-        android:shadowColor="#20000000"
-        android:shadowDx="3"
-        android:shadowDy="3"
-        android:shadowRadius="2"
         android:singleLine="true"
         android:textColor="#3c69ce"
         android:textSize="16sp" />

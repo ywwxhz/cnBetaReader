@@ -34,4 +34,6 @@ public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler
 
     public abstract void onSuccess(int statusCode, Header[] headers, String responseString, T object);
 
+    @Override
+    public void onProgress(int bytesWritten, int totalSize) {}
 }

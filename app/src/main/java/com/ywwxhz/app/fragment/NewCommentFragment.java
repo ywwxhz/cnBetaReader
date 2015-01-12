@@ -1,6 +1,7 @@
 package com.ywwxhz.app.fragment;
 
 import android.app.DialogFragment;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.kits.NetKit;
@@ -40,7 +42,7 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
     private EditText content;
     private EditText seccode;
     private View send;
-    private View progress;
+    private ProgressWheel progress;
     private ImageView seccodeImage;
     private boolean flushing = false;
 
@@ -79,7 +81,7 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         content = (EditText) view.findViewById(R.id.push_content);
         seccode = (EditText) view.findViewById(R.id.seccode);
         seccodeImage = (ImageView) view.findViewById(R.id.seccodeImage);
-        progress = view.findViewById(R.id.seccodeProgress);
+        progress = (ProgressWheel)view.findViewById(R.id.seccodeProgress);
         content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -123,6 +125,11 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
             NetKit.getInstance().getClient().get(getActivity(), Configure.SECOND_VIEW, NetKit.getAuthHeader(), params,
                     new JsonHttpResponseHandler() {
                         @Override
+                        public void onStart() {
+                            progress.spin();
+                        }
+
+                        @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
                                 String url = response.getString("url");
@@ -134,12 +141,11 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
                                         Bitmap bitmap = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
                                         //设置图片
                                         seccodeImage.setImageBitmap(bitmap);
-                                        seccodeImage.setVisibility(View.VISIBLE);
-                                        progress.setVisibility(View.GONE);
                                     }
 
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
+                                        seccodeImage.setImageBitmap(null);
                                         error.printStackTrace();
                                         showToast("获取验证码失败");
                                     }
@@ -147,19 +153,29 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
                                     @Override
                                     public void onFinish() {
                                         flushing = false;
+                                        seccodeImage.setVisibility(View.VISIBLE);
+                                        progress.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onProgress(int bytesWritten, int totalSize) {
+                                        progress.setProgress(bytesWritten * 1.0f / totalSize);
                                     }
                                 });
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                showToast("获取验证码失败");
+                                showToast("获取验证码失败了");
                                 flushing = false;
                             }
                         }
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            showToast("获取验证码失败");
+                            showToast("获取验证码失败了");
                             flushing = false;
+                            seccodeImage.setImageBitmap(null);
+                            seccodeImage.setVisibility(View.VISIBLE);
+                            progress.setVisibility(View.GONE);
                         }
                     }
             );
@@ -237,5 +253,17 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
 
     private void showToast(String message){
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width=dm.widthPixels;
+        if(width > UIKit.dip2px(getActivity(),420)){
+            width = UIKit.dip2px(getActivity(),420);
+        }
+        getDialog().getWindow().setLayout(width, getDialog().getWindow().getAttributes().height);
     }
 }

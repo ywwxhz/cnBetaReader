@@ -12,8 +12,8 @@ public class NewsItem implements Serializable {
     private String title;
     private String content;
     private String hometext;
-    private int comments;
-    private int counter;
+    private String comments;
+    private String counter;
     private String inputtime;
 
     public int getSid() {
@@ -80,19 +80,19 @@ public class NewsItem implements Serializable {
         this.hometext = hometext;
     }
 
-    public int getComments() {
+    public String getComments() {
         return comments;
     }
 
-    public void setComments(int comments) {
+    public void setComments(String comments) {
         this.comments = comments;
     }
 
-    public int getCounter() {
+    public String getCounter() {
         return counter;
     }
 
-    public void setCounter(int counter) {
+    public void setCounter(String counter) {
         this.counter = counter;
     }
 

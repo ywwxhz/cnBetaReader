@@ -14,8 +14,6 @@ import org.apache.http.Header;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicHeader;
 
-import java.net.SocketTimeoutException;
-
 /**
  * Created by ywwxhz on 2014/10/17.
  */
@@ -25,15 +23,12 @@ public class NetKit {
     private AsyncHttpClient mClient;
     public static final String CONTENT_TYPE="application/x-www-form-urlencoded; charset=UTF-8";
 
-    static {
-        AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
-    }
-
     private NetKit() {
         mClient = new AsyncHttpClient();
         mClient.setCookieStore(new BasicCookieStore());
         mClient.setConnectTimeout(3000);
-        mClient.setMaxRetriesAndTimeout(3,1000);
+        mClient.setResponseTimeout(6000);
+        mClient.setMaxRetriesAndTimeout(3,200);
         mClient.setUserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36");
     }
 

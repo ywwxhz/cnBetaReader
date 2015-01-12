@@ -9,9 +9,9 @@
         android:layout_height="fill_parent"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:listSelector="@android:color/transparent"
-        android:padding="5dp" />
+        android:drawSelectorOnTop="true"
+        android:listSelector="@drawable/list_item_background1"
+        android:scrollbarStyle="outsideOverlay" />
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/loading"

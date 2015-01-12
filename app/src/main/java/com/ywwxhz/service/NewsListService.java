@@ -44,6 +44,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * Created by ywwxhz on 2014/11/1.
  */
 public class NewsListService extends ActionService implements OnRefreshListener {
+    private int topSid;
     private int current;
     private boolean hasCached;
     private Activity mContext;
@@ -111,6 +112,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         mProgressBar.setVisibility(View.VISIBLE);
         if (newsList != null) {
             hasCached = true;
+            topSid = newsList.get(1).getSid();
             mAdapter.setDataSet(newsList);
             mLoader.notifyDataSetChanged();
             mProgressBar.setVisibility(View.GONE);
@@ -172,25 +174,54 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     public void callNewsPageLoadSuccess(NewsListObject listPage) {
         List<NewsItem> itemList = listPage.getList();
         List<NewsItem> dataSet = mAdapter.getDataSet();
-        for (NewsItem item : itemList) {
+        int size = 0;
+        boolean find = false;
+        for (int i = 0; i < itemList.size(); i++) {
+            NewsItem item = itemList.get(i);
+            if (itemList.get(i).getCounter() != null && item.getComments() != null) {
+                int num = Integer.parseInt(item.getCounter());
+                if (num > 9999) {
+                    item.setCounter("9999+");
+                }
+                num = Integer.parseInt(item.getComments());
+                if (num > 999) {
+                    item.setComments("999+");
+                }
+            } else {
+                item.setCounter("0");
+                item.setComments("0");
+            }
             item.setHometext(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")).toString());
-            if(item.getThumb().contains("thumb")) {
+            if (item.getThumb().contains("thumb")) {
                 item.setLargeImage(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""));
             }
+            if (!find && item.getSid() != topSid) {
+                size++;
+            }else if (!find){
+                find = true;
+            }
+        }
+        if(!find){
+            size++;
         }
 
         if (!hasCached || listPage.getPage() == 1) {
             hasCached = true;
             mAdapter.setDataSet(itemList);
-            showToastAndCache(itemList);
+            topSid = itemList.get(1).getSid();
+            showToastAndCache(itemList, size-1);
         } else {
             dataSet.addAll(itemList);
         }
         current = listPage.getPage();
     }
 
-    private void showToastAndCache(List<NewsItem> itemList) {
-        Crouton.makeText(mContext, mContext.getString(R.string.message_flush_success), Style.INFO).show();
+    private void showToastAndCache(List<NewsItem> itemList, int size) {
+        if (size < 1) {
+            Crouton.makeText(mContext, mContext.getString(R.string.message_no_new_news), Style.CONFIRM).show();
+        } else {
+            Crouton.makeText(mContext, mContext.getString(R.string.message_new_news, size), Style.INFO).show();
+        }
         FileCacheKit.getInstance().putAsync("newsList".hashCode() + "", Toolkit.getGson().toJson(itemList), "list", null);
     }
 
