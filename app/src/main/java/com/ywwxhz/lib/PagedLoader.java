@@ -49,7 +49,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         // 滑到底部后自动加载，判断listview已经停止滚动并且最后可视的条目等于adapter的条目
-        if (enable && mode == Mode.AUTO_LOAD && scrollState == OnScrollListener.SCROLL_STATE_IDLE&&!isLoading
+        if (enable && mode == Mode.AUTO_LOAD &&!isLoading&& scrollState == OnScrollListener.SCROLL_STATE_IDLE
                 && lastVisibleIndex == listView.getAdapter().getCount()) {
             if (mOnLoadListener != null) {
                 setLoading(true);

@@ -247,6 +247,9 @@ final class Manager extends Handler {
             } else {
                 Activity activity = crouton.getActivity();
                 if (null == activity || activity.isFinishing()) {
+                    if(!croutonQueue.isEmpty()) {
+                        croutonQueue.poll();
+                    }
                     return;
                 }
                 handleTranslucentActionBar((ViewGroup.MarginLayoutParams) params, activity);

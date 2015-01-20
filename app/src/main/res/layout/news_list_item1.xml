@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_item_background_normal"
+    android:background="@drawable/list_item_background"
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingLeft="8dp"
@@ -14,53 +14,61 @@
         android:id="@+id/news_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="aaaaa"
         android:textColor="@color/title_color"
         android:textSize="20sp" />
 
+    <TextView
+        style="@style/SubText"
+        android:id="@+id/news_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/news_title"
+        android:layout_toLeftOf="@+id/news_comments"
+        android:layout_toStartOf="@+id/news_comments"
+        android:ellipsize="end"
+        android:text="time" />
+
+    <TextView
+        style="@style/SubText"
+        android:id="@+id/news_comments"
+        android:layout_width="50sp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/news_views"
+        android:layout_toLeftOf="@+id/news_views"
+        android:layout_toStartOf="@+id/news_views"
+        android:drawableLeft="@drawable/ic_comments"
+        android:drawablePadding="2dp"
+        android:gravity="center"
+        android:paddingRight="2dp" />
+
+    <TextView
+        style="@style/SubText"
+        android:id="@+id/news_views"
+        android:layout_width="56sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/news_time"
+        android:drawableLeft="@drawable/ic_views"
+        android:drawablePadding="2dp"
+        android:gravity="center" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/news_time"
         android:orientation="horizontal"
-        android:paddingBottom="1dp"
-        android:weightSum="1">
-
-        <TextView
-            style="@style/SubText"
-            android:id="@+id/news_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.00"
-            android:ellipsize="end" />
-
-        <TextView
-            style="@style/SubText"
-            android:id="@+id/news_comments"
-            android:layout_width="50sp"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_comments"
-            android:drawablePadding="2dp"
-            android:gravity="center"
-            android:paddingRight="2dp" />
-
-        <TextView
-            style="@style/SubText"
-            android:id="@+id/news_views"
-            android:layout_width="56sp"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_views"
-            android:drawablePadding="2dp"
-            android:gravity="center" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dp"
-        android:orientation="horizontal">
+        android:paddingBottom="2dp">
 
         <LinearLayout
             android:id="@+id/news_image_hoder"
@@ -86,4 +94,4 @@
             android:lineSpacingExtra="1dp" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

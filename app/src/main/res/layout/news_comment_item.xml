@@ -1,75 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/list_item_background"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/comment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:paddingBottom="5dp"
+        android:paddingBottom="2dp"
         android:singleLine="true"
+        android:text="title"
         android:textColor="#3c69ce"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_marginBottom="2dp" />
 
     <TextView
         android:id="@+id/comment_ref"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
         android:background="@drawable/ref_background"
         android:lineSpacingExtra="1dp"
-        android:padding="5dp"
-        android:textSize="13sp" />
+        android:text="ref"
+        android:padding="4dp"
+        android:textSize="13sp"
+        android:layout_below="@+id/comment_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="2dp" />
 
     <TextView
         android:id="@+id/comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="1dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:textSize="14sp" />
+        android:paddingLeft="2dp"
+        android:text="comment"
+        android:paddingRight="2dp"
+        android:textSize="14sp"
+        android:layout_below="@+id/comment_ref"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="2dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        style="@style/SubText"
+        android:id="@+id/comment_time"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp">
+        android:layout_weight="1"
+        android:text="time"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:layout_below="@+id/comment_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/comment_score"
+        android:layout_toStartOf="@+id/comment_score" />
 
-        <TextView
-            style="@style/SubText"
-            android:id="@+id/comment_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:singleLine="true" />
+    <TextView
+        style="@style/SubText"
+        android:id="@+id/comment_reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_reason"
+        android:drawablePadding="5dp"
+        android:text="99+"
+        android:gravity="center"
+        android:minWidth="40sp"
+        android:layout_alignBaseline="@+id/comment_time"
+        android:layout_alignBottom="@+id/comment_time"
+        android:layout_alignRight="@+id/comment_content"
+        android:layout_alignEnd="@+id/comment_content"
+        android:layout_marginRight="2dp" />
 
-        <TextView
-            style="@style/SubText"
-            android:id="@+id/comment_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_score"
-            android:drawablePadding="5dp"
-            android:gravity="right"
-            android:minWidth="40sp" />
-
-        <TextView
-            style="@style/SubText"
-            android:id="@+id/comment_reason"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:drawableLeft="@drawable/ic_reason"
-            android:drawablePadding="5dp"
-            android:gravity="right"
-            android:minWidth="40sp" />
-    </LinearLayout>
-</LinearLayout>
+    <TextView
+        style="@style/SubText"
+        android:id="@+id/comment_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_score"
+        android:drawablePadding="5dp"
+        android:text="99+"
+        android:gravity="center"
+        android:minWidth="40sp"
+        android:layout_below="@+id/comment_content"
+        android:layout_toLeftOf="@+id/comment_reason"
+        android:layout_toStartOf="@+id/comment_reason"
+        android:layout_marginRight="5dp" />
+</RelativeLayout>

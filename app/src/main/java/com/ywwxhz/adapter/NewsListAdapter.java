@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.ywwxhz.app.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.NewsItem;
@@ -22,13 +23,15 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     private int layout;
     private boolean showLarge;
     private boolean showImage;
+    private Picasso picasso = MyApplication.getPicasso();
+
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
         showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
         showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
-        if(showLarge) {
-            layout =  R.layout.news_list_item;
-        }else{
+        if (showLarge) {
+            layout = R.layout.news_list_item;
+        } else {
             layout = R.layout.news_list_item1;
         }
     }
@@ -37,7 +40,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     protected View bindViewAndData(LayoutInflater infater, int position, View convertView, ViewGroup parent) {
         ViewHoder hoder;
         View view;
-        if (convertView == null || convertView.getTag() == null) {
+        if (convertView == null) {
             view = infater.inflate(layout, parent, false);
             hoder = new ViewHoder(view);
             view.setTag(hoder);
@@ -51,27 +54,24 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         hoder.news_time.setText(item.getInputtime());
         hoder.news_comment.setText(item.getComments());
         if (showImage) {
-            if(hoder.news_image_hoder.getVisibility() == View.GONE) {
-                hoder.news_image_hoder.setVisibility(View.VISIBLE);
-            }
-            if(showLarge){
-                if (item.getLargeImage()!=null) {
-                    MyApplication.getPicasso().load(item.getLargeImage())
+            if (showLarge) {
+                if (item.getLargeImage() != null) {
+                    hoder.news_image_hoder.setVisibility(View.VISIBLE);
+                    picasso.load(item.getLargeImage())
                             .fit().centerCrop()
                             .placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
                             .into(hoder.news_image);
-                }else{
+                } else {
                     hoder.news_image_hoder.setVisibility(View.GONE);
                 }
-            }else{
-                MyApplication.getPicasso().load(item.getThumb())
+            } else {
+                hoder.news_image_hoder.setVisibility(View.VISIBLE);
+                picasso.load(item.getThumb())
                         .placeholder(R.drawable.imagehoder_sm).noFade().error(R.drawable.imagehoder_error_sm)
                         .into(hoder.news_image);
             }
         } else {
-            if(hoder.news_image_hoder.getVisibility() == View.VISIBLE) {
-                hoder.news_image_hoder.setVisibility(View.GONE);
-            }
+            hoder.news_image_hoder.setVisibility(View.GONE);
         }
         hoder.news_summary.setText(item.getHometext());
         return view;
