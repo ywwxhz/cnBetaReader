@@ -11,7 +11,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name="com.ywwxhz.app.MyApplication"
+        android:name="com.ywwxhz.MyApplication"
         android:theme="@style/Theme.Basic">
         <activity
             android:configChanges="screenSize|keyboardHidden|orientation"

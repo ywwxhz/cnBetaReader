@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.ResponseHandlerInterface;
-import com.ywwxhz.app.MyApplication;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.lib.Configure;
 
 import org.apache.http.Header;

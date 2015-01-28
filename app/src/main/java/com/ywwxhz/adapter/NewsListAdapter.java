@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-import com.ywwxhz.app.MyApplication;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.NewsItem;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -23,17 +24,29 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     private int layout;
     private boolean showLarge;
     private boolean showImage;
-    private Picasso picasso = MyApplication.getPicasso();
+    private DisplayImageOptions options;
 
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
         showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
         showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new SimpleBitmapDisplayer());
         if (showLarge) {
             layout = R.layout.news_list_item;
+            builder.showImageOnLoading(R.drawable.imagehoder)
+                    .showImageForEmptyUri(R.drawable.imagehoder_error)
+                    .showImageOnFail(R.drawable.imagehoder_error);
         } else {
             layout = R.layout.news_list_item1;
+            builder.showImageOnLoading(R.drawable.imagehoder_sm)
+                    .showImageForEmptyUri(R.drawable.imagehoder_sm)
+                    .showImageOnFail(R.drawable.imagehoder_error_sm);
         }
+        options = builder.build();
     }
 
     @Override
@@ -57,18 +70,13 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             if (showLarge) {
                 if (item.getLargeImage() != null) {
                     hoder.news_image_hoder.setVisibility(View.VISIBLE);
-                    picasso.load(item.getLargeImage())
-                            .fit().centerCrop()
-                            .placeholder(R.drawable.imagehoder).error(R.drawable.imagehoder_error)
-                            .into(hoder.news_image);
+                    ImageLoader.getInstance().displayImage(item.getLargeImage(), hoder.news_image, options);
                 } else {
                     hoder.news_image_hoder.setVisibility(View.GONE);
                 }
             } else {
                 hoder.news_image_hoder.setVisibility(View.VISIBLE);
-                picasso.load(item.getThumb())
-                        .placeholder(R.drawable.imagehoder_sm).noFade().error(R.drawable.imagehoder_error_sm)
-                        .into(hoder.news_image);
+                ImageLoader.getInstance().displayImage(item.getThumb(), hoder.news_image, options);
             }
         } else {
             hoder.news_image_hoder.setVisibility(View.GONE);
