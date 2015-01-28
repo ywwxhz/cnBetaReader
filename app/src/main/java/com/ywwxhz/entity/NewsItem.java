@@ -12,6 +12,7 @@ public class NewsItem implements Serializable {
     private String title;
     private String content;
     private String hometext;
+    private String summary;
     private String comments;
     private String counter;
     private String inputtime;
@@ -102,5 +103,13 @@ public class NewsItem implements Serializable {
 
     public void setInputtime(String inputtime) {
         this.inputtime = inputtime;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

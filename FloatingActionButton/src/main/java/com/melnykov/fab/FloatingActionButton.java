@@ -2,20 +2,21 @@ package com.melnykov.fab;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Outline;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.AbsListView;
@@ -27,18 +28,26 @@ import android.widget.ImageButton;
  * @author Oleksandr Melnykov
  */
 public class FloatingActionButton extends ImageButton {
+    private static final int TRANSLATE_DURATION_MILLIS = 200;
 
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_MINI = 1;
-    private final ScrollSettleHandler mScrollSettleHandler = new ScrollSettleHandler();
-    private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
-    private AbsListView mListView;
-    private int mScrollY;
+
     private boolean mVisible;
+
     private int mColorNormal;
     private int mColorPressed;
+    private int mColorRipple;
     private boolean mShadow;
     private int mType;
+
+    private int mShadowSize;
+
+    private int mScrollThreshold;
+
+    private boolean mMarginsSet;
+
+    private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
 
     public FloatingActionButton(Context context) {
         this(context, null);
@@ -58,40 +67,23 @@ public class FloatingActionButton extends ImageButton {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int size = getDimension(
-                mType == TYPE_NORMAL ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
-        if (mShadow) {
-            int shadowSize = getDimension(R.dimen.fab_shadow_size);
-            size += shadowSize * 2;
+            mType == TYPE_NORMAL ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
+        if (mShadow && !hasLollipopApi()) {
+            size += mShadowSize * 2;
+            setMarginsWithoutShadow();
         }
         setMeasuredDimension(size, size);
     }
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState savedState = new SavedState(superState);
-        savedState.mScrollY = mScrollY;
-
-        return savedState;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof SavedState) {
-            SavedState savedState = (SavedState) state;
-            mScrollY = savedState.mScrollY;
-            super.onRestoreInstanceState(savedState.getSuperState());
-        } else {
-            super.onRestoreInstanceState(state);
-        }
-    }
-
     private void init(Context context, AttributeSet attributeSet) {
         mVisible = true;
-        mColorNormal = getColor(android.R.color.holo_blue_dark);
-        mColorPressed = getColor(android.R.color.holo_blue_light);
+        mColorNormal = getColor(R.color.material_blue_500);
+        mColorPressed = getColor(R.color.material_blue_600);
+        mColorRipple = getColor(android.R.color.white);
         mType = TYPE_NORMAL;
         mShadow = true;
+        mScrollThreshold = getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold);
+        mShadowSize = getDimension(R.dimen.fab_shadow_size);
         if (attributeSet != null) {
             initAttributes(context, attributeSet);
         }
@@ -103,9 +95,11 @@ public class FloatingActionButton extends ImageButton {
         if (attr != null) {
             try {
                 mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal,
-                        getColor(android.R.color.holo_blue_dark));
+                    getColor(R.color.material_blue_500));
                 mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed,
-                        getColor(android.R.color.holo_blue_light));
+                    getColor(R.color.material_blue_600));
+                mColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorRipple,
+                    getColor(android.R.color.white));
                 mShadow = attr.getBoolean(R.styleable.FloatingActionButton_fab_shadow, true);
                 mType = attr.getInt(R.styleable.FloatingActionButton_fab_type, TYPE_NORMAL);
             } finally {
@@ -126,13 +120,11 @@ public class FloatingActionButton extends ImageButton {
         ShapeDrawable shapeDrawable = new ShapeDrawable(ovalShape);
         shapeDrawable.getPaint().setColor(color);
 
-        if (mShadow) {
-            LayerDrawable layerDrawable = new LayerDrawable(
-                    new Drawable[]{getResources().getDrawable(R.drawable.shadow),
-                            shapeDrawable});
-            int shadowSize = getDimension(
-                    mType == TYPE_NORMAL ? R.dimen.fab_shadow_size : R.dimen.fab_mini_shadow_size);
-            layerDrawable.setLayerInset(1, shadowSize, shadowSize, shadowSize, shadowSize);
+        if (mShadow && !hasLollipopApi()) {
+            Drawable shadowDrawable = getResources().getDrawable(mType == TYPE_NORMAL ? R.drawable.shadow
+                : R.drawable.shadow_mini);
+            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{shadowDrawable, shapeDrawable});
+            layerDrawable.setLayerInset(1, mShadowSize, mShadowSize, mShadowSize, mShadowSize);
             return layerDrawable;
         } else {
             return shapeDrawable;
@@ -151,20 +143,50 @@ public class FloatingActionButton extends ImageButton {
         return getResources().getDimensionPixelSize(id);
     }
 
+    private void setMarginsWithoutShadow() {
+        if (!mMarginsSet) {
+            if (getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
+                int leftMargin = layoutParams.leftMargin - mShadowSize;
+                int topMargin = layoutParams.topMargin - mShadowSize;
+                int rightMargin = layoutParams.rightMargin - mShadowSize;
+                int bottomMargin = layoutParams.bottomMargin - mShadowSize;
+                layoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+
+                requestLayout();
+                mMarginsSet = true;
+            }
+        }
+    }
+
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     private void setBackgroundCompat(Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (hasLollipopApi()) {
+            float elevation;
+            if (mShadow) {
+                elevation = getElevation() > 0.0f ? getElevation()
+                    : getDimension(R.dimen.fab_elevation_lollipop);
+            } else {
+                elevation = 0.0f;
+            }
+            setElevation(elevation);
+            RippleDrawable rippleDrawable = new RippleDrawable(new ColorStateList(new int[][]{{}},
+                new int[]{mColorRipple}), drawable, null);
+            setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    int size = getDimension(mType == TYPE_NORMAL ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
+                    outline.setOval(0, 0, size, size);
+                }
+            });
+            setClipToOutline(true);
+            setBackground(rippleDrawable);
+        } else if (hasJellyBeanApi()) {
             setBackground(drawable);
         } else {
             setBackgroundDrawable(drawable);
         }
-    }
-
-    private int getListViewScrollY() {
-        View topChild = mListView.getChildAt(0);
-        return topChild == null ? 0 : mListView.getFirstVisiblePosition() * topChild.getHeight() -
-                topChild.getTop();
     }
 
     private int getMarginBottom() {
@@ -176,10 +198,6 @@ public class FloatingActionButton extends ImageButton {
         return marginBottom;
     }
 
-    public int getColorNormal() {
-        return mColorNormal;
-    }
-
     public void setColorNormal(int color) {
         if (color != mColorNormal) {
             mColorNormal = color;
@@ -187,8 +205,12 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    public int getColorPressed() {
-        return mColorPressed;
+    public void setColorNormalResId(int colorResId) {
+        setColorNormal(getColor(colorResId));
+    }
+
+    public int getColorNormal() {
+        return mColorNormal;
     }
 
     public void setColorPressed(int color) {
@@ -196,6 +218,29 @@ public class FloatingActionButton extends ImageButton {
             mColorPressed = color;
             updateBackground();
         }
+    }
+
+    public void setColorPressedResId(int colorResId) {
+        setColorPressed(getColor(colorResId));
+    }
+
+    public int getColorPressed() {
+        return mColorPressed;
+    }
+
+    public void setColorRipple(int color) {
+        if (color != mColorRipple) {
+            mColorRipple = color;
+            updateBackground();
+        }
+    }
+
+    public void setColorRippleResId(int colorResId) {
+        setColorRipple(getColor(colorResId));
+    }
+
+    public int getColorRipple() {
+        return mColorRipple;
     }
 
     public void setShadow(boolean shadow) {
@@ -209,10 +254,6 @@ public class FloatingActionButton extends ImageButton {
         return mShadow;
     }
 
-    public int getType() {
-        return mType;
-    }
-
     public void setType(int type) {
         if (type != mType) {
             mType = type;
@@ -220,109 +261,161 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    public void attachToListView(AbsListView listView) {
-        attachToListView(listView, true);
+    public int getType() {
+        return mType;
     }
 
-    public void attachToListView(AbsListView listView, boolean shouldinsert) {
-        if (listView == null) {
-            throw new NullPointerException("AbsListView cannot be null.");
-        }
-        mListView = listView;
-        if (shouldinsert) {
-            mListView.setOnScrollListener(getListViewOnScrollListener());
-        }
+    public boolean isVisible() {
+        return mVisible;
     }
 
-    public AbsListView.OnScrollListener getListViewOnScrollListener() {
-        return new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    if (!mVisible) {
-                        // Scrolling down
-                        mVisible = true;
-                        mScrollSettleHandler.onScroll(0);
-                    }
-                }
-            }
+    public void show() {
+        show(true);
+    }
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int newScrollY = getListViewScrollY();
-                if (newScrollY == mScrollY) {
+    public void hide() {
+        hide(true);
+    }
+
+    public void show(boolean animate) {
+        toggle(true, animate, false);
+    }
+
+    public void hide(boolean animate) {
+        toggle(false, animate, false);
+    }
+
+    private void toggle(final boolean visible, final boolean animate, boolean force) {
+        if (mVisible != visible || force) {
+            mVisible = visible;
+            int height = getHeight();
+            if (height == 0 && !force) {
+                ViewTreeObserver vto = getViewTreeObserver();
+                if (vto.isAlive()) {
+                    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            ViewTreeObserver currentVto = getViewTreeObserver();
+                            if (currentVto.isAlive()) {
+                                currentVto.removeOnPreDrawListener(this);
+                            }
+                            toggle(visible, animate, true);
+                            return true;
+                        }
+                    });
                     return;
                 }
-                if (newScrollY > 0) {
-                    if (newScrollY > mScrollY && mVisible) {
-                        // Scrolling up
-                        mVisible = false;
-                        mScrollSettleHandler.onScroll(getHeight() + getMarginBottom());
-                    } else if (newScrollY < mScrollY && !mVisible) {
-                        // Scrolling down
-                        mVisible = true;
-                        mScrollSettleHandler.onScroll(0);
-                    }
-                }
-                mScrollY = newScrollY;
             }
-        };
-    }
-
-    /**
-     * A {@link android.os.Parcelable} representing the {@link com.melnykov.fab.FloatingActionButton}'s
-     * state.
-     */
-    public static class SavedState extends BaseSavedState {
-
-        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-        private int mScrollY;
-
-        public SavedState(Parcelable parcel) {
-            super(parcel);
-        }
-
-        private SavedState(Parcel in) {
-            super(in);
-            mScrollY = in.readInt();
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeInt(mScrollY);
-        }
-    }
-
-    private class ScrollSettleHandler extends Handler {
-        private static final int TRANSLATE_DURATION_MILLIS = 200;
-
-        private int mSettledScrollY;
-
-        public void onScroll(int scrollY) {
-            if (mSettledScrollY != scrollY) {
-                mSettledScrollY = scrollY;
-                removeMessages(0);
-                sendEmptyMessage(0);
-            }
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            animate().setInterpolator(mInterpolator)
+            int translationY = visible ? 0 : height + getMarginBottom();
+            if (animate) {
+                this.animate().setInterpolator(mInterpolator)
                     .setDuration(TRANSLATE_DURATION_MILLIS)
-                    .translationY(mSettledScrollY);
+                    .translationY(translationY);
+            } else {
+                this.setTranslationY(translationY);
+            }
+
+            // On pre-Honeycomb a translated view is still clickable, so we need to disable clicks manually
+            if (!hasHoneycombApi()) {
+                setClickable(visible);
+            }
+        }
+    }
+
+    public AbsListView.OnScrollListener attachToListView(AbsListView listView) {
+        return attachToListView(listView, null);
+    }
+
+    public ObservableScrollView.OnScrollChangedListener attachToScrollView(ObservableScrollView scrollView) {
+        return attachToScrollView(scrollView, null);
+    }
+
+    public AbsListView.OnScrollListener attachToListView(AbsListView listView, ScrollDirectionListener listener) {
+        return attachToListView(listView,listener,true);
+    }
+    public AbsListView.OnScrollListener attachToListView(AbsListView listView, ScrollDirectionListener listener,boolean insert) {
+        AbsListViewScrollDetectorImpl scrollDetector = new AbsListViewScrollDetectorImpl();
+        scrollDetector.setListener(listener);
+        scrollDetector.setListView(listView);
+        scrollDetector.setScrollThreshold(mScrollThreshold);
+        if(insert) {
+            listView.setOnScrollListener(scrollDetector);
+        }
+        return scrollDetector;
+    }
+
+    public ObservableScrollView.OnScrollChangedListener attachToScrollView( ObservableScrollView scrollView, ScrollDirectionListener listener) {
+        return attachToScrollView(scrollView, listener,true);
+    }
+
+    public ObservableScrollView.OnScrollChangedListener attachToScrollView( ObservableScrollView scrollView, ScrollDirectionListener listener,boolean insert) {
+        ScrollViewScrollDetectorImpl scrollDetector = new ScrollViewScrollDetectorImpl();
+        scrollDetector.setListener(listener);
+        scrollDetector.setScrollThreshold(mScrollThreshold);
+        if (insert) {
+            scrollView.setOnScrollChangedListener(scrollDetector);
+        }
+        return scrollDetector;
+    }
+
+
+    private boolean hasLollipopApi() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    private boolean hasJellyBeanApi() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    private boolean hasHoneycombApi() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    private class AbsListViewScrollDetectorImpl extends AbsListViewScrollDetector {
+        private ScrollDirectionListener mListener;
+
+        private void setListener(ScrollDirectionListener scrollDirectionListener) {
+            mListener = scrollDirectionListener;
+        }
+
+        @Override
+        public void onScrollDown() {
+            show();
+            if (mListener != null) {
+                mListener.onScrollDown();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            hide();
+            if (mListener != null) {
+                mListener.onScrollUp();
+            }
+        }
+    }
+
+    private class ScrollViewScrollDetectorImpl extends ScrollViewScrollDetector {
+        private ScrollDirectionListener mListener;
+
+        private void setListener(ScrollDirectionListener scrollDirectionListener) {
+            mListener = scrollDirectionListener;
+        }
+
+        @Override
+        public void onScrollDown() {
+            show();
+            if (mListener != null) {
+                mListener.onScrollDown();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            hide();
+            if (mListener != null) {
+                mListener.onScrollUp();
+            }
         }
     }
 }

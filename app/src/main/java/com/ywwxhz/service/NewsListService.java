@@ -76,9 +76,8 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.mListView.addHeaderView(view, null, false);
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();
         this.mLoader.setAdapter(mAdapter);
-        this.mLoader.setOnScrollListener(this.actionButton.getListViewOnScrollListener());
+        this.mLoader.setOnScrollListener(this.actionButton.attachToListView(this.mListView,null,false));
         this.actionButton.setVisibility(View.VISIBLE);
-        this.actionButton.attachToListView(mListView, false);
         this.actionButton.setImageResource(R.drawable.ic_settings);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +190,12 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                 item.setCounter("0");
                 item.setComments("0");
             }
-            item.setHometext(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")).toString());
+            StringBuilder sb = new StringBuilder(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
+            if(sb.length()>80) {
+                item.setSummary(sb.replace(79,sb.length(),"...").toString());
+            }else{
+                item.setSummary(sb.toString());
+            }
             if (item.getThumb().contains("thumb")) {
                 item.setLargeImage(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""));
             }

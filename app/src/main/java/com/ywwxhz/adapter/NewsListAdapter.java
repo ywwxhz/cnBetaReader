@@ -73,7 +73,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         } else {
             hoder.news_image_hoder.setVisibility(View.GONE);
         }
-        hoder.news_summary.setText(item.getHometext());
+        hoder.news_summary.setText(item.getSummary());
         return view;
     }
 

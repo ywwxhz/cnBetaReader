@@ -1,16 +1,15 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@null"
-        android:dividerHeight="0dp"
-        android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/list_item_background1"
+        android:listSelector="@android:color/transparent"
+        android:padding="5dp"
         android:scrollbarStyle="outsideOverlay" />
 
     <com.pnikosis.materialishprogress.ProgressWheel
@@ -27,8 +26,8 @@
 
     <TextView
         android:id="@+id/loadFail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:gravity="center"
         android:text="@string/load_fail"
         android:textSize="18sp"
@@ -39,10 +38,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:alpha="0.8"
         android:visibility="gone"
         app:fab_colorNormal="@color/color_normal"
-        app:fab_colorPressed="@color/color_passed" />
+        app:fab_colorPressed="@color/color_passed"
+        app:fab_shadow="true" />
 
 </merge>

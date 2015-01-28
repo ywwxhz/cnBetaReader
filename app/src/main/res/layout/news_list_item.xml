@@ -2,28 +2,28 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/list_item_background"
     android:orientation="vertical">
 
     <com.ywwxhz.view.ProportionLinearLayout
         android:id="@+id/news_image_hoder"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:pl_proportion="0.4">
 
         <ImageView
             android:id="@+id/news_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:scaleType="centerCrop" />
     </com.ywwxhz.view.ProportionLinearLayout>
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
         android:paddingBottom="5dp"
         android:paddingLeft="8dp"
@@ -32,16 +32,16 @@
 
         <TextView
             android:id="@+id/news_title"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:maxLines="2"
             android:text="aaaaa"
             android:textColor="@color/title_color"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingBottom="1dp">
@@ -76,12 +76,12 @@
 
         <TextView
             android:id="@+id/news_summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autoLink="none"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:ellipsize="end"
             android:lineSpacingExtra="1dp"
-            android:maxLines="3" />
+            android:maxLines="3"
+            android:textSize="15sp" />
     </LinearLayout>
 
 

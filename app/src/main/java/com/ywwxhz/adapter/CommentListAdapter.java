@@ -1,6 +1,7 @@
 package com.ywwxhz.adapter;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +41,11 @@ public class CommentListAdapter extends BaseAdapter<CommentItem> {
         hoder.comment_name.setText(String.format(Locale.CHINA, "%s [%s]", item.getName(), item.getHost_name()));
         if (item.getRefContent().length() != 0) {
             hoder.comment_ref.setVisibility(View.VISIBLE);
-            hoder.comment_ref.setText(item.getRefContent());
+            hoder.comment_ref.setText(Html.fromHtml(item.getRefContent()));
         } else {
             hoder.comment_ref.setVisibility(View.GONE);
         }
-        hoder.comment_content.setText(item.getComment());
+        hoder.comment_content.setText(Html.fromHtml(item.getComment()));
         hoder.comment_time.setText(item.getDate());
         String score;
         if (item.getScore() > 999) {

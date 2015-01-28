@@ -14,7 +14,7 @@ import com.ywwxhz.service.NewsCommentService;
  * Created by ywwxhz on 2014/11/2.
  */
 public class NewsCommentActivity extends ExtendBaseActivity {
-    private int padding;
+    private int[] paddings;
     private int margin;
     private NewsCommentService mService;
 
@@ -22,7 +22,8 @@ public class NewsCommentActivity extends ExtendBaseActivity {
     protected void createView(Bundle savedInstanceState) {
         setContentView(R.layout.list_layout);
         mService = new NewsCommentService(this);
-        padding = mService.getParentView().getPaddingLeft();
+        View list = mService.getParentView();
+        paddings = new int[]{list.getPaddingLeft(),list.getPaddingTop(),list.getPaddingRight(),list.getPaddingBottom()};
     }
 
     @Override
@@ -37,7 +38,7 @@ public class NewsCommentActivity extends ExtendBaseActivity {
 
     @Override
     protected int[] getPadding() {
-        return new int[]{padding};
+        return paddings;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class NewsCommentActivity extends ExtendBaseActivity {
 
     @Override
     protected UIKit.PaddingMode getPaddingMode() {
-        return UIKit.PaddingMode.ALL_SAME;
+        return UIKit.PaddingMode.SET_ALL;
     }
 
     @Override

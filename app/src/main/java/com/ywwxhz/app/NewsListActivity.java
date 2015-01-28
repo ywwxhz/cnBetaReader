@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.kits.UIKit;
@@ -17,12 +18,15 @@ public class NewsListActivity extends BaseActivity {
 
     private int margin;
     private NewsListService mService;
+    private int[] paddings;
 
     @Override
     protected void createView(Bundle savedInstanceState) {
         setContentView(R.layout.list_layout);
         getActionBar().setDisplayShowHomeEnabled(true);
         mService = new NewsListService(this);
+        ListView list = mService.getListView();
+        paddings = new int[]{list.getPaddingLeft(),list.getPaddingTop(),list.getPaddingRight(),list.getPaddingBottom()};
     }
 
     @Override
@@ -52,12 +56,12 @@ public class NewsListActivity extends BaseActivity {
 
     @Override
     protected UIKit.PaddingMode getPaddingMode() {
-        return UIKit.PaddingMode.NONE;
+        return UIKit.PaddingMode.SET_ALL;
     }
 
     @Override
     protected int[] getPadding() {
-        return null;
+        return paddings;
     }
 
     @Override
