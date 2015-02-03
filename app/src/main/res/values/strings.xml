@@ -31,7 +31,7 @@
     <string name="pref_author_summary">远望の无限</string>
     <string name="pref_auto_page_off">点击加载更多</string>
     <string name="pref_auto_page_key">autoPageLoad</string>
-    <string name="pref_auto_reflush_title">自动刷新</string>
+    <string name="pref_auto_reflush_title">首次启动自动刷新</string>
     <string name="pref_auto_page_title">自动加载更多</string>
     <string name="pref_auto_reflush_on">自动刷新列表</string>
     <string name="pref_auto_reflush_key">autoReflush</string>

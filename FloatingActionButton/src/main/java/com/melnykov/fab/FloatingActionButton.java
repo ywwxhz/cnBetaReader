@@ -387,6 +387,11 @@ public class FloatingActionButton extends ImageButton {
         }
 
         @Override
+        void onScrollIdle() {
+            show();
+        }
+
+        @Override
         public void onScrollUp() {
             hide();
             if (mListener != null) {

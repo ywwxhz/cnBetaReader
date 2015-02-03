@@ -80,7 +80,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         this.mTextView = (TextView) mContext.findViewById(R.id.loadFail);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
         TextView type = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
-        type.setText("全部评论");
+        type.setText("类型：全部评论");
         this.mFoot = new TextView(mContext);
         mFoot.setText("--- The End ---");
         mFoot.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

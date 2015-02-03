@@ -4,4 +4,9 @@
         <attr name="pl_Reversal" format="boolean" />
         <attr name="pl_proportion" format="float" />
     </declare-styleable>
+    <declare-styleable name="ExtImageView">
+        <attr name="ex_enable" format="boolean"/>
+        <attr name="ex_Reversal" format="boolean" />
+        <attr name="ex_proportion" format="float" />
+    </declare-styleable>
 </resources>

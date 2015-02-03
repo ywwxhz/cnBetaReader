@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dip"
     android:textColor="@color/green_1"
-    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:paddingTop="16dip" />

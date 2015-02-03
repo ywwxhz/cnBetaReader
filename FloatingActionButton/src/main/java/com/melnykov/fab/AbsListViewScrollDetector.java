@@ -13,8 +13,13 @@ abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener
 
     abstract void onScrollDown();
 
+    abstract void onScrollIdle();
+
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == SCROLL_STATE_IDLE){
+            onScrollIdle();
+        }
     }
 
     @Override

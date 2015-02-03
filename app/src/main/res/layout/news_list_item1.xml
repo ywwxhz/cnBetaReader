@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<com.ywwxhz.hoder.NewsListItemHoderView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/list_item_background"
     android:orientation="vertical"
     android:paddingBottom="5dp"
@@ -14,12 +15,9 @@
         android:id="@+id/news_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="aaaaa"
         android:textColor="@color/title_color"
         android:textSize="22sp" />
 
@@ -33,8 +31,7 @@
         android:layout_below="@+id/news_title"
         android:layout_toLeftOf="@+id/news_comments"
         android:layout_toStartOf="@+id/news_comments"
-        android:ellipsize="end"
-        android:text="time" />
+        android:ellipsize="end" />
 
     <TextView
         style="@style/SubText"
@@ -64,25 +61,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/news_time"
+        android:layout_below="@id/news_time"
         android:orientation="horizontal"
         android:paddingBottom="2dp">
 
-        <LinearLayout
-            android:id="@+id/news_image_hoder"
-            android:layout_width="53sp"
-            android:layout_height="53sp"
+        <com.ywwxhz.view.ExtImageView
+            android:id="@+id/news_image"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp">
-
-            <ImageView
-                android:id="@+id/news_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-        </LinearLayout>
+            android:layout_marginRight="3dp"
+            android:scaleType="centerCrop"
+            app:ex_enable="false" />
 
         <TextView
             android:id="@+id/news_summary"
@@ -94,4 +84,5 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-</RelativeLayout>
+
+</com.ywwxhz.hoder.NewsListItemHoderView>

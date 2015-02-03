@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
 import com.melnykov.fab.FloatingActionButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.adapter.NewsListAdapter;
 import com.ywwxhz.app.NewsDetailActivity;
@@ -59,7 +61,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     private PagedLoader.OnLoadListener loadListener = new PagedLoader.OnLoadListener() {
         @Override
         public void onLoading(PagedLoader pagedLoader, boolean isAutoLoad) {
-            NetKit.getInstance().getNewslistByPage(current + 1, newsPage);
+            NetKit.getInstance().getNewslistByPage(current + 1,"all", newsPage);
         }
     };
 
@@ -76,7 +78,8 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.mListView.addHeaderView(view, null, false);
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();
         this.mLoader.setAdapter(mAdapter);
-        this.mLoader.setOnScrollListener(this.actionButton.attachToListView(this.mListView,null,false));
+        this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(),false,true
+                ,this.actionButton.attachToListView(this.mListView,null,false)));
         this.actionButton.setVisibility(View.VISIBLE);
         this.actionButton.setImageResource(R.drawable.ic_settings);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +91,14 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         });
         this.actionButton.setScaleX(0);
         this.actionButton.setScaleY(0);
+        this.actionButton.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                actionButton.setVisibility(View.VISIBLE);
+                actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(
+                        new AccelerateDecelerateInterpolator()).start();
+            }
+        }, 200);
         this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -102,13 +113,15 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                 .listener(this)
                 .options(Options.create().scrollDistance(0.2f).refreshOnUp(true).build())
                 .setup(mPullToRefreshLayout);
-        loadDataOnStartUp();
+        loadData(true);
     }
 
-    private void loadDataOnStartUp() {
+    private void loadData(boolean startup) {
         ArrayList<NewsItem> newsList = FileCacheKit.getInstance().getAsObject("newsList".hashCode() + "", "list", new TypeToken<ArrayList<NewsItem>>() {
         });
-        mProgressBar.setVisibility(View.VISIBLE);
+        if(mAdapter.getCount()==0) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
         if (newsList != null) {
             hasCached = true;
             topSid = newsList.get(1).getSid();
@@ -119,16 +132,6 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             this.hasCached = false;
         }
         this.current = 1;
-        this.actionButton.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                actionButton.setVisibility(View.VISIBLE);
-                actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
-            }
-        }, 200);
-    }
-
-    public void onResume() {
         if (!hasCached || PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_reflush_key), false)) {
             mListView.postDelayed(new Runnable() {
                 @Override
@@ -136,8 +139,11 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                     mPullToRefreshLayout.setRefreshing(true);
                     onRefreshStarted(null);
                 }
-            }, 400);
+            }, startup?400:0);
         }
+    }
+
+    public void onResume() {
         if (PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_auto_page_key), false)) {
             this.mLoader.setMode(PagedLoader.Mode.AUTO_LOAD);
         } else {
@@ -167,7 +173,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
 
     @Override
     public void onRefreshStarted(View view) {
-        NetKit.getInstance().getNewslistByPage(1, newsPage);
+        NetKit.getInstance().getNewslistByPage(1,"all", newsPage);
     }
 
     public void callNewsPageLoadSuccess(NewsListObject listPage) {

@@ -5,5 +5,5 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/listChoiceBackgroundIndicator"
     android:clickable="true"
-    android:padding="3dp"
-    android:textSize="14sp" />
+    android:padding="2.5dp"
+    android:textSize="14.5sp" />
