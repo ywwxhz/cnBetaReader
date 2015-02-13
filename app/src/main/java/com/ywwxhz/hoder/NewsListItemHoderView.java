@@ -49,7 +49,7 @@ public class NewsListItemHoderView extends RelativeLayout {
         this.news_image = (ImageView) findViewById(R.id.news_image);
     }
 
-    public void showNews(NewsItem item,boolean showImage,boolean showLarge,DisplayImageOptions options,NewsListAdapter.AnimateFirstDisplayListener listener){
+    public void showNews(NewsItem item, boolean showImage, boolean showLarge, DisplayImageOptions options, NewsListAdapter.AnimateFirstDisplayListener listener) {
         news_title.setText(item.getTitle());
         news_views.setText(item.getCounter());
         news_time.setText(item.getInputtime());
@@ -57,17 +57,25 @@ public class NewsListItemHoderView extends RelativeLayout {
         if (showImage) {
             if (showLarge) {
                 if (item.getLargeImage() != null) {
-                    news_image.setVisibility(View.VISIBLE);
-                    ImageLoader.getInstance().displayImage(item.getLargeImage(), news_image, options,listener);
+                    if (news_image.getVisibility() == GONE) {
+                        news_image.setVisibility(View.VISIBLE);
+                    }
+                    ImageLoader.getInstance().displayImage(item.getLargeImage(), news_image, options, listener);
                 } else {
-                    news_image.setVisibility(View.GONE);
+                    if (news_image.getVisibility() == VISIBLE) {
+                        news_image.setVisibility(View.GONE);
+                    }
                 }
             } else {
-                news_image.setVisibility(View.VISIBLE);
+                if (news_image.getVisibility() == GONE) {
+                    news_image.setVisibility(View.VISIBLE);
+                }
                 ImageLoader.getInstance().displayImage(item.getThumb(), news_image, options);
             }
         } else {
-            news_image.setVisibility(View.GONE);
+            if (news_image.getVisibility() == VISIBLE) {
+                news_image.setVisibility(View.GONE);
+            }
         }
         news_summary.setText(item.getSummary());
     }

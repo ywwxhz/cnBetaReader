@@ -9,6 +9,7 @@
         <item name="android:preferenceCategoryStyle">@style/Preference.Category</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:textColor">#474747</item>
+        <item name="android:actionBarSize">48dp</item>
         <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
         <item name="android:checkboxStyle">@style/CheckBoxBasic</item>
         <item name="ptrHeaderStyle">@style/pullHeadStyle</item>

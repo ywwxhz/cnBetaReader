@@ -38,6 +38,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -67,4 +68,5 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile files('libs/jsoup-1.8.1.jar')
     compile files('libs/universal-image-loader-1.9.3-with-sources.jar')
+    compile 'com.android.support:support-v4:21.0.3'
 }

@@ -3,11 +3,13 @@ package com.ywwxhz.service;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -54,7 +56,7 @@ public class NewsDetailService extends ActionService {
     private FloatingActionButton mActionButtom;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<style>body{word-break: break-all;}video{width:100%%;height:auto}.content img{max-width: 100%% !important;height: auto; !important}a{text-decoration: none;color:#2f7cad;}" +
+            "<style>body{word-break: break-all;}video{width:100%% !important;height:auto !important}.content img{max-width: 100%% !important;height: auto; !important}a{text-decoration: none;color:#2f7cad;}" +
             ".content p iframe{width: 100%% !important;height:auto !important}.introduce img{padding:3pt;width:50pt;height:auto}.introduce p{margin:0}.introduce div{margin: 0px !important;}" +
             ".content embed{width: 100%% !important;height:auto; !important}.title{font-size: 18pt;color: #1473af;}" +
             ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
@@ -63,7 +65,9 @@ public class NewsDetailService extends ActionService {
             "<hr/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");" +
             "for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0)" +
-            "{a.onclick=function(){return false;}}}; var videos = document.getElementsByTagName('video');for(var i=0;i<videos.length;i++){videos[i].onclick=function(){ window.Video.showToast(this.src);return false;}}</script></body></html>";
+            "{a.onclick=function(){return false;}}};" +
+            //" var videos = document.getElementsByTagName('video');for(var i=0;i<videos.length;i++){videos[i].onclick=function(){ Video.showToast(this.src);return false;}}" +
+            "</script></body></html>";
     private Handler myHandler;
 
     public NewsDetailService(Activity mContext) {
@@ -121,6 +125,7 @@ public class NewsDetailService extends ActionService {
         WebSettings settings = mWebView.getSettings();
         settings.setSupportZoom(false);
         settings.setAllowFileAccess(true);
+        settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(true);
@@ -135,8 +140,45 @@ public class NewsDetailService extends ActionService {
         } else {
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
-        mWebView.setWebChromeClient(new WebChromeClient());
-        mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Video");
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            private View myView = null;
+            private CustomViewCallback myCallback = null;
+            private int orientation;
+            @Override
+            public void onShowCustomView(View view, CustomViewCallback callback) {
+                if (myCallback != null) {
+                    myCallback.onCustomViewHidden();
+                    myCallback = null ;
+                    return;
+                }
+                orientation = mContext.getRequestedOrientation();
+                mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                ViewGroup parent = (ViewGroup) mWebView.getParent();
+                parent.removeView( mWebView);
+                parent.removeView(mActionButtom);
+                parent.addView(view);
+                myView = view;
+                myCallback = callback;
+            }
+
+            @Override
+            public void onHideCustomView() {
+
+                if (myView != null) {
+
+                    if (myCallback != null) {
+                        myCallback.onCustomViewHidden();
+                        myCallback = null ;
+                    }
+                    mContext.setRequestedOrientation(orientation);
+                    ViewGroup parent = (ViewGroup) myView.getParent();
+                    parent.removeView( myView);
+                    parent.addView( mWebView);
+                    parent.addView(mActionButtom);
+                    myView = null;
+                }
+            }
+        });
         this.loadFail.setClickable(true);
         this.loadFail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,5 +326,14 @@ public class NewsDetailService extends ActionService {
         Uri content_url = Uri.parse(Configure.buildArticleUrl(mNewsItem.getSid() + ""));
         intent.setData(content_url);
         mContext.startActivity(Intent.createChooser(intent, mContext.getString(R.string.choise_browser)));
+    }
+
+    public void handleFontSize(boolean up){
+            WebSettings settings = mWebView.getSettings();
+        if (up){
+            settings.setTextZoom(settings.getTextZoom()+5);
+        }else{
+            settings.setTextZoom(settings.getTextZoom()-5);
+        }
     }
 }

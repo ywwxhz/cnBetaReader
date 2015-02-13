@@ -31,7 +31,6 @@ public class NewsDetailActivity extends ExtendBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mService.getWebView().destroy();
-        System.gc();
     }
 
     @Override
@@ -66,6 +65,12 @@ public class NewsDetailActivity extends ExtendBaseActivity {
                 break;
             case R.id.menu_reflush:
                 mService.makeRequest();
+                break;
+            case R.id.menu_font_size_down:
+                mService.handleFontSize(false);
+                break;
+            case R.id.menu_font_size_up:
+                mService.handleFontSize(true);
                 break;
         }
         return super.onOptionsItemSelected(item);

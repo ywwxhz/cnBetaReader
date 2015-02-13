@@ -15,15 +15,12 @@ import java.util.List;
  * Created by ywwxhz on 2014/11/2.
  */
 public class CommentListAdapter extends BaseAdapter<CommentItem> {
+    private boolean enable;
+    private String token;
+
     public CommentListAdapter(Context context, List<CommentItem> items) {
         super(context, items);
     }
-
-    public CommentListAdapter(Context context) {
-        super(context);
-    }
-
-    private String token;
 
     @Override
     protected View bindViewAndData(LayoutInflater infater, int position, View convertView, ViewGroup parent) {
@@ -34,7 +31,15 @@ public class CommentListAdapter extends BaseAdapter<CommentItem> {
             view = (NewsCommentItemHoderView) convertView;
         }
         CommentItem item = getDataSetItem(position);
-        view.showComment(item);
+        view.showComment(item,token,this,enable);
         return view;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

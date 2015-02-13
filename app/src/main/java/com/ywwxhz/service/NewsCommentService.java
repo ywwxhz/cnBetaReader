@@ -1,23 +1,18 @@
 package com.ywwxhz.service;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 import com.ywwxhz.adapter.CommentListAdapter;
 import com.ywwxhz.app.fragment.NewCommentFragment;
@@ -31,9 +26,6 @@ import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 import com.ywwxhz.lib.kits.UIKit;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,6 +138,8 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     }
 
     public void callOnLoadingSuccess(CommentListObject commentListObject, boolean fromCache, boolean isClosed) {
+        this.token = commentListObject.getToken();
+        this.mAdapter.setToken(token);
         ArrayList<CommentItem> cmntlist = commentListObject.getCmntlist();
         HashMap<String, CommentItem> cmntstore = commentListObject.getCmntstore();
         for (CommentItem item : cmntlist) {
@@ -182,8 +176,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         if (cmntlist.size() > 0) { //针对加载缓存和普通访问
             this.mAdapter.setDataSet(cmntlist);
             if(!isClosed&&!fromCache) {
-                this.token = commentListObject.getToken();
-                this.mListView.setOnItemClickListener(listener);
+                this.mAdapter.setEnable(true);
                 this.actionButton.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -196,6 +189,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             }
         } else if (commentListObject.getOpen()==0) { //针对关平的新闻评论
             Crouton.makeText(mContext, R.string.message_comment_close, Style.ALERT).show();
+            this.mAdapter.setEnable(false);
             this.mPullToRefreshLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
                 this.mTextView.setText(R.string.message_comment_close);
@@ -255,81 +249,5 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
 
     public View getFloatButtom() {
         return actionButton;
-    }
-
-    private AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ExtendPopMenu menu = new ExtendPopMenu(mContext,view,mAdapter.getDataSetItem(position-1),token);
-            menu.show();
-        }
-    };
-
-    private class ExtendPopMenu extends PopupMenu{
-        public int SUPPORT = 1;
-        public int AGAINST = 2;
-        public int REPORT = 3;
-        private int action;
-        private CommentItem citem;
-        private String csrf_token;
-
-        public ExtendPopMenu(Context context, View anchor,CommentItem item, String token) {
-            super(context, anchor);
-            this.citem = item;
-            this.csrf_token = token;
-            inflate(R.menu.menu_comment);
-            setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()){
-                        case R.id.comment_support:
-                            action = SUPPORT;
-                            NetKit.getInstance().setCommentAction("support",sid+"",citem.getTid(),csrf_token,chandler);
-                            break;
-                        case R.id.comment_against:
-                            action = AGAINST;
-                            NetKit.getInstance().setCommentAction("against",sid+"",citem.getTid(),csrf_token,chandler);
-                            break;
-                        case R.id.comment_report:
-                            action = REPORT;
-                            NetKit.getInstance().setCommentAction("report",sid+"",citem.getTid(),csrf_token,chandler);
-                            break;
-                    }
-                    return true;
-                }
-            });
-
-        }
-        private JsonHttpResponseHandler chandler = new JsonHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Toast.makeText(mContext,"操作失败",Toast.LENGTH_LONG).show();
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    if("success".equals(response.getString("state"))){
-                        String actionString;
-                        if(action == SUPPORT) {
-                            actionString = "支持";
-                            citem.setScore(citem.getScore() + 1);
-                        }else if(action == AGAINST){
-                            actionString = "反对";
-                            citem.setReason(citem.getReason()+1);
-                        }else{
-                            actionString = "举报";
-                        }
-                        mAdapter.notifyDataSetChanged();
-                        Toast.makeText(mContext,actionString+"成功",Toast.LENGTH_SHORT).show();
-                    }else{
-                        throw new Exception();
-                    }
-                } catch (Exception e) {
-                    onFailure(statusCode,headers,e,response);
-                }
-            }
-        };
     }
 }

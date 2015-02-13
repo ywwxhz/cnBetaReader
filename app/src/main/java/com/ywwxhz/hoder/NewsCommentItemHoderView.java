@@ -4,11 +4,13 @@ import android.content.Context;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.CommentItem;
+import com.ywwxhz.view.ExtendPopMenu;
 
 import java.util.Locale;
 
@@ -17,7 +19,7 @@ import java.util.Locale;
  * com.ywwxhz.hoder
  * Created by 远望の无限(ywwxhz) on 2015/2/3 9:49.
  */
-public class NewsCommentItemHoderView extends RelativeLayout {
+public class NewsCommentItemHoderView extends RelativeLayout implements View.OnClickListener {
 
     private TextView comment_name;
     private TextView comment_ref;
@@ -26,6 +28,7 @@ public class NewsCommentItemHoderView extends RelativeLayout {
     private TextView comment_score;
     private TextView comment_time;
     private View comment_more;
+    private ExtendPopMenu popMenu;
 
     public NewsCommentItemHoderView(Context context) {
         super(context);
@@ -49,15 +52,20 @@ public class NewsCommentItemHoderView extends RelativeLayout {
         this.comment_score = (TextView) findViewById(R.id.comment_score);
         this.comment_time = (TextView) findViewById(R.id.comment_time);
         this.comment_more = findViewById(R.id.comment_more);
+        this.popMenu = new ExtendPopMenu(getContext(),comment_more);
     }
 
-    public void showComment(CommentItem item){
+    public void showComment(CommentItem item,String token,BaseAdapter adapter, boolean enable) {
         comment_name.setText(String.format(Locale.CHINA, "%s [%s]", item.getName(), item.getHost_name()));
         if (item.getRefContent().length() != 0) {
-            comment_ref.setVisibility(View.VISIBLE);
+            if (comment_ref.getVisibility() == GONE) {
+                comment_ref.setVisibility(View.VISIBLE);
+            }
             comment_ref.setText(Html.fromHtml(item.getRefContent()));
         } else {
-            comment_ref.setVisibility(View.GONE);
+            if (comment_ref.getVisibility() == VISIBLE) {
+                comment_ref.setVisibility(View.GONE);
+            }
         }
         comment_content.setText(Html.fromHtml(item.getComment()));
         comment_time.setText(item.getDate());
@@ -75,5 +83,18 @@ public class NewsCommentItemHoderView extends RelativeLayout {
             reason = item.getReason() + "";
         }
         comment_reason.setText(reason);
+        if(enable){
+            comment_more.setOnClickListener(this);
+            popMenu.setCitem(item);
+            popMenu.setAdapter(adapter);
+            popMenu.setToken(token);
+        }else{
+            comment_more.setOnClickListener(null);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        popMenu.show();
     }
 }

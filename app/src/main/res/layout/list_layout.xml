@@ -9,6 +9,7 @@
         android:layout_height="fill_parent"
         android:divider="@null"
         android:dividerHeight="2dp"
+        android:clipToPadding="false"
         android:listSelector="@android:color/transparent"
         android:padding="5dp"
         android:scrollbarStyle="outsideOverlay" />

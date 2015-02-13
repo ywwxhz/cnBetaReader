@@ -18,9 +18,9 @@ package de.keyboardsurfer.android.widget.crouton;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.util.LruCache;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+import android.util.LruCache;
 
 /**
  * Style a spannable with a custom {@link Typeface}.
