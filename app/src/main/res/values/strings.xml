@@ -41,8 +41,8 @@
     <string name="pref_hardware_accelerated_key">hardwareAccelerated</string>
     <string name="pref_hardware_accelerated_summary">关闭可能会造成WebView滑动卡顿。</string>
     <string name="pref_show_list_news_image_key">showListImage</string>
-    <string name="pref_show_list_news_image_title">显示列表图片</string>
-    <string name="pref_show_list_news_image_summary">新闻是否列表显示图片</string>
+    <string name="pref_show_list_news_image_title">新闻列表显示图片</string>
+    <string name="pref_show_list_news_image_summary">开启后会消耗较多的流量，平均消耗200K~600K左右。</string>
     <string name="pref_debug_key">debug</string>
     <string name="pref_debug_title">调试模式</string>
     <string name="pref_debug_summary">启用调试模式(重启应用生效)</string>
@@ -50,7 +50,7 @@
     <string name="pref_clean_cache_title">清理应用缓存</string>
     <string name="pref_advience_categroy">高级</string>
     <string name="pref_show_large_image_key">largeImage</string>
-    <string name="pref_show_large_image_title">显示大图</string>
-    <string name="pref_show_large_image_summary">新闻列表显示大图(重启应用生效)</string>
+    <string name="pref_show_large_image_title">新闻列表显示大图</string>
+    <string name="pref_show_large_image_summary">开启后将会消耗大量流量,平均消耗大于 2M, 推荐在Wifi下使用。</string>
 
 </resources>

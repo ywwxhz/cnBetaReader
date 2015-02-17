@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.ywwxhz.hoder.NewsListItemHoderView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/list_item_background">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.ywwxhz.view.ExtImageView
-        android:id="@+id/news_image"
+        android:id="@+id/news_image_large"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
@@ -16,7 +13,7 @@
 
 
     <RelativeLayout
-        android:layout_below="@id/news_image"
+        android:layout_below="@id/news_image_large"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="3dp"
@@ -48,7 +45,7 @@
         <TextView
             style="@style/SubText"
             android:id="@+id/news_comments"
-            android:layout_width="50sp"
+            android:layout_width="52sp"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_comments"
             android:drawablePadding="2dp"
@@ -61,7 +58,7 @@
         <TextView
             style="@style/SubText"
             android:id="@+id/news_views"
-            android:layout_width="56sp"
+            android:layout_width="58sp"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_views"
             android:drawablePadding="2dp"
@@ -70,16 +67,35 @@
             android:layout_alignRight="@+id/news_title"
             android:layout_alignEnd="@+id/news_title" />
 
-        <TextView
-            android:id="@+id/news_summary"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lineSpacingExtra="1dp"
-            android:maxLines="3"
-            android:textSize="15sp"
-            android:layout_below="@+id/news_time" />
+            android:layout_below="@id/news_time"
+            android:orientation="horizontal"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp">
+
+            <ImageView
+                android:id="@+id/news_image_small"
+                android:layout_width="54sp"
+                android:layout_height="54sp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="1sp"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="1sp"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/news_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="3"
+                android:lineSpacingExtra="1dp"
+                android:textSize="15sp"/>
+        </LinearLayout>
     </RelativeLayout>
 
 
-</com.ywwxhz.hoder.NewsListItemHoderView>
+</merge>

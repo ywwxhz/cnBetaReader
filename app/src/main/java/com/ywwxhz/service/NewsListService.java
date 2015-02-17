@@ -197,8 +197,12 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                 item.setComments("0");
             }
             StringBuilder sb = new StringBuilder(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
-            if(sb.length()>80) {
-                item.setSummary(sb.replace(79,sb.length(),"...").toString());
+//            int index = sb.indexOf("。");
+//            if(index >0&&index<sb.length()){
+//                item.setSummary(sb.delete(index+1,sb.length()).toString());
+//            }else
+            if(sb.length()>100) {
+                item.setSummary(sb.replace(101,sb.length(),"...").toString());
             }else{
                 item.setSummary(sb.toString());
             }
@@ -253,6 +257,6 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     }
 
     public void onReturn(int request, int response) {
-        mLoader.notifyDataSetChanged();
+        mLoader.notifyDataSetInvalidated();
     }
 }

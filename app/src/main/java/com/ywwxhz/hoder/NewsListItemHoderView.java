@@ -1,8 +1,7 @@
 package com.ywwxhz.hoder;
 
 import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,59 +23,59 @@ public class NewsListItemHoderView extends RelativeLayout {
     private TextView news_views;
     private TextView news_summary;
     private TextView news_comment;
-    private ImageView news_image;
+    private ImageView news_image_large;
+    private ImageView news_image_small;
 
-    public NewsListItemHoderView(Context context) {
+    public NewsListItemHoderView(Context context, LayoutInflater infater) {
         super(context);
-    }
-
-    public NewsListItemHoderView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public NewsListItemHoderView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+        infater.inflate(R.layout.news_list_item, this);
         this.news_time = (TextView) findViewById(R.id.news_time);
         this.news_title = (TextView) findViewById(R.id.news_title);
         this.news_views = (TextView) findViewById(R.id.news_views);
         this.news_summary = (TextView) findViewById(R.id.news_summary);
         this.news_comment = (TextView) findViewById(R.id.news_comments);
-        this.news_image = (ImageView) findViewById(R.id.news_image);
+        this.news_image_large = (ImageView) findViewById(R.id.news_image_large);
+        this.news_image_small = (ImageView) findViewById(R.id.news_image_small);
+        setBackgroundResource(R.drawable.list_item_background);
     }
 
-    public void showNews(NewsItem item, boolean showImage, boolean showLarge, DisplayImageOptions options, NewsListAdapter.AnimateFirstDisplayListener listener) {
+    public void showNews(NewsItem item, boolean showImage, boolean showLarge, DisplayImageOptions optionsLarge, DisplayImageOptions optionsSmall, NewsListAdapter.AnimateFirstDisplayListener listener) {
         news_title.setText(item.getTitle());
         news_views.setText(item.getCounter());
         news_time.setText(item.getInputtime());
         news_comment.setText(item.getComments());
-        if (showImage) {
+        news_summary.setText(item.getSummary());
+        if(!showImage){
+            if(news_image_large.getVisibility()==VISIBLE){
+                news_image_large.setVisibility(GONE);
+            }
+            if(news_image_small.getVisibility() == VISIBLE){
+                news_image_small.setVisibility(GONE);
+            }
+        }else{
             if (showLarge) {
+                if (news_image_small.getVisibility() == VISIBLE) {
+                    news_image_small.setVisibility(GONE);
+                }
                 if (item.getLargeImage() != null) {
-                    if (news_image.getVisibility() == GONE) {
-                        news_image.setVisibility(View.VISIBLE);
+                    if (news_image_large.getVisibility() == GONE) {
+                        news_image_large.setVisibility(VISIBLE);
                     }
-                    ImageLoader.getInstance().displayImage(item.getLargeImage(), news_image, options, listener);
+                    ImageLoader.getInstance().displayImage(item.getLargeImage(), news_image_large, optionsLarge, listener);
                 } else {
-                    if (news_image.getVisibility() == VISIBLE) {
-                        news_image.setVisibility(View.GONE);
+                    if (news_image_large.getVisibility() == VISIBLE) {
+                        news_image_large.setVisibility(GONE);
                     }
                 }
             } else {
-                if (news_image.getVisibility() == GONE) {
-                    news_image.setVisibility(View.VISIBLE);
+                if (news_image_large.getVisibility() == VISIBLE) {
+                    news_image_large.setVisibility(GONE);
                 }
-                ImageLoader.getInstance().displayImage(item.getThumb(), news_image, options);
-            }
-        } else {
-            if (news_image.getVisibility() == VISIBLE) {
-                news_image.setVisibility(View.GONE);
+                if (news_image_small.getVisibility() == GONE) {
+                    news_image_small.setVisibility(VISIBLE);
+                }
+                ImageLoader.getInstance().displayImage(item.getThumb(), news_image_small, optionsSmall);
             }
         }
-        news_summary.setText(item.getSummary());
     }
 }

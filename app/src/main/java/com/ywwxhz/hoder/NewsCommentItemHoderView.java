@@ -83,7 +83,7 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
             reason = item.getReason() + "";
         }
         comment_reason.setText(reason);
-        if(enable){
+        if(enable&&!item.isHasscored()){
             comment_more.setOnClickListener(this);
             popMenu.setCitem(item);
             popMenu.setAdapter(adapter);

@@ -34,9 +34,6 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/settings"
             android:name="com.ywwxhz.app.SettingsActivity"/>
-        <activity android:name="com.ywwxhz.app.MediaActivity"
-            android:theme="@style/Theme.Basic.Video"
-            android:configChanges="screenSize|keyboardHidden|orientation"/>
     </application>
 
 </manifest>

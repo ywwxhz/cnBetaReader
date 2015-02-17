@@ -252,6 +252,7 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
     }
 
     private void showToast(String message){
+        if(getActivity()!=null)
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 

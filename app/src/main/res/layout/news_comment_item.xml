@@ -16,11 +16,12 @@
         android:textColor="#3c69ce"
         android:layout_toLeftOf="@+id/comment_more"
         android:layout_toStartOf="@+id/comment_more"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
     <ImageView
         android:id="@+id/comment_more"
-        android:layout_width="24sp"
-        android:layout_height="24sp"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:background="?android:attr/listChoiceBackgroundIndicator"
         android:src="@drawable/ic_more"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/comment_reason"
@@ -82,8 +83,8 @@
         android:drawableLeft="@drawable/ic_reason"
         android:drawablePadding="5dp"
         android:gravity="center"
-        android:minWidth="40sp"
-        android:text="99+" />
+        android:minWidth="50sp"
+        android:text="999+" />
 
     <TextView
         style="@style/SubText"
@@ -97,6 +98,6 @@
         android:drawableLeft="@drawable/ic_score"
         android:drawablePadding="5dp"
         android:gravity="center"
-        android:minWidth="40sp"
+        android:minWidth="50sp"
         android:text="99+" />
 </com.ywwxhz.hoder.NewsCommentItemHoderView>

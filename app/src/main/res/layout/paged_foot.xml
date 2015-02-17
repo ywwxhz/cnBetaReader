@@ -30,7 +30,6 @@
         android:layout_height="25dp"
         android:visibility="gone"
         app:barWidth="2dp"
-        app:progressIndeterminate="true"
         app:rimWidth="2dp" />
 
 </LinearLayout>

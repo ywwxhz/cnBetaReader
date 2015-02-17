@@ -20,8 +20,11 @@ import java.io.File;
  * Created by ywwxhz on 2014/11/3.
  */
 public class SettingsActivity extends ExtendBaseActivity {
+
+    private boolean haschange = false;
     @Override
     protected void createView(Bundle savedInstanceState) {
+        haschange = false;
     }
 
     @Override
@@ -39,7 +42,9 @@ public class SettingsActivity extends ExtendBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            setResult(0);
+            if(haschange) {
+                setResult(200);
+            }
             this.finish();
         }
         return super.onOptionsItemSelected(item);
@@ -48,7 +53,9 @@ public class SettingsActivity extends ExtendBaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setResult(0);
+        if(haschange) {
+            setResult(200);
+        }
         this.finish();
     }
 
@@ -56,6 +63,15 @@ public class SettingsActivity extends ExtendBaseActivity {
         private ListView mListView;
         private int paddings[];
         private Preference preference;
+        private Preference.OnPreferenceClickListener listener = new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if(getActivity() instanceof SettingsActivity) {
+                    ((SettingsActivity) getActivity()).haschange = true;
+                }
+                return false;
+            }
+        };
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +92,8 @@ public class SettingsActivity extends ExtendBaseActivity {
                     return false;
                 }
             });
+            findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceClickListener(listener);
+            findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceClickListener(listener);
         }
 
         private String getFileSize(){

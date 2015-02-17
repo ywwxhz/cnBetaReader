@@ -73,6 +73,7 @@ public class ExtendPopMenu extends PopupMenu {
                     } else {
                         actionString = "举报";
                     }
+                    citem.setHasscored(true);
                     adapter.notifyDataSetChanged();
                     Toast.makeText(mContext, actionString + "成功", Toast.LENGTH_SHORT).show();
                 } else {

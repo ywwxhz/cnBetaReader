@@ -10,6 +10,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.adapter.BaseAdapter;
 import com.ywwxhz.cnbetareader.R;
 
@@ -18,7 +19,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     private TextView finallyTextView;
     private ListAdapter adapter;
     private ListView listView;
-    private View progressBar;
+    private ProgressWheel progressBar;
     // ListView底部View
     private View moreView;
     // 最后可见条目的索引
@@ -84,9 +85,11 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     public void setLoading(boolean isloading) {
         isLoading = isloading;
         if (isloading) {
+            progressBar.spin();
             progressBar.setVisibility(View.VISIBLE);
             normalTextView.setVisibility(View.GONE);
         } else {
+            progressBar.stopSpinning();
             normalTextView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
@@ -160,6 +163,24 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
         }
     }
 
+
+    public void notifyDataSetInvalidated() {
+        ListAdapter adapter;
+        if (this.adapter != null) {
+            adapter = this.adapter;
+        } else if (listView.getAdapter() != null) {
+            adapter = this.listView.getAdapter();
+        } else {
+            throw new RuntimeException("must set adapter after notifyDataSetChanged");
+        }
+        ((BaseAdapter) adapter).notifyDataSetInvalidated();
+        if (adapter.getCount() == 0) {
+            setEnable(false);
+        } else {
+            setEnable(true);
+        }
+    }
+
     public ListAdapter getAdapter() {
         return adapter;
     }
@@ -225,7 +246,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
                     pagedLoader.listView, false);
             pagedLoader.normalTextView = (TextView) pagedLoader.moreView.findViewById(R.id.bt_load);
             pagedLoader.finallyTextView = (TextView) pagedLoader.moreView.findViewById(R.id.bt_finally);
-            pagedLoader.progressBar = pagedLoader.moreView.findViewById(R.id.pg);
+            pagedLoader.progressBar = (ProgressWheel)pagedLoader.moreView.findViewById(R.id.pg);
         }
 
         public static Builder getInstance(Context context) {

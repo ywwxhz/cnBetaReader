@@ -2,6 +2,7 @@ package com.ywwxhz.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,49 +26,55 @@ import java.util.List;
  */
 public class NewsListAdapter extends BaseAdapter<NewsItem> {
 
-    private int layout;
+    private static final String TAG = NewsListAdapter.class.getSimpleName();
     private boolean showLarge;
     private boolean showImage;
-    private DisplayImageOptions options;
+    private DisplayImageOptions optionsLarge;
+    private DisplayImageOptions optionsSmall;
     private AnimateFirstDisplayListener listener =  new AnimateFirstDisplayListener();
 
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
         showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
         showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
-        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder()
+        optionsLarge = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
-                .displayer(new SimpleBitmapDisplayer());
-        if (showLarge) {
-            layout = R.layout.news_list_item;
-            builder.showImageOnLoading(R.drawable.imagehoder)
-                    .showImageOnFail(R.drawable.imagehoder_error);
-        } else {
-            layout = R.layout.news_list_item1;
-            builder.showImageOnLoading(R.drawable.imagehoder_sm)
-                    .showImageOnFail(R.drawable.imagehoder_error_sm);
-        }
-        options = builder.build();
+                .showImageOnLoading(R.drawable.imagehoder)
+                .showImageOnFail(R.drawable.imagehoder_error)
+                .displayer(new SimpleBitmapDisplayer()).build();
+        optionsSmall = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .showImageOnLoading(R.drawable.imagehoder_sm)
+                .showImageOnFail(R.drawable.imagehoder_error_sm)
+                .displayer(new SimpleBitmapDisplayer()).build();
+
     }
 
     @Override
     protected View bindViewAndData(LayoutInflater infater, int position, View convertView, ViewGroup parent) {
-        NewsListItemHoderView view;
-        if (convertView == null) {
-            view = (NewsListItemHoderView)infater.inflate(layout, parent, false);
-        } else {
-            view = (NewsListItemHoderView) convertView;
+        NewsListItemHoderView view = (NewsListItemHoderView) convertView;
+        if (view == null) {
+            view = new NewsListItemHoderView(context,infater);
+            Log.d(TAG,"new View "+view.hashCode());
         }
         NewsItem item = getDataSetItem(position);
-        view.showNews(item,showImage,showLarge,options,listener);
+        view.showNews(item,showImage,showLarge,optionsLarge,optionsSmall,listener);
         return view;
     }
 
     @Override
     public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
         showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyDataSetInvalidated() {
+        showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
+        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
+        super.notifyDataSetInvalidated();
     }
 
     public static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
