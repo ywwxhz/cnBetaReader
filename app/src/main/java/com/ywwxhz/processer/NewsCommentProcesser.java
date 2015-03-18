@@ -1,4 +1,4 @@
-package com.ywwxhz.service;
+package com.ywwxhz.processer;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.CommentItem;
 import com.ywwxhz.entity.CommentListObject;
 import com.ywwxhz.entity.ResponseObject;
-import com.ywwxhz.lib.handler.ActionService;
+import com.ywwxhz.lib.handler.BaseProcesser;
 import com.ywwxhz.lib.handler.CommentListHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
@@ -40,7 +40,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Created by ywwxhz on 2014/11/2.
  */
-public class NewsCommentService extends ActionService implements OnRefreshListener {
+public class NewsCommentProcesser extends BaseProcesser implements OnRefreshListener {
     public static final String SN_KEY = "key_sn";
     public static final String SID_KEY = "key_sid";
     public static final String TITLE_KEY = "key_title";
@@ -57,7 +57,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     private FloatingActionButton actionButton;
     private PullToRefreshLayout mPullToRefreshLayout;
 
-    public NewsCommentService(final Activity mContext) {
+    public NewsCommentProcesser(final Activity mContext) {
         this.mContext = mContext;
         Bundle bundle = mContext.getIntent().getExtras();
         if (!bundle.containsKey(SN_KEY) || !bundle.containsKey(TITLE_KEY) || !bundle.containsKey(SID_KEY)) {
@@ -78,11 +78,11 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         mFoot.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mFoot.setGravity(Gravity.CENTER);
         mFoot.setTextSize(16);
-        int padding = UIKit.dip2px(mContext,5);
-        mFoot.setPadding(padding,padding,padding,padding);
+        int padding = UIKit.dip2px(mContext, 5);
+        mFoot.setPadding(padding, padding, padding, padding);
         mFoot.setVisibility(View.GONE);
         this.mListView.addHeaderView(type, null, false);
-        this.mListView.addFooterView(mFoot,null,false);
+        this.mListView.addFooterView(mFoot, null, false);
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new CommentListAdapter(mContext, new ArrayList<CommentItem>());
         this.handler = new CommentListHandler(this, new TypeToken<ResponseObject<CommentListObject>>() {
@@ -91,12 +91,12 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         this.mListView.setAdapter(mAdapter);
         this.mProgressBar.setVisibility(View.GONE);
         this.actionButton.attachToListView(mListView);
-        this.actionButton.setImageResource(R.drawable.ic_edit);
+        this.actionButton.setImageResource(R.mipmap.ic_edit);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewCommentFragment fragment = NewCommentFragment.getInstance(sid,"0",token);
-                fragment.show(mContext.getFragmentManager(),"new comment");
+                NewCommentFragment fragment = NewCommentFragment.getInstance(sid, "0", token);
+                fragment.show(mContext.getFragmentManager(), "new comment");
             }
         });
         this.actionButton.setScaleX(0);
@@ -118,9 +118,9 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
     }
 
     private void makeRequest() {
-        if(mAdapter.getDataSet().size()==0){
+        if (mAdapter.getDataSet().size() == 0) {
             mProgressBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mProgressBar.setVisibility(View.GONE);
         }
         this.mListView.setOnItemClickListener(null);
@@ -175,7 +175,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         }
         if (cmntlist.size() > 0) { //针对加载缓存和普通访问
             this.mAdapter.setDataSet(cmntlist);
-            if(!isClosed&&!fromCache) {
+            if (!isClosed && !fromCache) {
                 this.mAdapter.setEnable(true);
                 this.actionButton.postDelayed(new Runnable() {
                     @Override
@@ -187,7 +187,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
                 Crouton.makeText(mContext, R.string.message_flush_success, Style.INFO).show();
             }
-        } else if (commentListObject.getOpen()==0) { //针对关平的新闻评论
+        } else if (commentListObject.getOpen() == 0) { //针对关平的新闻评论
             Crouton.makeText(mContext, R.string.message_comment_close, Style.ALERT).show();
             this.mAdapter.setEnable(false);
             this.mPullToRefreshLayout.setEnabled(false);
@@ -198,7 +198,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
             }
         } else {//针对暂时无评论的情况
             Crouton.makeText(mContext, R.string.message_no_comment, Style.INFO).show();
-            if(mAdapter.getCount()!=0) {
+            if (mAdapter.getCount() != 0) {
                 this.mListView.setVisibility(View.GONE);
             }
             this.actionButton.postDelayed(new Runnable() {
@@ -217,7 +217,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         this.mProgressBar.setVisibility(View.GONE);
         this.mPullToRefreshLayout.setRefreshComplete();
         this.mAdapter.notifyDataSetChanged();
-        if(mAdapter.getCount()>0){
+        if (mAdapter.getCount() > 0) {
             mFoot.setVisibility(View.VISIBLE);
         }
     }
@@ -227,7 +227,7 @@ public class NewsCommentService extends ActionService implements OnRefreshListen
         });
         if (commentListObject != null) {
             callOnLoadingSuccess(commentListObject, true, isCommentClose);
-            if (!isWebChange&&!isCommentClose) {
+            if (!isWebChange && !isCommentClose) {
                 Crouton.makeText(mContext, R.string.message_load_from_cache, Style.ALERT).show();
                 return true;
             } else return !isCommentClose;

@@ -5,14 +5,15 @@ import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.CommentItem;
 import com.ywwxhz.view.ExtendPopMenu;
-
-import java.util.Locale;
+import com.ywwxhz.view.textdrawable.TextDrawable;
+import com.ywwxhz.view.textdrawable.util.ColorGenerator;
 
 /**
  * CnbetaReader
@@ -29,6 +30,8 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
     private TextView comment_time;
     private View comment_more;
     private ExtendPopMenu popMenu;
+    private ImageView comment_image;
+    private TextView comment_from;
 
     public NewsCommentItemHoderView(Context context) {
         super(context);
@@ -51,12 +54,14 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
         this.comment_reason = (TextView) findViewById(R.id.comment_reason);
         this.comment_score = (TextView) findViewById(R.id.comment_score);
         this.comment_time = (TextView) findViewById(R.id.comment_time);
+        this.comment_image = (ImageView)findViewById(R.id.comment_image);
         this.comment_more = findViewById(R.id.comment_more);
-        this.popMenu = new ExtendPopMenu(getContext(),comment_more);
+        this.comment_from = (TextView)findViewById(R.id.comment_from);
+        this.popMenu = new ExtendPopMenu(getContext(), comment_more);
     }
 
-    public void showComment(CommentItem item,String token,BaseAdapter adapter, boolean enable) {
-        comment_name.setText(String.format(Locale.CHINA, "%s [%s]", item.getName(), item.getHost_name()));
+    public void showComment(CommentItem item, String token, BaseAdapter adapter, boolean enable, TextDrawable.IBuilder drawableBuilder, ColorGenerator colorGenerator) {
+        comment_name.setText(item.getName());
         if (item.getRefContent().length() != 0) {
             if (comment_ref.getVisibility() == GONE) {
                 comment_ref.setVisibility(View.VISIBLE);
@@ -67,8 +72,10 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
                 comment_ref.setVisibility(View.GONE);
             }
         }
+        comment_image.setImageDrawable(drawableBuilder.build(String.valueOf(item.getName().charAt(0)), colorGenerator.getColor(item.getTid())));
         comment_content.setText(Html.fromHtml(item.getComment()));
         comment_time.setText(item.getDate());
+        comment_from.setText(item.getHost_name());
         String score;
         if (item.getScore() > 999) {
             score = "999+";
@@ -83,12 +90,12 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
             reason = item.getReason() + "";
         }
         comment_reason.setText(reason);
-        if(enable&&!item.isHasscored()){
+        if (enable && !item.isHasscored()) {
             comment_more.setOnClickListener(this);
             popMenu.setCitem(item);
             popMenu.setAdapter(adapter);
             popMenu.setToken(token);
-        }else{
+        } else {
             comment_more.setOnClickListener(null);
         }
     }

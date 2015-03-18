@@ -2,35 +2,32 @@ package com.ywwxhz.app;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.ywwxhz.cnbetareader.R;
-import com.ywwxhz.service.NewsDetailService;
+import com.ywwxhz.processer.NewsDetailProcesser;
 
 /**
  * Created by ywwxhz on 2014/11/1.
  */
 public class NewsDetailActivity extends ExtendBaseActivity {
 
-    private NewsDetailService mService;
+    private NewsDetailProcesser mService;
 
     @Override
-    protected void createView(Bundle savedInstanceState) {
-        mService = new NewsDetailService(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mService = new NewsDetailProcesser(this,helper);
+        mService.fixPadding();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mService.getWebView().destroy();
+        this.finish();
     }
 
     @Override
@@ -43,6 +40,11 @@ public class NewsDetailActivity extends ExtendBaseActivity {
     protected void onResume() {
         super.onResume();
         mService.getWebView().onResume();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return mService.onKeyDown(keyCode, event)||super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -66,33 +68,16 @@ public class NewsDetailActivity extends ExtendBaseActivity {
             case R.id.menu_reflush:
                 mService.makeRequest();
                 break;
-            case R.id.menu_font_size_down:
-                mService.handleFontSize(false);
-                break;
-            case R.id.menu_font_size_up:
-                mService.handleFontSize(true);
+            case R.id.menu_font_size:
+                mService.handleFontSize();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onViewCreated(Bundle savedInstanceState) {
-        mService.fixPadding();
-    }
-
-    @Override
-    protected boolean shouldFixPose() {
-        return true;
-    }
-
-    @Override
-    protected View getInsertView() {
-        return mService.getInsertView();
-    }
-
-    @Override
-    protected void onConfigurationChangedNew(Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
         mService.fixPadding();
     }
 }

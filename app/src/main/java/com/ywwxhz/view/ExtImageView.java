@@ -39,14 +39,14 @@ public class ExtImageView extends ImageView {
             reversal = a.getBoolean(
                     R.styleable.ExtImageView_ex_Reversal, false);
             proportion = a.getFloat(R.styleable.ExtImageView_ex_proportion, 1);
-            ex_enable = a.getBoolean(R.styleable.ExtImageView_ex_enable,true);
+            ex_enable = a.getBoolean(R.styleable.ExtImageView_ex_enable, true);
             a.recycle();
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if(ex_enable) {
+        if (ex_enable) {
             setMeasuredDimension(getDefaultSize(0,
                     widthMeasureSpec), getDefaultSize(0,
                     heightMeasureSpec));

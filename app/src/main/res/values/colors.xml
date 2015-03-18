@@ -5,4 +5,6 @@
     <color name="color_normal">#1473af</color>
     <color name="color_passed">#3A85B5</color>
     <color name="green_1">#307351</color>
+
+    <color name="gray_80">#CC000000</color>
 </resources>

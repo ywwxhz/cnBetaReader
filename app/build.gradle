@@ -64,6 +64,8 @@ dependencies {
     compile project(':FloatingActionButton')
     compile project(':ActionBar-PullToRefresh')
     compile project(':materialish-progress')
+    compile project(':PhotoView')
+    compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile files('libs/jsoup-1.8.1.jar')

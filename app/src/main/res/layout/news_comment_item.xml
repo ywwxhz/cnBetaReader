@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ywwxhz.hoder.NewsCommentItemHoderView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/list_item_background"
-    android:padding="8dp">
+                                           android:layout_width="fill_parent"
+                                           android:layout_height="fill_parent"
+                                           android:background="@drawable/list_item_background"
+                                           android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/comment_image"
+        android:layout_width="42sp"
+        android:layout_height="42sp"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="3dp"/>
 
     <TextView
         android:id="@+id/comment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
         android:ellipsize="end"
-        android:paddingBottom="2dp"
         android:singleLine="true"
         android:textColor="#3c69ce"
         android:layout_toLeftOf="@+id/comment_more"
-        android:layout_toStartOf="@+id/comment_more"
-        android:textSize="20sp" />
+        android:textSize="18sp"
+        android:layout_toRightOf="@+id/comment_image"
+        android:layout_toEndOf="@+id/comment_image"
+        android:layout_marginRight="2dp"/>
+
+    <TextView
+        android:id="@+id/comment_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="from"
+        android:textColor="#5d5b5b"
+        android:textSize="12sp"
+        android:layout_below="@+id/comment_name"
+        android:layout_alignRight="@+id/comment_name"
+        android:layout_alignEnd="@+id/comment_name"
+        android:layout_marginBottom="2dp"
+        android:layout_alignLeft="@+id/comment_name"
+        />
+
     <ImageView
         android:id="@+id/comment_more"
         android:layout_width="30sp"
@@ -25,35 +48,36 @@
         android:src="@drawable/ic_more"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/comment_reason"
-        android:layout_alignEnd="@+id/comment_reason" />
+        android:layout_alignEnd="@+id/comment_reason"/>
 
     <TextView
         android:id="@+id/comment_ref"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/comment_name"
-        android:layout_marginBottom="2dp"
         android:background="@drawable/ref_background"
         android:lineSpacingExtra="1dp"
         android:padding="4dp"
         android:text="ref"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_below="@+id/comment_image"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"/>
 
     <TextView
         android:id="@+id/comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/comment_ref"
-        android:layout_marginBottom="2dp"
         android:lineSpacingExtra="1dp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:text="comment"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:layout_below="@+id/comment_ref"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="1dp"/>
 
     <TextView
         style="@style/SubText"
@@ -65,39 +89,37 @@
         android:layout_below="@+id/comment_content"
         android:layout_toLeftOf="@+id/comment_score"
         android:layout_toStartOf="@+id/comment_score"
-        android:layout_weight="1"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="time" />
+        android:text="time"/>
 
     <TextView
         style="@style/SubText"
         android:id="@+id/comment_reason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/comment_time"
-        android:layout_alignBottom="@+id/comment_time"
-        android:layout_alignEnd="@+id/comment_content"
-        android:layout_alignRight="@+id/comment_content"
-        android:layout_marginRight="2dp"
-        android:drawableLeft="@drawable/ic_reason"
+        android:drawableLeft="@mipmap/ic_reason"
         android:drawablePadding="5dp"
         android:gravity="center"
         android:minWidth="50sp"
-        android:text="999+" />
+        android:text="999+"
+        android:layout_below="@+id/comment_content"
+        android:layout_alignRight="@+id/comment_content"
+        android:layout_alignEnd="@+id/comment_content"
+        android:layout_marginRight="2dp"/>
 
     <TextView
         style="@style/SubText"
         android:id="@+id/comment_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/comment_content"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/comment_reason"
-        android:layout_toStartOf="@+id/comment_reason"
-        android:drawableLeft="@drawable/ic_score"
+        android:drawableLeft="@mipmap/ic_score"
         android:drawablePadding="5dp"
         android:gravity="center"
         android:minWidth="50sp"
-        android:text="99+" />
+        android:text="99+"
+        android:layout_alignTop="@+id/comment_reason"
+        android:layout_toLeftOf="@+id/comment_reason"
+        android:layout_toStartOf="@+id/comment_reason"
+        android:layout_marginRight="4dp"/>
 </com.ywwxhz.hoder.NewsCommentItemHoderView>

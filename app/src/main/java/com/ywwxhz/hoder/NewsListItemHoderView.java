@@ -45,14 +45,14 @@ public class NewsListItemHoderView extends RelativeLayout {
         news_time.setText(item.getInputtime());
         news_comment.setText(item.getComments());
         news_summary.setText(item.getSummary());
-        if(!showImage){
-            if(news_image_large.getVisibility()==VISIBLE){
+        if (!showImage) {
+            if (news_image_large.getVisibility() == VISIBLE) {
                 news_image_large.setVisibility(GONE);
             }
-            if(news_image_small.getVisibility() == VISIBLE){
+            if (news_image_small.getVisibility() == VISIBLE) {
                 news_image_small.setVisibility(GONE);
             }
-        }else{
+        } else {
             if (showLarge) {
                 if (news_image_small.getVisibility() == VISIBLE) {
                     news_image_small.setVisibility(GONE);

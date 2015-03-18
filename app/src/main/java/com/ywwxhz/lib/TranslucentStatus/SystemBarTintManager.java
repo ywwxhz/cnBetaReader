@@ -1,3 +1,4 @@
+package com.ywwxhz.lib.TranslucentStatus;
 /*
  * Copyright (C) 2013 readyState Software Ltd
  *
@@ -14,7 +15,6 @@
  * limitations under the License.
  */
 
-package com.ywwxhz.lib;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -34,7 +34,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout.LayoutParams;
+import android.widget.FrameLayout;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -66,6 +66,7 @@ public class SystemBarTintManager {
      * The default system bar tint color value.
      */
     public static final int DEFAULT_TINT_COLOR = 0x99000000;
+    public static int DEFAULT_ACTION_BAR_SIZE_Attr_RES_ID = android.R.attr.actionBarSize;
 
     private static String sNavBarOverride;
 
@@ -76,21 +77,38 @@ public class SystemBarTintManager {
     private boolean mNavBarTintEnabled;
     private View mStatusBarTintView;
     private View mNavBarTintView;
-    private LayoutParams mStatusBarParams;
+    private boolean attachDirectView;
 
     /**
      * Constructor. Call this in the host activity onCreate method after its
      * content view has been set. You should always create new instances when
-     * the host activity is recreated.
+     * the host activity is recreated. It only solve android.R.attr.actionBarSize
      *
      * @param activity The host activity.
      */
     @TargetApi(19)
     public SystemBarTintManager(Activity activity) {
+        this(activity, DEFAULT_ACTION_BAR_SIZE_Attr_RES_ID);
+    }
 
+    /**
+     * Constructor. Call this in the host activity onCreate method after its
+     * content view has been set. You should always create new instances when
+     * the host activity is recreated. It compalite with toolbar in support v7 R.attr.actionBarSize
+     *
+     * @param activity          The host activity.
+     * @param actionBarSizeAttr The ActionBar size attr
+     */
+    @TargetApi(19)
+    public SystemBarTintManager(Activity activity, int actionBarSizeAttr) {
+        this(activity, actionBarSizeAttr, null);
+    }
+
+
+    @TargetApi(19)
+    public SystemBarTintManager(Activity activity, int actionBarSizeAttr, View statusBarView) {
         Window win = activity.getWindow();
         ViewGroup decorViewGroup = (ViewGroup) win.getDecorView();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // check theme attrs
             int[] attrs = {android.R.attr.windowTranslucentStatus,
@@ -115,19 +133,18 @@ public class SystemBarTintManager {
             }
         }
 
-        mConfig = new SystemBarConfig(activity, mStatusBarAvailable, mNavBarAvailable);
+        mConfig = new SystemBarConfig(activity, mStatusBarAvailable, mNavBarAvailable, actionBarSizeAttr);
         // device might not have virtual navigation keys
         if (!mConfig.hasNavigtionBar()) {
             mNavBarAvailable = false;
         }
 
         if (mStatusBarAvailable) {
-            setupStatusBarView(activity, decorViewGroup);
+            setupStatusBarView(activity, decorViewGroup, statusBarView);
         }
         if (mNavBarAvailable) {
             setupNavBarView(activity, decorViewGroup);
         }
-
     }
 
     /**
@@ -225,11 +242,8 @@ public class SystemBarTintManager {
      *
      * @param alpha The alpha to use
      */
-    @TargetApi(11)
     public void setStatusBarAlpha(float alpha) {
-        if (mStatusBarAvailable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mStatusBarTintView.setAlpha(alpha);
-        }
+        mStatusBarTintView.setAlpha(alpha);
     }
 
     /**
@@ -271,11 +285,8 @@ public class SystemBarTintManager {
      *
      * @param alpha The alpha to use
      */
-    @TargetApi(11)
     public void setNavigationBarAlpha(float alpha) {
-        if (mNavBarAvailable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mNavBarTintView.setAlpha(alpha);
-        }
+        mNavBarTintView.setAlpha(alpha);
     }
 
     /**
@@ -321,35 +332,51 @@ public class SystemBarTintManager {
         return mNavBarTintEnabled;
     }
 
-    private void setupStatusBarView(Context context, ViewGroup decorViewGroup) {
-        mStatusBarTintView = new View(context);
-        mStatusBarParams = new LayoutParams(LayoutParams.MATCH_PARENT, mConfig.getStatusBarHeight());
-        mStatusBarParams.gravity = Gravity.TOP;
-        if (mNavBarAvailable && !mConfig.isNavigationAtBottom()) {
-            mStatusBarParams.rightMargin = mConfig.getNavigationBarWidth();
+    private void setupStatusBarView(Context context, ViewGroup decorViewGroup, View statusBarView) {
+        if (statusBarView == null) {
+            mStatusBarTintView = new View(context);
+            FrameLayout.LayoutParams mStatusBarParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT
+                    , mConfig.getStatusBarHeight());
+            mStatusBarParams.gravity = Gravity.TOP;
+            mStatusBarTintView.setLayoutParams(mStatusBarParams);
+            if (mNavBarAvailable && !mConfig.isNavigationAtBottom()) {
+                mStatusBarParams.rightMargin = mConfig.getNavigationBarWidth();
+            }
+            decorViewGroup.addView(mStatusBarTintView);
+            attachDirectView = true;
+        } else {
+            mStatusBarTintView = statusBarView;
+            ViewGroup.LayoutParams mStatusBarParams = mStatusBarTintView.getLayoutParams();
+            if (mStatusBarParams == null) {
+                throw new IllegalStateException("view must attach to parent view");
+            }
+            mStatusBarParams.height = mConfig.getStatusBarHeight();
+            mStatusBarTintView.setLayoutParams(mStatusBarParams);
+            attachDirectView = false;
         }
-        mStatusBarTintView.setLayoutParams(mStatusBarParams);
         mStatusBarTintView.setBackgroundColor(DEFAULT_TINT_COLOR);
         mStatusBarTintView.setVisibility(View.GONE);
-        decorViewGroup.addView(mStatusBarTintView);
     }
 
     private void updateStatusBarView() {
-        if (mNavBarAvailable && !mConfig.isNavigationAtBottom()) {
-            mStatusBarParams.rightMargin = mConfig.getNavigationBarWidth();
-        } else {
-            mStatusBarParams.rightMargin = 0;
+        ViewGroup.LayoutParams params = mStatusBarTintView.getLayoutParams();
+        if (params instanceof FrameLayout.LayoutParams && attachDirectView) {
+            if (mNavBarAvailable && !mConfig.isNavigationAtBottom()) {
+                ((FrameLayout.LayoutParams) params).rightMargin = mConfig.getNavigationBarWidth();
+            } else {
+                ((FrameLayout.LayoutParams) params).rightMargin = 0;
+            }
         }
     }
 
     private void setupNavBarView(Context context, ViewGroup decorViewGroup) {
         mNavBarTintView = new View(context);
-        LayoutParams params;
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         if (mConfig.isNavigationAtBottom()) {
-            params = new LayoutParams(LayoutParams.MATCH_PARENT, mConfig.getNavigationBarHeight());
+            params.height = mConfig.getNavigationBarHeight();
             params.gravity = Gravity.BOTTOM;
         } else {
-            params = new LayoutParams(mConfig.getNavigationBarWidth(), LayoutParams.MATCH_PARENT);
+            params.width = mConfig.getNavigationBarWidth();
             params.gravity = Gravity.RIGHT;
         }
         mNavBarTintView.setLayoutParams(params);
@@ -359,12 +386,14 @@ public class SystemBarTintManager {
     }
 
     private void updateNavBarView() {
-        LayoutParams params;
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNavBarTintView.getLayoutParams();
         if (mConfig.isNavigationAtBottom()) {
-            params = new LayoutParams(LayoutParams.MATCH_PARENT, mConfig.getNavigationBarHeight());
+            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
+            params.height = mConfig.getNavigationBarHeight();
             params.gravity = Gravity.BOTTOM;
         } else {
-            params = new LayoutParams(mConfig.getNavigationBarWidth(), LayoutParams.MATCH_PARENT);
+            params.width = mConfig.getNavigationBarWidth();
+            params.height = FrameLayout.LayoutParams.MATCH_PARENT;
             params.gravity = Gravity.RIGHT;
         }
         mNavBarTintView.setLayoutParams(params);
@@ -407,9 +436,12 @@ public class SystemBarTintManager {
         private int mSplitActionBarHeight;
         private boolean mHasSplitActionBar;
         private Activity mActivity;
+        private int actionBarSizeAttr;
 
-        private SystemBarConfig(Activity activity, boolean translucentStatusBar, boolean traslucentNavBar) {
+
+        protected SystemBarConfig(Activity activity, boolean translucentStatusBar, boolean traslucentNavBar, int actionBarSizeAttr) {
             this.mActivity = activity;
+            this.actionBarSizeAttr = actionBarSizeAttr;
             mTranslucentStatusBar = translucentStatusBar;
             mTranslucentNavBar = traslucentNavBar;
             notifyConfigureChange();
@@ -433,31 +465,23 @@ public class SystemBarTintManager {
                     & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
         }
 
-        @TargetApi(14)
-        private int getActionBarHeight(Context context) {
-            int result = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                TypedValue tv = new TypedValue();
-                context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-                result = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-            }
-            return result;
+        private int getActionBarHeight(Activity context) {
+            TypedValue tv = new TypedValue();
+            context.getTheme().resolveAttribute(actionBarSizeAttr, tv, true);
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 
-        @TargetApi(14)
-        private int getNavigationBarHeight(Context context) {
+        private int getNavigationBarHeight(Activity context) {
             Resources res = context.getResources();
             int result = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                if (hasNavBar(context)) {
-                    String key;
-                    if (mInPortrait) {
-                        key = NAV_BAR_HEIGHT_RES_NAME;
-                    } else {
-                        key = NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME;
-                    }
-                    return getInternalDimensionSize(res, key);
+            if (hasNavBar(context)) {
+                String key;
+                if (mInPortrait) {
+                    key = NAV_BAR_HEIGHT_RES_NAME;
+                } else {
+                    key = NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME;
                 }
+                return getInternalDimensionSize(res, key);
             }
             return result;
         }
@@ -493,19 +517,14 @@ public class SystemBarTintManager {
         }
 
 
-        @TargetApi(14)
         private int getNavigationBarWidth(Context context) {
             Resources res = context.getResources();
-            int result = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                if (hasNavBar(context)) {
-                    return getInternalDimensionSize(res, NAV_BAR_WIDTH_RES_NAME);
-                }
+            if (hasNavBar(context)) {
+                return getInternalDimensionSize(res, NAV_BAR_WIDTH_RES_NAME);
             }
-            return result;
+            return 0;
         }
 
-        @TargetApi(14)
         private boolean hasNavBar(Context context) {
             Resources res = context.getResources();
             int resourceId = res.getIdentifier(SHOW_NAV_BAR_RES_NAME, "bool", "android");

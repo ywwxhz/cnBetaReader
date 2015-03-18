@@ -51,7 +51,7 @@
             @android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse
         </item>
         <item name="android:background">@drawable/ab_solid_basic</item>
-        <item name="android:logo">@drawable/ic_logo</item>
+        <item name="android:logo">@mipmap/ic_logo</item>
     </style>
 
 </resources>

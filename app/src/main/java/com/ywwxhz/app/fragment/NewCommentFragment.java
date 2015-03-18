@@ -81,7 +81,7 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         content = (EditText) view.findViewById(R.id.push_content);
         seccode = (EditText) view.findViewById(R.id.seccode);
         seccodeImage = (ImageView) view.findViewById(R.id.seccodeImage);
-        progress = (ProgressWheel)view.findViewById(R.id.seccodeProgress);
+        progress = (ProgressWheel) view.findViewById(R.id.seccodeProgress);
         content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -114,8 +114,8 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         }
     };
 
-    private void reflushscecode(){
-        if(!flushing) {
+    private void reflushscecode() {
+        if (!flushing) {
             flushing = true;
             seccodeImage.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
@@ -187,9 +187,9 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         super.onStart();
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width=dm.widthPixels;
-        if(width > UIKit.dip2px(getActivity(),450)){
-            width = UIKit.dip2px(getActivity(),450);
+        int width = dm.widthPixels;
+        if (width > UIKit.dip2px(getActivity(), 450)) {
+            width = UIKit.dip2px(getActivity(), 450);
         }
         getDialog().getWindow().setLayout(width, getDialog().getWindow().getAttributes().height);
     }
@@ -197,7 +197,7 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.send) {
-            if(seccode.getText().length()==4) {
+            if (seccode.getText().length() == 4) {
                 RequestParams params = new RequestParams();
                 params.put("op", "publish");
                 params.put("content", content.getText().toString());
@@ -221,9 +221,9 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
                                         }
                                         showToast(action + "成功");
                                         dismiss();
-                                    } else if ("error".equals(response.getString("state"))){
-                                        showToast(response.getString("error")+"");
-                                    }else{
+                                    } else if ("error".equals(response.getString("state"))) {
+                                        showToast(response.getString("error") + "");
+                                    } else {
                                         throw new JSONException("response error");
                                     }
                                 } catch (JSONException e) {
@@ -244,16 +244,16 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
                             }
                         }
                 );
-            }else{
+            } else {
                 showToast("验证码不能为空");
             }
 
         }
     }
 
-    private void showToast(String message){
-        if(getActivity()!=null)
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    private void showToast(String message) {
+        if (getActivity() != null)
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -261,9 +261,9 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
         super.onConfigurationChanged(newConfig);
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width=dm.widthPixels;
-        if(width > UIKit.dip2px(getActivity(),420)){
-            width = UIKit.dip2px(getActivity(),420);
+        int width = dm.widthPixels;
+        if (width > UIKit.dip2px(getActivity(), 420)) {
+            width = UIKit.dip2px(getActivity(), 420);
         }
         getDialog().getWindow().setLayout(width, getDialog().getWindow().getAttributes().height);
     }

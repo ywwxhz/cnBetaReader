@@ -2,40 +2,27 @@ package com.ywwxhz.app;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.ywwxhz.cnbetareader.R;
-import com.ywwxhz.lib.kits.UIKit;
-import com.ywwxhz.service.NewsListService;
+import com.ywwxhz.processer.NewsListProcesser;
 
 
 public class NewsListActivity extends BaseActivity {
 
-    private int margin;
-    private NewsListService mService;
-    private int[] paddings;
+    private NewsListProcesser mService;
 
     @Override
-    protected void createView(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.list_layout);
         getActionBar().setDisplayShowHomeEnabled(true);
-        mService = new NewsListService(this);
+        mService = new NewsListProcesser(this);
         ListView list = mService.getListView();
-        paddings = new int[]{list.getPaddingLeft(),list.getPaddingTop(),list.getPaddingRight(),list.getPaddingBottom()};
-    }
-
-    @Override
-    protected void onViewCreated(Bundle savedInstanceState) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mService.getFloatButtom().getLayoutParams();
-        margin = layoutParams.leftMargin;
-        layoutParams.setMargins(margin, margin,
-                margin + tintManager.getConfig().getPixelInsetRight(), margin + tintManager.getConfig().getPixelInsetBottom());
-        mService.getFloatButtom().setLayoutParams(layoutParams);
+        option.setConfigView(list);
+        fixPos();
     }
 
     @Override
@@ -44,54 +31,33 @@ public class NewsListActivity extends BaseActivity {
         mService.onResume();
     }
 
-    @Override
-    protected boolean shouldFixPose() {
-        return true;
-    }
 
     @Override
-    protected View getInsertView() {
-        return mService.getListView();
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        fixPos();
     }
 
-    @Override
-    protected UIKit.PaddingMode getPaddingMode() {
-        return UIKit.PaddingMode.SET_ALL;
-    }
-
-    @Override
-    protected int[] getPadding() {
-        return paddings;
-    }
-
-    @Override
-    protected Drawable getStatusDrawable() {
-        return new ColorDrawable(getResources().getColor(R.color.statusColor));
-    }
-
-    @Override
-    protected void onConfigurationChangedNew(Configuration newConfig) {
+    private void fixPos() {
+        int[] ints = helper.getInsertPixs(false);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mService.getFloatButtom().getLayoutParams();
-        layoutParams.setMargins(margin, margin,
-                margin + tintManager.getConfig().getPixelInsetRight(), margin + tintManager.getConfig().getPixelInsetBottom());
+        int margin = layoutParams.leftMargin;
+        layoutParams.rightMargin = margin + ints[2];
+        layoutParams.bottomMargin = margin + ints[3];
         mService.getFloatButtom().setLayoutParams(layoutParams);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        this.finish();
         System.exit(0);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mService.onReturn(requestCode,resultCode);
+        mService.onReturn(requestCode, resultCode);
     }
 }

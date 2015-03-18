@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:icon="@drawable/ic_more_light"
+        android:icon="@mipmap/ic_more_light"
         android:showAsAction="always"
         android:title="more">
         <menu>
             <item
+                android:id="@+id/menu_reflush"
+                android:title="@string/menu_reflush" />
+            <item
                 android:id="@+id/menu_share"
                 android:title="@string/menu_share" />
             <item
-                android:id="@+id/menu_font_size_up"
-                android:title="增大字体" />
-            <item
-                android:id="@+id/menu_font_size_down"
-                android:title="减小字体" />
+                android:id="@+id/menu_font_size"
+                android:title="调节字体大小" />
             <item
                 android:id="@+id/menu_view_in_browser"
                 android:title="@string/menu_view_in_browser" />
-            <item
-                android:id="@+id/menu_reflush"
-                android:title="@string/menu_reflush" />
         </menu>
     </item>
 </menu>

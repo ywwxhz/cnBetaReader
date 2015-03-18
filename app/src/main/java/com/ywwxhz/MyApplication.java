@@ -38,13 +38,13 @@ public class MyApplication extends Application {
         // or you can create default configuration by
         //  ImageLoaderConfiguration.createDefault(this);
         // method.
-        ImageLoaderConfiguration.Builder builder =  new ImageLoaderConfiguration.Builder(context)
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .diskCacheSize(50 * 1024 * 1024) // 50 Mb
                 .tasksProcessingOrder(QueueProcessingType.LIFO);
-        if (debug){
+        if (debug) {
             builder.writeDebugLogs();
         }
         ImageLoaderConfiguration config = builder.build();

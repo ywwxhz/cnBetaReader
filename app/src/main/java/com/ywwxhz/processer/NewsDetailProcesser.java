@@ -1,4 +1,4 @@
-package com.ywwxhz.service;
+package com.ywwxhz.processer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -21,20 +22,24 @@ import android.widget.Toast;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 import com.pnikosis.materialishprogress.ProgressWheel;
-import com.ywwxhz.app.MediaActivity;
+import com.ywwxhz.app.ImageViewActivity;
 import com.ywwxhz.app.NewsCommentActivity;
+import com.ywwxhz.app.fragment.FontSizeFragment;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entity.NewsItem;
 import com.ywwxhz.lib.Configure;
-import com.ywwxhz.lib.handler.ActionService;
+import com.ywwxhz.lib.TranslucentStatus.TranslucentStatusHelper;
+import com.ywwxhz.lib.handler.BaseProcesser;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apache.http.Header;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.Locale;
@@ -43,8 +48,9 @@ import java.util.regex.Matcher;
 /**
  * Created by ywwxhz on 2014/11/1.
  */
-public class NewsDetailService extends ActionService {
+public class NewsDetailProcesser extends BaseProcesser {
     public static final String NEWS_ITEM_KEY = "key_news_item";
+    private final TranslucentStatusHelper helper;
     private View vg;
     private View loadFail;
     private int margin = 0;
@@ -62,19 +68,20 @@ public class NewsDetailService extends ActionService {
             ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
             ".content{padding-top:10pt;font-size: 12pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
             "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
-            "<hr/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
+            "<hr style=\"clear: both\"/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");" +
             "for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0)" +
-            "{a.onclick=function(){return false;}}};" +
-            //" var videos = document.getElementsByTagName('video');for(var i=0;i<videos.length;i++){videos[i].onclick=function(){ Video.showToast(this.src);return false;}}" +
+            "{a.onclick=function(){return false;}}}; function openImage(obj){window.Interface.showImage(obj.src);return false;}"+
             "</script></body></html>";
     private Handler myHandler;
+    private WebSettings settings;
 
-    public NewsDetailService(Activity mContext) {
+    public NewsDetailProcesser(Activity mContext, TranslucentStatusHelper helper) {
         this.hascontent = false;
         this.mContext = mContext;
         this.mContext.setContentView(R.layout.activity_detail);
         this.myHandler = new Handler();
+        this.helper = helper;
         initView();
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
@@ -120,9 +127,10 @@ public class NewsDetailService extends ActionService {
                 commentAction();
             }
         });
+        this.helper.getOption().setConfigView(vg) ;
         mActionButtom.setScaleX(0);
         mActionButtom.setScaleY(0);
-        WebSettings settings = mWebView.getSettings();
+        settings = mWebView.getSettings();
         settings.setSupportZoom(false);
         settings.setAllowFileAccess(true);
         settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
@@ -140,22 +148,27 @@ public class NewsDetailService extends ActionService {
         } else {
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
-        mWebView.setWebChromeClient(new WebChromeClient(){
+        mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Interface");
+        mWebView.setWebChromeClient(new WebChromeClient() {
             private View myView = null;
             private CustomViewCallback myCallback = null;
             private int orientation;
+
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
                 if (myCallback != null) {
                     myCallback.onCustomViewHidden();
-                    myCallback = null ;
+                    myCallback = null;
                     return;
                 }
                 orientation = mContext.getRequestedOrientation();
                 mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                mContext.getActionBar().hide();
+                helper.getOption().setWithActionBar(false);
+
                 ViewGroup parent = (ViewGroup) mWebView.getParent();
-                parent.removeView( mWebView);
-                parent.removeView(mActionButtom);
+                mWebView.setVisibility(View.GONE);
+                mActionButtom.setVisibility(View.GONE);
                 parent.addView(view);
                 myView = view;
                 myCallback = callback;
@@ -168,16 +181,21 @@ public class NewsDetailService extends ActionService {
 
                     if (myCallback != null) {
                         myCallback.onCustomViewHidden();
-                        myCallback = null ;
+                        myCallback = null;
                     }
                     mContext.setRequestedOrientation(orientation);
+                    mContext.getActionBar().show();
+                    helper.getOption().setWithActionBar(true);
                     ViewGroup parent = (ViewGroup) myView.getParent();
-                    parent.removeView( myView);
-                    parent.addView( mWebView);
-                    parent.addView(mActionButtom);
+                    parent.removeView(myView);
+                    mWebView.setVisibility(View.VISIBLE);
+                    mActionButtom.setVisibility(View.VISIBLE);
+
                     myView = null;
                 }
             }
+
+
         });
         this.loadFail.setClickable(true);
         this.loadFail.setOnClickListener(new View.OnClickListener() {
@@ -186,28 +204,6 @@ public class NewsDetailService extends ActionService {
                 makeRequest();
             }
         });
-    }
-
-
-    public class JavaScriptInterface {
-        Context mContext;
-
-        JavaScriptInterface(Context c) {
-            mContext = c;
-        }
-
-        @JavascriptInterface
-        public void showToast(String webMessage) {
-            final String msgeToast = webMessage;
-            myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(mContext, MediaActivity.class);
-                    intent.putExtra("videoUrl", msgeToast);
-                    mContext.startActivity(intent);
-                }
-            });
-        }
     }
 
     public void makeRequest() {
@@ -244,7 +240,11 @@ public class NewsDetailService extends ActionService {
                             Elements newsHeadlines = doc.select(".body");
                             mNewsItem.setFrom(newsHeadlines.select(".where").html());
                             mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
-                            mNewsItem.setContent(newsHeadlines.select(".content").html());
+                            Elements content = newsHeadlines.select(".content");
+                            for(Element e:content.select("img")){
+                                e.attr("onclick","openImage(this)");
+                            }
+                            mNewsItem.setContent(content.html());
                             Matcher snMatcher = Configure.SN_PATTERN.matcher(params[0]);
                             if (snMatcher.find())
                                 mNewsItem.setSN(snMatcher.group(1));
@@ -277,10 +277,6 @@ public class NewsDetailService extends ActionService {
         return mNewsItem;
     }
 
-    public View getInsertView() {
-        return vg;
-    }
-
     public Activity getContext() {
         return mContext;
     }
@@ -305,9 +301,9 @@ public class NewsDetailService extends ActionService {
 
     public void commentAction() {
         Intent intent = new Intent(mContext, NewsCommentActivity.class);
-        intent.putExtra(NewsCommentService.SN_KEY, mNewsItem.getSN());
-        intent.putExtra(NewsCommentService.SID_KEY, mNewsItem.getSid());
-        intent.putExtra(NewsCommentService.TITLE_KEY, mNewsItem.getTitle());
+        intent.putExtra(NewsCommentProcesser.SN_KEY, mNewsItem.getSN());
+        intent.putExtra(NewsCommentProcesser.SID_KEY, mNewsItem.getSid());
+        intent.putExtra(NewsCommentProcesser.TITLE_KEY, mNewsItem.getTitle());
         mContext.startActivity(intent);
     }
 
@@ -328,12 +324,50 @@ public class NewsDetailService extends ActionService {
         mContext.startActivity(Intent.createChooser(intent, mContext.getString(R.string.choise_browser)));
     }
 
-    public void handleFontSize(boolean up){
-            WebSettings settings = mWebView.getSettings();
-        if (up){
-            settings.setTextZoom(settings.getTextZoom()+5);
-        }else{
-            settings.setTextZoom(settings.getTextZoom()-5);
+    public void handleFontSize() {
+        FontSizeFragment fragment = FontSizeFragment.getInstance(settings.getTextZoom());
+        fragment.show(mContext.getFragmentManager(), "Font Size");
+        fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                if (fromUser) {
+                    settings.setTextZoom(value);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return false;
+    }
+
+    private class JavaScriptInterface {
+        Context mContext;
+
+        JavaScriptInterface(Context c) {
+            mContext = c;
+        }
+
+        @JavascriptInterface
+        public void showImage(final String imageSrc){
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(mContext, ImageViewActivity.class);
+                    intent.putExtra(ImageViewActivity.IMAGE_URL,imageSrc);
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 }

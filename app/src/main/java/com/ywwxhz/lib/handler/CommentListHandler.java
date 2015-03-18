@@ -3,17 +3,17 @@ package com.ywwxhz.lib.handler;
 import com.google.gson.reflect.TypeToken;
 import com.ywwxhz.entity.CommentListObject;
 import com.ywwxhz.entity.ResponseObject;
-import com.ywwxhz.service.NewsCommentService;
+import com.ywwxhz.processer.NewsCommentProcesser;
 
 import org.apache.http.Header;
 
 /**
  * Created by ywwxhz on 2014/11/2.
  */
-public class CommentListHandler extends ExternedGsonHttpResposerHandler<NewsCommentService, ResponseObject<CommentListObject>> {
+public class CommentListHandler extends ExternedGsonHttpResposerHandler<NewsCommentProcesser, ResponseObject<CommentListObject>> {
 
-    public CommentListHandler(NewsCommentService newsCommentService, TypeToken<ResponseObject<CommentListObject>> type) {
-        super(newsCommentService, type);
+    public CommentListHandler(NewsCommentProcesser newsCommentProcesser, TypeToken<ResponseObject<CommentListObject>> type) {
+        super(newsCommentProcesser, type);
     }
 
     @Override

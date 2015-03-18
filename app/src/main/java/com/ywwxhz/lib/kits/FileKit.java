@@ -2,15 +2,15 @@ package com.ywwxhz.lib.kits;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
@@ -29,7 +29,7 @@ public class FileKit {
     public static long copyFile(String srcFile, File destDir, String newFileName) {
         long copySizes = 0;
         if (!destDir.exists()) {
-            if(!destDir.mkdirs()) {
+            if (!destDir.mkdirs()) {
                 System.out.println("无法建立文件夹");
                 return -1;
             }
@@ -82,7 +82,7 @@ public class FileKit {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 
-    public static long getFolderSize(File file){
+    public static long getFolderSize(File file) {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
@@ -93,12 +93,12 @@ public class FileKit {
                     size = size + aFileList.length();
                 }
             }
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
         }
         return size;
     }
 
-    public static long getFolderSize(String path){
+    public static long getFolderSize(String path) {
         File file = new File(path);
         long size = 0;
         try {
@@ -110,7 +110,7 @@ public class FileKit {
                     size = size + aFileList.length();
                 }
             }
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
         }
         return size;
     }
@@ -126,6 +126,9 @@ public class FileKit {
     }
 
     public static boolean writeFile(File path, String fileName, String content) {
+        if (!path.exists()) {
+            path.mkdirs();
+        }
         return writeFile(new File(path, fileName), content);
     }
 
@@ -138,18 +141,29 @@ public class FileKit {
     }
 
     public static boolean writeFile(File file, boolean append, String content) {
-        BufferedWriter out = null;
+        FileOutputStream fos = null;
+        FileChannel fc_out = null;
         try {
-            out = new BufferedWriter(new FileWriter(file, append), 1024);
-            out.write(content);
+            fos = new FileOutputStream(file, append);
+            fc_out = fos.getChannel();
+            ByteBuffer buf = ByteBuffer.wrap(content.getBytes());
+            buf.put(content.getBytes());
+            buf.flip();
+            fc_out.write(buf);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         } finally {
-            if (out != null) {
+            if (null != fc_out) {
                 try {
-                    out.flush();
-                    out.close();
+                    fc_out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (null != fos) {
+                try {
+                    fos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -229,18 +243,21 @@ public class FileKit {
         return fname;
     }
 
-    public static boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            //递归删除目录中的子目录下
+    public static void deleteDir(File dir) {
+        File to = new File(dir.getAbsolutePath() + System.currentTimeMillis());
+        dir.renameTo(to);// in order to fix android java.io.IOException: open failed: EBUSY (Device or resource busy)
+                         // detail http://stackoverflow.com/questions/11539657/open-failed-ebusy-device-or-resource-busy
+        if (to.isDirectory()) {
+            String[] children = to.list();
             for (String aChildren : children) {
-                boolean success = deleteDir(new File(dir, aChildren));
-                if (!success) {
-                    return false;
+                File temp = new File(to, aChildren);
+                if (temp.isDirectory()) {
+                    deleteDir(temp);
+                } else if (!temp.delete()) {
+                    Log.d("deleteSDCardFolder", "DELETE FAIL");
                 }
             }
+            to.delete();
         }
-        // 目录此时为空，可以删除
-        return dir.delete();
     }
 }

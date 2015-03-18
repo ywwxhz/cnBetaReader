@@ -21,14 +21,14 @@ public class NetKit {
 
     private static NetKit instance;
     private AsyncHttpClient mClient;
-    public static final String CONTENT_TYPE="application/x-www-form-urlencoded; charset=UTF-8";
+    public static final String CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private NetKit() {
         mClient = new AsyncHttpClient();
         mClient.setCookieStore(new BasicCookieStore());
         mClient.setConnectTimeout(3000);
         mClient.setResponseTimeout(6000);
-        mClient.setMaxRetriesAndTimeout(3,200);
+        mClient.setMaxRetriesAndTimeout(3, 200);
         mClient.setUserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36");
     }
 
@@ -43,17 +43,17 @@ public class NetKit {
     }
 
     public static NetKit getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new NetKit();
         }
         return instance;
     }
 
-    public void getNewslistByPage(int page,String type, ResponseHandlerInterface handlerInterface) {
+    public void getNewslistByPage(int page, String type, ResponseHandlerInterface handlerInterface) {
         RequestParams params = new RequestParams();
-        params.add("type",type);
-        params.add("page",page+"");
-        params.add("_",System.currentTimeMillis()+"");
+        params.add("type", type);
+        params.add("page", page + "");
+        params.add("_", System.currentTimeMillis() + "");
         mClient.get(null, Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
     }
 
@@ -63,23 +63,23 @@ public class NetKit {
 
     public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
         RequestParams params = new RequestParams();
-        params.add("op","1,"+sid+","+sn);
-        mClient.post(null, Configure.COMMENT_URL, getAuthHeader(), params,CONTENT_TYPE, handlerInterface);
+        params.add("op", "1," + sid + "," + sn);
+        mClient.post(null, Configure.COMMENT_URL, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
     }
 
-    public void setCommentAction(String op, String sid, String tid ,String csrf_token, ResponseHandlerInterface handlerInterface) {
+    public void setCommentAction(String op, String sid, String tid, String csrf_token, ResponseHandlerInterface handlerInterface) {
         RequestParams params = new RequestParams();
-        params.add("op",op);
-        params.add("sid",sid);
-        params.add("tid",tid);
-        params.add("csrf_token",csrf_token);
-        mClient.post(null, Configure.COMMENT_VIEW, getAuthHeader(), params,CONTENT_TYPE, handlerInterface);
+        params.add("op", op);
+        params.add("sid", sid);
+        params.add("tid", tid);
+        params.add("csrf_token", csrf_token);
+        mClient.post(null, Configure.COMMENT_VIEW, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
     }
 
     public static Header[] getAuthHeader() {
         return new Header[]{
                 new BasicHeader("Referer", "http://www.cnbeta.com/"),
-                new BasicHeader("Origin","http://www.cnbeta.com"),
+                new BasicHeader("Origin", "http://www.cnbeta.com"),
                 new BasicHeader("X-Requested-With", "XMLHttpRequest")
         };
     }

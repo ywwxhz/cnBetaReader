@@ -17,10 +17,10 @@ public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler
         if (statusCode == 200) {
             try {
                 T e = Toolkit.getGson().fromJson(responseString, getType());
-                if(e!=null) {
+                if (e != null) {
                     onSuccess(statusCode, headers, responseString, e);
-                }else{
-                    onFailure(statusCode,headers,responseString,new RuntimeException("response empty"));
+                } else {
+                    onFailure(statusCode, headers, responseString, new RuntimeException("response empty"));
                 }
             } catch (Exception e) {
                 onError(statusCode, headers, responseString, e);
@@ -35,5 +35,6 @@ public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler
     public abstract void onSuccess(int statusCode, Header[] headers, String responseString, T object);
 
     @Override
-    public void onProgress(int bytesWritten, int totalSize) {}
+    public void onProgress(int bytesWritten, int totalSize) {
+    }
 }

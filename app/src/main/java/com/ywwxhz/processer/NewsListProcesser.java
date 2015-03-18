@@ -1,4 +1,4 @@
-package com.ywwxhz.service;
+package com.ywwxhz.processer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,7 +25,7 @@ import com.ywwxhz.entity.NewsItem;
 import com.ywwxhz.entity.NewsListObject;
 import com.ywwxhz.entity.ResponseObject;
 import com.ywwxhz.lib.PagedLoader;
-import com.ywwxhz.lib.handler.ActionService;
+import com.ywwxhz.lib.handler.BaseProcesser;
 import com.ywwxhz.lib.handler.NormalNewsListHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
@@ -45,7 +45,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Created by ywwxhz on 2014/11/1.
  */
-public class NewsListService extends ActionService implements OnRefreshListener {
+public class NewsListProcesser extends BaseProcesser implements OnRefreshListener {
     private int topSid;
     private int current;
     private boolean hasCached;
@@ -61,11 +61,11 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     private PagedLoader.OnLoadListener loadListener = new PagedLoader.OnLoadListener() {
         @Override
         public void onLoading(PagedLoader pagedLoader, boolean isAutoLoad) {
-            NetKit.getInstance().getNewslistByPage(current + 1,"all", newsPage);
+            NetKit.getInstance().getNewslistByPage(current + 1, "all", newsPage);
         }
     };
 
-    public NewsListService(final Activity mContext) {
+    public NewsListProcesser(final Activity mContext) {
         this.hasCached = false;
         this.mContext = mContext;
         this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
@@ -78,10 +78,10 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.mListView.addHeaderView(view, null, false);
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();
         this.mLoader.setAdapter(mAdapter);
-        this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(),false,true
-                ,this.actionButton.attachToListView(this.mListView,null,false)));
+        this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true
+                , this.actionButton.attachToListView(this.mListView, null, false)));
         this.actionButton.setVisibility(View.VISIBLE);
-        this.actionButton.setImageResource(R.drawable.ic_settings);
+        this.actionButton.setImageResource(R.mipmap.ic_settings);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,9 +102,9 @@ public class NewsListService extends ActionService implements OnRefreshListener 
         this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(NewsListService.this.mContext, NewsDetailActivity.class);
-                intent.putExtra(NewsDetailService.NEWS_ITEM_KEY, mAdapter.getDataSetItem(i - 1));
-                NewsListService.this.mContext.startActivity(intent);
+                Intent intent = new Intent(NewsListProcesser.this.mContext, NewsDetailActivity.class);
+                intent.putExtra(NewsDetailProcesser.NEWS_ITEM_KEY, mAdapter.getDataSetItem(i - 1));
+                NewsListProcesser.this.mContext.startActivity(intent);
             }
         });
         ActionBarPullToRefresh.from(mContext)
@@ -119,7 +119,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     private void loadData(boolean startup) {
         ArrayList<NewsItem> newsList = FileCacheKit.getInstance().getAsObject("newsList".hashCode() + "", "list", new TypeToken<ArrayList<NewsItem>>() {
         });
-        if(mAdapter.getCount()==0) {
+        if (mAdapter.getCount() == 0) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
         if (newsList != null) {
@@ -139,7 +139,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
                     mPullToRefreshLayout.setRefreshing(true);
                     onRefreshStarted(null);
                 }
-            }, startup?400:0);
+            }, startup ? 400 : 0);
         }
     }
 
@@ -173,7 +173,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
 
     @Override
     public void onRefreshStarted(View view) {
-        NetKit.getInstance().getNewslistByPage(1,"all", newsPage);
+        NetKit.getInstance().getNewslistByPage(1, "all", newsPage);
     }
 
     public void callNewsPageLoadSuccess(NewsListObject listPage) {
@@ -198,12 +198,12 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             }
             StringBuilder sb = new StringBuilder(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
 //            int index = sb.indexOf("。");
-//            if(index >0&&index<sb.length()){
+//            if(index >25 && index <50){
 //                item.setSummary(sb.delete(index+1,sb.length()).toString());
 //            }else
-            if(sb.length()>100) {
-                item.setSummary(sb.replace(101,sb.length(),"...").toString());
-            }else{
+            if (sb.length() > 140) {
+                item.setSummary(sb.replace(140, sb.length(), "...").toString());
+            } else {
                 item.setSummary(sb.toString());
             }
             if (item.getThumb().contains("thumb")) {
@@ -211,11 +211,11 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             }
             if (!find && item.getSid() != topSid) {
                 size++;
-            }else if (!find){
+            } else if (!find) {
                 find = true;
             }
         }
-        if(!find){
+        if (!find) {
             size++;
         }
 
@@ -223,7 +223,7 @@ public class NewsListService extends ActionService implements OnRefreshListener 
             hasCached = true;
             mAdapter.setDataSet(itemList);
             topSid = itemList.get(1).getSid();
-            showToastAndCache(itemList, size-1);
+            showToastAndCache(itemList, size - 1);
         } else {
             dataSet.addAll(itemList);
         }
@@ -257,6 +257,8 @@ public class NewsListService extends ActionService implements OnRefreshListener 
     }
 
     public void onReturn(int request, int response) {
-        mLoader.notifyDataSetInvalidated();
+        if (response == 200) {
+            mAdapter.notifyDataSetChanged(true);
+        }
     }
 }

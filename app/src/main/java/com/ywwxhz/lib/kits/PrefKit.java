@@ -25,6 +25,7 @@ public class PrefKit {
         SharedPreferences appPrefs = getSharedPreferences(context);
         return appPrefs.getBoolean(key, def);
     }
+
     public static boolean getBoolean(Context context, int key, boolean def) {
         SharedPreferences appPrefs = getSharedPreferences(context);
         return appPrefs.getBoolean(context.getString(key), def);

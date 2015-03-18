@@ -2,7 +2,6 @@ package com.ywwxhz.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     private boolean showImage;
     private DisplayImageOptions optionsLarge;
     private DisplayImageOptions optionsSmall;
-    private AnimateFirstDisplayListener listener =  new AnimateFirstDisplayListener();
+    private AnimateFirstDisplayListener listener = new AnimateFirstDisplayListener();
 
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
@@ -56,25 +55,24 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     protected View bindViewAndData(LayoutInflater infater, int position, View convertView, ViewGroup parent) {
         NewsListItemHoderView view = (NewsListItemHoderView) convertView;
         if (view == null) {
-            view = new NewsListItemHoderView(context,infater);
-            Log.d(TAG,"new View "+view.hashCode());
+            view = new NewsListItemHoderView(context, infater);
         }
         NewsItem item = getDataSetItem(position);
-        view.showNews(item,showImage,showLarge,optionsLarge,optionsSmall,listener);
+        view.showNews(item, showImage, showLarge, optionsLarge, optionsSmall, listener);
         return view;
     }
 
     @Override
     public void notifyDataSetChanged() {
-        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
-        super.notifyDataSetChanged();
+        notifyDataSetChanged(false);
     }
 
-    @Override
-    public void notifyDataSetInvalidated() {
-        showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
-        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
-        super.notifyDataSetInvalidated();
+    public void notifyDataSetChanged(boolean changeConfig) {
+        if(changeConfig){
+            showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
+            showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
+        }
+        super.notifyDataSetChanged();
     }
 
     public static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
@@ -86,7 +84,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             if (loadedImage != null) {
                 ImageView imageView = (ImageView) view;
                 boolean firstDisplay = !displayedImages.contains(imageUri);
-                if (firstDisplay&&imageView.getVisibility()==View.VISIBLE) {
+                if (firstDisplay && imageView.getVisibility() == View.VISIBLE) {
                     FadeInBitmapDisplayer.animate(imageView, 500);
                     displayedImages.add(imageUri);
                 }

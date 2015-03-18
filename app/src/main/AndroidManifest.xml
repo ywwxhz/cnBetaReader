@@ -9,7 +9,7 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name="com.ywwxhz.MyApplication"
         android:theme="@style/Theme.Basic">
@@ -34,6 +34,10 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/settings"
             android:name="com.ywwxhz.app.SettingsActivity"/>
+        <activity
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/Theme.Basic.Image"
+            android:name="com.ywwxhz.app.ImageViewActivity"/>
     </application>
 
 </manifest>

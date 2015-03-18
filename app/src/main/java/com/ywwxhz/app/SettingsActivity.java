@@ -1,6 +1,5 @@
 package com.ywwxhz.app;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -22,29 +21,20 @@ import java.io.File;
 public class SettingsActivity extends ExtendBaseActivity {
 
     private boolean haschange = false;
-    @Override
-    protected void createView(Bundle savedInstanceState) {
-        haschange = false;
-    }
 
     @Override
-    protected void onViewCreated(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
+            haschange = false;
             getFragmentManager().beginTransaction().replace(android.R.id.content, new GeneralPreference()).commit();
         }
     }
 
     @Override
-    protected View getInsertView() {
-        return null;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if(haschange) {
-                setResult(200);
-            }
+            setResult();
             this.finish();
         }
         return super.onOptionsItemSelected(item);
@@ -52,21 +42,24 @@ public class SettingsActivity extends ExtendBaseActivity {
 
     @Override
     public void onBackPressed() {
+        setResult();
         super.onBackPressed();
-        if(haschange) {
+        this.finish();
+    }
+
+    private void setResult(){
+        if (haschange) {
             setResult(200);
         }
-        this.finish();
     }
 
     public static class GeneralPreference extends PreferenceFragment {
         private ListView mListView;
-        private int paddings[];
         private Preference preference;
         private Preference.OnPreferenceClickListener listener = new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if(getActivity() instanceof SettingsActivity) {
+                if (getActivity() instanceof SettingsActivity) {
                     ((SettingsActivity) getActivity()).haschange = true;
                 }
                 return false;
@@ -86,8 +79,9 @@ public class SettingsActivity extends ExtendBaseActivity {
                     FileKit.deleteDir(getActivity().getCacheDir());
                     try {
                         FileKit.deleteDir(getActivity().getExternalCacheDir());
-                    }catch (Exception ignored){}
-                    FileKit.deleteDir(new File(getActivity().getCacheDir().getAbsolutePath()+"/../app_webview"));
+                    } catch (Exception ignored) {
+                    }
+                    FileKit.deleteDir(new File(getActivity().getCacheDir().getAbsolutePath() + "/../app_webview"));
                     preference.setSummary(getFileSize());
                     return false;
                 }
@@ -96,13 +90,14 @@ public class SettingsActivity extends ExtendBaseActivity {
             findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceClickListener(listener);
         }
 
-        private String getFileSize(){
+        private String getFileSize() {
             long size = 0;
-            size+=FileKit.getFolderSize(getActivity().getCacheDir());
+            size += FileKit.getFolderSize(getActivity().getCacheDir());
             try {
-                size+=FileKit.getFolderSize(getActivity().getExternalCacheDir());
-            }catch (Exception ignored){}
-            size+=FileKit.getFolderSize(new File(getActivity().getCacheDir().getAbsolutePath()+"/../app_webview"));
+                size += FileKit.getFolderSize(getActivity().getExternalCacheDir());
+            } catch (Exception ignored) {
+            }
+            size += FileKit.getFolderSize(new File(getActivity().getCacheDir().getAbsolutePath() + "/../app_webview"));
             return Formatter.formatFileSize(getActivity(), size);
         }
 
@@ -110,9 +105,9 @@ public class SettingsActivity extends ExtendBaseActivity {
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             mListView = UIKit.getHideListView(this);
-            paddings = new int[]{mListView.getPaddingLeft(), mListView.getPaddingTop(), mListView.getPaddingRight()
-                    , mListView.getPaddingBottom()};
-            UIKit.fixTranslucentStatusPadding(getActivity(), mListView, UIKit.PaddingMode.SET_ALL, paddings);
+            if (getActivity() instanceof SettingsActivity) {
+                ((SettingsActivity) getActivity()).option.setConfigView(mListView);
+            }
         }
 
         private String getVersionName() {
@@ -120,9 +115,11 @@ public class SettingsActivity extends ExtendBaseActivity {
         }
 
         @Override
-        public void onConfigurationChanged(Configuration newConfig) {
-            super.onConfigurationChanged(newConfig);
-            UIKit.fixTranslucentStatusPadding(getActivity(), mListView, UIKit.PaddingMode.SET_ALL, paddings);
+        public void onDetach() {
+            super.onDetach();
+            if (getActivity() instanceof SettingsActivity) {
+                ((SettingsActivity) getActivity()).option.setConfigView(null);
+            }
         }
     }
 }
