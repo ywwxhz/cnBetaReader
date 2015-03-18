@@ -1,18 +1,18 @@
 package com.ywwxhz.lib.handler;
 
 import com.google.gson.reflect.TypeToken;
-import com.ywwxhz.entity.NewsListObject;
-import com.ywwxhz.entity.ResponseObject;
-import com.ywwxhz.processer.NewsListProcesser;
+import com.ywwxhz.entitys.NewsListObject;
+import com.ywwxhz.entitys.ResponseObject;
+import com.ywwxhz.processers.NewsListProcesserImpl;
 
 import org.apache.http.Header;
 
 /**
  * Created by ywwxhz on 2014/11/1.
  */
-public class NormalNewsListHandler extends ExternedGsonHttpResposerHandler<NewsListProcesser, ResponseObject<NewsListObject>> {
+public class NormalNewsListHandler extends ExternedGsonHttpResposerHandler<NewsListProcesserImpl, ResponseObject<NewsListObject>> {
 
-    public NormalNewsListHandler(NewsListProcesser hoder, TypeToken<ResponseObject<NewsListObject>> type) {
+    public NormalNewsListHandler(NewsListProcesserImpl hoder, TypeToken<ResponseObject<NewsListObject>> type) {
         super(hoder, type);
     }
 

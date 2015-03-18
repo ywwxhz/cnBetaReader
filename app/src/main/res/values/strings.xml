@@ -18,8 +18,8 @@
     <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。快联系联系开发者吧。 </string>
 
     <string name="menu_reflush">刷新</string>
-    <string name="menu_share">分享链接</string>
-    <string name="menu_view_in_browser">在浏览器中查看</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_view_in_browser">浏览器中查看</string>
 
 
     <string name="pref_about_title">关于</string>
@@ -52,5 +52,10 @@
     <string name="pref_show_large_image_key">largeImage</string>
     <string name="pref_show_large_image_title">新闻列表显示大图</string>
     <string name="pref_show_large_image_summary">开启后将会消耗大量流量,平均消耗大于 2M, 推荐在Wifi下使用。</string>
+
+
+    <string name="button_temporary_save">临时生效</string>
+    <string name="button_restore_default">恢复默认</string>
+    <string name="buttom_permanent_save">永久生效</string>
 
 </resources>

@@ -3,7 +3,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.ywwxhz.view.ExtImageView
+    <com.ywwxhz.widget.ExtImageView
         android:id="@+id/news_image_large"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -78,9 +78,9 @@
                 android:layout_height="70sp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
-                android:layout_marginBottom="1sp"
+                android:layout_marginBottom="2dp"
                 android:layout_marginRight="3dp"
-                android:layout_marginTop="1sp"
+                android:layout_marginTop="2dp"
                 android:scaleType="centerCrop"/>
 
             <TextView
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="4"
                 android:ellipsize="end"
-                android:lineSpacingExtra="1dp"
+                android:lineSpacingExtra="0.5dp"
                 android:textSize="15sp"/>
         </LinearLayout>
     </RelativeLayout>

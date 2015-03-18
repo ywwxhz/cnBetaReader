@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.processers.BaseProcesserImpl;
 
 import org.apache.http.Header;
 
@@ -16,7 +17,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 /**
  * Created by ywwxhz on 2014/11/2.
  */
-public abstract class ExternedGsonHttpResposerHandler<ActionServer extends BaseProcesser, T> extends GsonHttpResponseHandler<T> {
+public abstract class ExternedGsonHttpResposerHandler<ActionServer extends BaseProcesserImpl, T> extends GsonHttpResponseHandler<T> {
     protected SoftReference<ActionServer> mActionServer;
     protected Type type;
 
@@ -29,14 +30,14 @@ public abstract class ExternedGsonHttpResposerHandler<ActionServer extends BaseP
     protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
         Log.e(this.getClass().getSimpleName(), responseString + "");
         cause.printStackTrace();
-        Crouton.makeText(mActionServer.get().getContext(), R.string.message_data_structure_change, Style.ALERT).show();
+        Crouton.makeText(mActionServer.get().getActivity(), R.string.message_data_structure_change, Style.ALERT).show();
     }
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         Log.e(this.getClass().getSimpleName(), responseString + "");
         throwable.printStackTrace();
-        Crouton.makeText(mActionServer.get().getContext(), R.string.message_no_network, Style.ALERT).show();
+        Crouton.makeText(mActionServer.get().getActivity(), R.string.message_no_network, Style.ALERT).show();
     }
 
     @Override

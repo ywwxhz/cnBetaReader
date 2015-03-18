@@ -52,4 +52,11 @@ public class PrefKit {
         SharedPreferences appPrefs = getSharedPreferences(context);
         return appPrefs.getInt(key, def);
     }
+
+    public static void delete(Context context, String key) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        SharedPreferences.Editor edit = appPrefs.edit();
+        edit.remove(key);
+        edit.apply();
+    }
 }

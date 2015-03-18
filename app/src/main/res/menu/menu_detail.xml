@@ -7,16 +7,19 @@
         <menu>
             <item
                 android:id="@+id/menu_reflush"
-                android:title="@string/menu_reflush" />
+                android:title="@string/menu_reflush"/>
+            <item
+                android:id="@+id/menu_book_mark"
+                android:title="收藏"/>
             <item
                 android:id="@+id/menu_share"
-                android:title="@string/menu_share" />
+                android:title="@string/menu_share"/>
             <item
                 android:id="@+id/menu_font_size"
-                android:title="调节字体大小" />
+                android:title="字体大小"/>
             <item
                 android:id="@+id/menu_view_in_browser"
-                android:title="@string/menu_view_in_browser" />
+                android:title="@string/menu_view_in_browser"/>
         </menu>
     </item>
 </menu>
