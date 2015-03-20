@@ -1,6 +1,6 @@
 # cnBeta reader
 
-This is the three part of cnbeta reader client for Android 4.0+
+This is the third-party of cnbeta reader client for Android 4.0+
 
 ## Quick Overview
 
