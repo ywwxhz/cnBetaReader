@@ -6,11 +6,11 @@ This is the three part of cnbeta reader client for Android 4.0+
 
  - Screenshots
 
-    <img src="screenshots/device-2015-03-20-171546.png" alt="screenshot" title="screenshot" height="500" />
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/Android-Universal-Image-Loader/screenshots/device-2015-03-20-171546.png" alt="screenshot" title="screenshot" height="500" />
 
-    <img src="screenshots/device-2015-03-20-171556.png" alt="screenshot" title="screenshot" height="500" />
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/Android-Universal-Image-Loader/screenshots/device-2015-03-20-171556.png" alt="screenshot" title="screenshot" height="500" />
 
-    <img src="screenshots/device-2015-03-20-171610.png" alt="screenshot" title="screenshot" height="500" />
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/Android-Universal-Image-Loader/screenshots/device-2015-03-20-171610.png" alt="screenshot" title="screenshot" height="500" />
 
 ## Pre-requisites
 
@@ -21,12 +21,13 @@ Android SDK v21
 
 ## Build from Source
 
- - clone or download source
+1. clone or download source
 
 
- - change app/build.gradle signingConfigs to your own configuration
+2. change app/build.gradle signingConfigs to your own configuration
 
 
+<pre>
     signingConfigs {
          release {
              storeFile file(System.getenv("KEY_STROE_FILE"))
@@ -41,11 +42,14 @@ Android SDK v21
              keyPassword System.getenv("KEY_PASSWORD")
          }
      }
+</pre>
 
- - compiler
 
 
-    ./gradlew assembleDebug
+3. compiler
+
+
+    <code>./gradlew assembleDebug</code>
 
 ##License
 
