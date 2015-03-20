@@ -59,5 +59,7 @@
     <string name="buttom_permanent_save">保存</string>
     <string name="menu_font">字体</string>
     <string name="menu_book_mark">收藏</string>
+    <string name="pref_source_title">源代码</string>
+    <string name="pref_source_summary">https://git.oschina.net/ywwxhz/cnBeta-reader</string>
 
 </resources>

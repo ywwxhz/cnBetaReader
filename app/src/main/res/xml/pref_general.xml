@@ -46,6 +46,11 @@
             android:summary="@string/pref_about_summary"
             android:title="@string/pref_about_title" />
         <Preference
+            android:title="@string/pref_source_title"
+            android:summary="@string/pref_source_summary">
+            <intent android:action="android.intent.action.VIEW" android:data="@string/pref_source_summary"/>
+        </Preference>
+        <Preference
             android:summary="@string/pref_author_summary"
             android:title="@string/pref_author_title" />
         <Preference
