@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
+              android:padding="10dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
         android:text="调节字体大小"
-        android:textSize="20sp"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:padding="5dp"
         android:layout_height="wrap_content"/>
 
@@ -18,39 +20,36 @@
         android:layout_height="wrap_content"
         app:dsb_max="150"
         app:dsb_min="50"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         app:dsb_indicatorFormatter="%d%%"/>
 
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:gravity="right"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/buttom_temporary_save"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
+            style="@style/ButtonBarButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_temporary_save"
-            android:layout_weight="1"/>
+            android:text="@string/button_temporary_save"/>
 
         <Button
             android:id="@+id/buttom_restore_default"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
+            style="@style/ButtonBarButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_restore_default"
-            android:layout_weight="1"/>
+            android:text="@string/button_restore_default"/>
 
         <Button
             android:id="@+id/buttom_permanent_save"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
+            style="@style/ButtonBarButton"
+            android:layout_width="wrap_content"
             android:text="@string/buttom_permanent_save"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

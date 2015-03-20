@@ -54,4 +54,10 @@
         <item name="android:logo">@mipmap/ic_logo</item>
     </style>
 
+    <style name="ButtonBarButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

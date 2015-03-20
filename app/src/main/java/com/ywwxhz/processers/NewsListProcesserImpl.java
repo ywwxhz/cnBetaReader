@@ -204,10 +204,6 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
                 item.setComments("0");
             }
             StringBuilder sb = new StringBuilder(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
-//            int index = sb.indexOf("。");
-//            if(index >25 && index <50){
-//                item.setSummary(sb.delete(index+1,sb.length()).toString());
-//            }else
             if (sb.length() > 140) {
                 item.setSummary(sb.replace(140, sb.length(), "...").toString());
             } else {

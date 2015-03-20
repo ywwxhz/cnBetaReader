@@ -24,7 +24,8 @@
         app:circleRadius="30dp"
         app:progressIndeterminate="true"
         app:rimColor="#E1E8EC"
-        app:rimWidth="3dp" />
+        app:rimWidth="3dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/loadFail"

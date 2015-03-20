@@ -77,11 +77,11 @@ public class FontSizeFragment extends DialogFragment implements View.OnClickList
             case R.id.buttom_temporary_save:
                 break;
             case R.id.buttom_restore_default:
-                listener.onProgressChanged(mSeekBar,100,true);
                 mSeekBar.setProgress(100);
-                PrefKit.delete(getActivity(),"font_size");
+                PrefKit.delete(getActivity(), "font_size");
                 break;
         }
+        listener.onProgressChanged(mSeekBar,mSeekBar.getProgress(),true);
         this.dismiss();
     }
 }

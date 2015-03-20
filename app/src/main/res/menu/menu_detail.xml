@@ -10,13 +10,13 @@
                 android:title="@string/menu_reflush"/>
             <item
                 android:id="@+id/menu_book_mark"
-                android:title="收藏"/>
+                android:title="@string/menu_book_mark"/>
             <item
                 android:id="@+id/menu_share"
                 android:title="@string/menu_share"/>
             <item
                 android:id="@+id/menu_font_size"
-                android:title="字体大小"/>
+                android:title="@string/menu_font"/>
             <item
                 android:id="@+id/menu_view_in_browser"
                 android:title="@string/menu_view_in_browser"/>
