@@ -16,7 +16,7 @@ This is the third-party of cnbeta reader client for Android 4.0+
 
 Android Studio 1.0+
 
-Android SDK v21
+Android SDK v22
 
 
 ## Build from Source

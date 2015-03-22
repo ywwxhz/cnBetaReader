@@ -1,1 +1,1 @@
-include ':app', ':ActionBar-PullToRefresh', ':Crouton', ':FloatingActionButton',':materialish-progress',':PhotoView',':discreteSeekBar'
+include ':app', ':Crouton', ':FloatingActionButton',':materialish-progress',':PhotoView',':discreteSeekBar'

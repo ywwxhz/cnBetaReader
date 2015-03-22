@@ -23,7 +23,7 @@ public class TranslucentStatusHelper implements Translucentable, Observer {
     private Option option;
 
     private TranslucentStatusHelper(Builder builder) {
-        this.option = builder.option;
+        this.option = builder.getOption();
         this.option.addObserver(this);
         this.tintManager = buildTranslucent(builder.mActivity, builder.getOption()
                 , builder.getTranslucentProxy(), builder.actionBarSizeAttr, builder.getStatusView());

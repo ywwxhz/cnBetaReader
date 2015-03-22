@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="statusColor">#1473af</color>
+    <color name="statusColor">#11659a</color>
+    <color name="toolbarColor">#1473af</color>
     <color name="title_color">#3c69ce</color>
     <color name="color_normal">#1473af</color>
     <color name="color_passed">#3A85B5</color>

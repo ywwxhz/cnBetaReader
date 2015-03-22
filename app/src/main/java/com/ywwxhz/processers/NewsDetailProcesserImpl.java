@@ -23,17 +23,19 @@ import android.widget.Toast;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
 import com.ywwxhz.activitys.NewsCommentActivity;
-import com.ywwxhz.fragments.FontSizeFragment;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.NewsItem;
+import com.ywwxhz.fragments.FontSizeFragment;
 import com.ywwxhz.lib.Configure;
-import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
+import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
+import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apache.http.Header;
@@ -44,6 +46,9 @@ import org.jsoup.select.Elements;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by ywwxhz on 2014/11/1.
@@ -86,7 +91,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
             mContext.setTitle("详情：" + mNewsItem.getTitle());
-            NewsItem mNews = FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class);
+            NewsItem mNews = mNewsItem.getSN()==null?FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class):mNewsItem;
             if (mNews == null) {
                 makeRequest();
             } else {
@@ -330,7 +335,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     public void handleFontSize() {
         FontSizeFragment fragment = FontSizeFragment.getInstance(settings.getTextZoom());
         fragment.show(mContext.getFragmentManager(), "Font Size");
-        fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener(){
+        fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 if (fromUser) {
@@ -352,6 +357,20 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return false;
+    }
+
+    public void doBookmark() {
+        try {
+            if( MyApplication.getInstance().getDbUtils().findById(NewsItem.class,mNewsItem.getSid())==null) {
+                MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
+                Crouton.makeText(mContext,"收藏成功", Style.INFO).show();
+            }else{
+                MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class,mNewsItem.getSid());
+                Crouton.makeText(mContext, "取消收藏成功", Style.INFO).show();
+            }
+        } catch (DbException e) {
+            Crouton.makeText(mContext,"操作失败", Style.ALERT).show();
+        }
     }
 
     private class JavaScriptInterface {

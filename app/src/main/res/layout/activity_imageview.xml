@@ -16,5 +16,17 @@
         app:rimColor="#44000000"
         app:barWidth="4dp"
         app:rimWidth="4dp" />
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="20dp"
+        android:alpha="0.8"
+        android:visibility="gone"
+        android:src="@android:drawable/ic_menu_save"
+        app:fab_colorNormal="@color/color_normal"
+        app:fab_colorPressed="@color/color_passed"
+        app:fab_shadow="true" />
 
 </merge>

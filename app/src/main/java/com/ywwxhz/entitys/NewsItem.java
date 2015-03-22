@@ -1,9 +1,14 @@
 package com.ywwxhz.entitys;
 
+import com.ywwxhz.lib.database.annotation.Id;
+import com.ywwxhz.lib.database.annotation.NoAutoIncrement;
+
 import java.io.Serializable;
 
 public class NewsItem implements Serializable {
 
+    @Id
+    @NoAutoIncrement
     private int sid;
     private String SN;
     private String thumb;

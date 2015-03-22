@@ -12,21 +12,6 @@
         <item name="android:activityCloseExitAnimation">@anim/slide_out_left</item>
     </style>
 
-    <style name="CheckBoxBasic" parent="android:Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/basic_btn_check_holo_light</item>
-    </style>
-
-    <style name="pullHeadStyle">
-        <item name="ptrProgressBarColor">#11659a</item>
-        <item name="ptrSmoothProgressBarStyle">@style/smoothStyle</item>
-    </style>
-
-    <style name="smoothStyle" parent="SmoothProgressBar">
-        <item name="spb_color">#11659a</item>
-        <item name="spb_mirror_mode">true</item>
-        <item name="spb_reversed">true</item>
-    </style>
-
     <style name="Preference" />
 
     <style name="Preference.Category">
@@ -50,7 +35,7 @@
         <item name="android:subtitleTextStyle">
             @android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse
         </item>
-        <item name="android:background">@drawable/ab_solid_basic</item>
+        <item name="android:background">@color/toolbarColor</item>
         <item name="android:logo">@mipmap/ic_logo</item>
     </style>
 

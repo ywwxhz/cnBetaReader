@@ -70,6 +70,9 @@ public class NewsDetailActivity extends ExtendBaseActivity {
             case R.id.menu_font_size:
                 mService.handleFontSize();
                 break;
+            case R.id.menu_book_mark:
+                mService.doBookmark();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -62,7 +62,6 @@ dependencies {
     compile project(':Crouton')
     compile files('libs/gson-2.2.4.jar')
     compile project(':FloatingActionButton')
-    compile project(':ActionBar-PullToRefresh')
     compile project(':materialish-progress')
     compile project(':PhotoView')
     compile project(':discreteSeekBar')
@@ -70,5 +69,5 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile files('libs/jsoup-1.8.1.jar')
     compile files('libs/universal-image-loader-1.9.3-with-sources.jar')
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:22.0.0'
 }

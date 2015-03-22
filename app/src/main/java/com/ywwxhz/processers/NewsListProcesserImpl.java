@@ -3,10 +3,10 @@ package com.ywwxhz.processers;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -18,46 +18,40 @@ import com.loopj.android.http.ResponseHandlerInterface;
 import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
-import com.pnikosis.materialishprogress.ProgressWheel;
-import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.activitys.SettingsActivity;
+import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.entitys.NewsListObject;
 import com.ywwxhz.entitys.ResponseObject;
-import com.ywwxhz.widget.PagedLoader;
-import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 import com.ywwxhz.lib.handler.NormalNewsListHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
+import com.ywwxhz.widget.PagedLoader;
+import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by ywwxhz on 2014/11/1.
  */
-public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefreshListener {
+public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRefreshLayout.OnRefreshListener {
     private int topSid;
     private int current;
     private boolean hasCached;
     private Activity mContext;
     private ListView mListView;
     private PagedLoader mLoader;
-    private ProgressWheel mProgressBar;
     private NewsListAdapter mAdapter;
     private FloatingActionButton actionButton;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mSwipeLayout;
     private TranslucentStatusHelper helper;
     private ResponseHandlerInterface newsPage = new NormalNewsListHandler(this, new TypeToken<ResponseObject<NewsListObject>>() {
     });
@@ -72,10 +66,12 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
         this.hasCached = false;
         this.helper = helper;
         this.mContext = mContext;
-        this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
-        this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
-        this.helper.getOption().setConfigView(mListView);
+        mSwipeLayout = (SwipeRefreshLayout) mContext.findViewById(R.id.swipe_container);
+        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(R.color.statusColor, R.color.toolbarColor, R.color.title_color);
+        this.helper.getOption().setConfigView(mSwipeLayout);
         this.actionButton = (FloatingActionButton) mContext.findViewById(R.id.action);
         this.mAdapter = new NewsListAdapter(mContext, new ArrayList<NewsItem>());
         TextView view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
@@ -83,8 +79,7 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
         this.mListView.addHeaderView(view, null, false);
         this.mLoader = PagedLoader.Builder.getInstance(mContext).setListView(mListView).setOnLoadListener(loadListener).builder();
         this.mLoader.setAdapter(mAdapter);
-        this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true
-                , this.actionButton.attachToListView(this.mListView, null, false)));
+        this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
         this.actionButton.setVisibility(View.VISIBLE);
         this.actionButton.setImageResource(R.mipmap.ic_settings);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
@@ -112,28 +107,19 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
                 NewsListProcesserImpl.this.mContext.startActivity(intent);
             }
         });
-        ActionBarPullToRefresh.from(mContext)
-                .insertLayoutInto((ViewGroup) mContext.findViewById(android.R.id.content))
-                .theseChildrenArePullable(mListView)
-                .listener(this)
-                .options(Options.create().scrollDistance(0.2f).refreshOnUp(true).build())
-                .setup(mPullToRefreshLayout);
+
         loadData(true);
         fixPos();
     }
 
-    private void loadData(boolean startup) {
+    protected void loadData(boolean startup) {
         ArrayList<NewsItem> newsList = FileCacheKit.getInstance().getAsObject("newsList".hashCode() + "", "list", new TypeToken<ArrayList<NewsItem>>() {
         });
-        if (mAdapter.getCount() == 0) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
         if (newsList != null) {
             hasCached = true;
             topSid = newsList.get(1).getSid();
             mAdapter.setDataSet(newsList);
             mLoader.notifyDataSetChanged();
-            mProgressBar.setVisibility(View.GONE);
         } else {
             this.hasCached = false;
         }
@@ -142,8 +128,8 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
             mListView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mPullToRefreshLayout.setRefreshing(true);
-                    onRefreshStarted(null);
+                    mSwipeLayout.setRefreshing(true);
+                    onRefresh();
                 }
             }, startup ? 400 : 0);
         }
@@ -172,15 +158,6 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
 
     public PagedLoader getLoader() {
         return mLoader;
-    }
-
-    public PullToRefreshLayout getPullToRefreshLayout() {
-        return mPullToRefreshLayout;
-    }
-
-    @Override
-    public void onRefreshStarted(View view) {
-        NetKit.getInstance().getNewslistByPage(1, "all", newsPage);
     }
 
     public void callNewsPageLoadSuccess(NewsListObject listPage) {
@@ -247,11 +224,8 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
             mLoader.setLoading(false);
         }
         mLoader.notifyDataSetChanged();
-        if (mProgressBar.getVisibility() == View.VISIBLE) {
-            mProgressBar.setVisibility(View.GONE);
-        }
-        if (mPullToRefreshLayout.isRefreshing()) {
-            mPullToRefreshLayout.setRefreshComplete();
+        if (mSwipeLayout.isRefreshing()) {
+            mSwipeLayout.setRefreshing(false);
         }
     }
 
@@ -273,5 +247,10 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements OnRefres
         layoutParams.rightMargin = margin + ints[2];
         layoutParams.bottomMargin = margin + ints[3];
         actionButton.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void onRefresh() {
+        NetKit.getInstance().getNewslistByPage(1, "all", newsPage);
     }
 }

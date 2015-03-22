@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.ywwxhz.lib.MyCrashHandler;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.lib.database.DbUtils;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.PrefKit;
 
@@ -24,6 +25,12 @@ public class MyApplication extends Application {
 
     private Boolean debug;
 
+    public DbUtils getDbUtils() {
+        return mDbUtils;
+    }
+
+    private DbUtils mDbUtils;
+
     @Override
     public void onCreate() {
         instance = this;
@@ -31,6 +38,7 @@ public class MyApplication extends Application {
         FileCacheKit.getInstance(this);
         MyCrashHandler.getInstance().init(this);
         initImageLoader(getApplicationContext());
+        mDbUtils = DbUtils.create(this);
     }
 
     public void initImageLoader(Context context) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,32 +19,28 @@ import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.melnykov.fab.FloatingActionButton;
 import com.ywwxhz.adapters.CommentListAdapter;
-import com.ywwxhz.fragments.NewCommentFragment;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.entitys.CommentListObject;
 import com.ywwxhz.entitys.ResponseObject;
-import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
+import com.ywwxhz.fragments.NewCommentFragment;
 import com.ywwxhz.lib.handler.CommentListHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 import com.ywwxhz.lib.kits.UIKit;
+import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by ywwxhz on 2014/11/2.
  */
-public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRefreshListener {
+public class NewsCommentProcesserImpl extends BaseProcesserImpl implements SwipeRefreshLayout.OnRefreshListener {
     public static final String SN_KEY = "key_sn";
     public static final String SID_KEY = "key_sid";
     public static final String TITLE_KEY = "key_title";
@@ -53,13 +50,12 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
     private int sid;
     private String sn;
     private String token;
-    private View mProgressBar;
     private Activity mContext;
     private ListView mListView;
     private TextView mTextView;
     private TextView mFoot;
     private FloatingActionButton actionButton;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mSwipeLayout;
 
     public NewsCommentProcesserImpl(final Activity mContext, TranslucentStatusHelper helper) {
         this.mContext = mContext;
@@ -72,11 +68,13 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
         this.sn = bundle.getString(SN_KEY);
         this.sid = bundle.getInt(SID_KEY);
         this.helper = helper;
-        this.mProgressBar = mContext.findViewById(R.id.loading);
-        this.mPullToRefreshLayout = new PullToRefreshLayout(mContext);
         this.mTextView = (TextView) mContext.findViewById(R.id.loadFail);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
-        this.helper.getOption().setConfigView(mListView);
+        mSwipeLayout = (SwipeRefreshLayout) mContext.findViewById(R.id.swipe_container);
+        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeResources(R.color.statusColor,R.color.toolbarColor,R.color.title_color);
+        this.helper.getOption().setConfigView(mSwipeLayout);
         TextView type = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, mListView, false);
         type.setText("类型：全部评论");
         this.mFoot = new TextView(mContext);
@@ -95,7 +93,6 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
         });
         this.mTextView.setClickable(true);
         this.mListView.setAdapter(mAdapter);
-        this.mProgressBar.setVisibility(View.GONE);
         this.actionButton.attachToListView(mListView);
         this.actionButton.setImageResource(R.mipmap.ic_edit);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
@@ -107,17 +104,10 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
         });
         this.actionButton.setScaleX(0);
         this.actionButton.setScaleY(0);
-        ActionBarPullToRefresh.from(mContext)
-                .insertLayoutInto((ViewGroup) mContext.findViewById(android.R.id.content))
-                .theseChildrenArePullable(mListView)
-                .listener(this)
-                .options(Options.create().scrollDistance(0.2f).refreshOnUp(true).build())
-                .setup(mPullToRefreshLayout);
         mListView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToRefreshLayout.setRefreshing(true);
-                mProgressBar.setVisibility(View.VISIBLE);
+                mSwipeLayout.setRefreshing(true);
                 makeRequest();
             }
         }, 100);
@@ -125,11 +115,6 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
     }
 
     private void makeRequest() {
-        if (mAdapter.getDataSet().size() == 0) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            mProgressBar.setVisibility(View.GONE);
-        }
         this.mListView.setOnItemClickListener(null);
         this.mTextView.setVisibility(View.GONE);
         NetKit.getInstance().getCommentBySnAndSid(sn, sid + "", handler);
@@ -203,7 +188,7 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
         } else if (commentListObject.getOpen() == 0) { //针对关平的新闻评论
             Crouton.makeText(mContext, R.string.message_comment_close, Style.ALERT).show();
             this.mAdapter.setEnable(false);
-            this.mPullToRefreshLayout.setEnabled(false);
+            this.mSwipeLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
                 this.mTextView.setText(R.string.message_comment_close);
                 this.mListView.setVisibility(View.GONE);
@@ -227,8 +212,7 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
     }
 
     public void setLoadFinish() {
-        this.mProgressBar.setVisibility(View.GONE);
-        this.mPullToRefreshLayout.setRefreshComplete();
+        this.mSwipeLayout.setRefreshing(false);
         this.mAdapter.notifyDataSetChanged();
         if (mAdapter.getCount() > 0) {
             mFoot.setVisibility(View.VISIBLE);
@@ -255,11 +239,6 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
         }
     }
 
-    @Override
-    public void onRefreshStarted(View view) {
-        makeRequest();
-    }
-
     private void fixPos() {
         int[] ints = helper.getInsertPixs(false);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) actionButton.getLayoutParams();
@@ -267,5 +246,10 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements OnRef
         layoutParams.rightMargin = margin + ints[2];
         layoutParams.bottomMargin = margin + ints[3];
         actionButton.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void onRefresh() {
+        makeRequest();
     }
 }
