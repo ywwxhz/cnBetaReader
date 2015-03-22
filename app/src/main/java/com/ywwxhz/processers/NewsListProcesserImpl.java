@@ -152,14 +152,6 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
         return mContext;
     }
 
-    public NewsListAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    public PagedLoader getLoader() {
-        return mLoader;
-    }
-
     public void callNewsPageLoadSuccess(NewsListObject listPage) {
         List<NewsItem> itemList = listPage.getList();
         List<NewsItem> dataSet = mAdapter.getDataSet();

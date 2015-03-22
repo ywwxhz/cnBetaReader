@@ -280,10 +280,6 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
 
     }
 
-    public NewsItem getNewsItem() {
-        return mNewsItem;
-    }
-
     public Context getContext() {
         return mContext;
     }
@@ -291,10 +287,6 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     @Override
     public Activity getActivity() {
         return mContext;
-    }
-
-    public void setLoadFinish() {
-        mProgressBar.setVisibility(View.GONE);
     }
 
     private void fixPadding() {

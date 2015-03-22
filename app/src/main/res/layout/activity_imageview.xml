@@ -5,7 +5,7 @@
         android:id="@+id/photoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/progressWheel"
@@ -15,7 +15,8 @@
         app:barColor="#fff0f4e2"
         app:rimColor="#44000000"
         app:barWidth="4dp"
-        app:rimWidth="4dp" />
+        app:rimWidth="4dp"/>
+
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/action"
         android:layout_width="wrap_content"
@@ -27,6 +28,5 @@
         android:src="@android:drawable/ic_menu_save"
         app:fab_colorNormal="@color/color_normal"
         app:fab_colorPressed="@color/color_passed"
-        app:fab_shadow="true" />
-
+        app:fab_shadow="true"/>
 </merge>

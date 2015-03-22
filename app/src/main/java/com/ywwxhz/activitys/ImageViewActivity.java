@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
@@ -42,7 +45,7 @@ public class ImageViewActivity extends Activity {
     public static final String IMAGE_URL = "image_url";
 
     private PhotoView photoView;
-
+    private TranslucentStatusHelper helper;
     private ProgressWheel progressWheel;
     private PhotoViewAttacher attacher;
     private com.melnykov.fab.FloatingActionButton action;
@@ -51,7 +54,9 @@ public class ImageViewActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getExtras().containsKey(IMAGE_URL)) {
-            TranslucentStatusHelper.setTranslucentStatus(this,TranslucentStatusHelper.TranslucentProxy.STATUS_BAR);
+            helper = TranslucentStatusHelper.from(this)
+                    .setTranslucentProxy(TranslucentStatusHelper.TranslucentProxy.STATUS_BAR)
+                    .builder();
             setContentView(R.layout.activity_imageview);
             this.action = (FloatingActionButton) findViewById(R.id.action);
             this.progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
@@ -106,7 +111,7 @@ public class ImageViewActivity extends Activity {
                     }
                 });
                 progressWheel.setVisibility(View.GONE);
-                Crouton.makeText(ImageViewActivity.this, "图片下载失败", Style.ALERT).show();
+                makeText("图片下载失败");
             }
 
             @Override
@@ -125,6 +130,17 @@ public class ImageViewActivity extends Activity {
                 temp.delete();
             }
         });
+    }
+
+    private void makeText(String message) {
+        LinearLayout infoHoder = (LinearLayout) getLayoutInflater().inflate(R.layout.infolayout, (ViewGroup) getWindow().getDecorView(),false);
+        TextView text1 = (TextView) infoHoder.findViewById(R.id.message);
+        int[] ints = helper.getInsertPixs(false);
+        infoHoder.setPadding(0,  ints[1],
+                ints[2], 0);
+        text1.setText(message);
+        infoHoder.setBackgroundColor(Style.holoRedLight);
+        Crouton.make(ImageViewActivity.this, infoHoder).show();
     }
 
     private void loadImage(File file) {
@@ -149,7 +165,7 @@ public class ImageViewActivity extends Activity {
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 loadFail();
-                Crouton.makeText(ImageViewActivity.this, "图片加载失败", Style.ALERT).show();
+                makeText("图片加载失败");
             }
         });
     }
@@ -181,6 +197,7 @@ public class ImageViewActivity extends Activity {
     @Override
     protected void onDestroy() {
         NetKit.getInstance().getClient().cancelAllRequests(true);
+        Crouton.clearCroutonsForActivity(this);
         super.onDestroy();
     }
 }
