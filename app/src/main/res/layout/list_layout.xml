@@ -3,6 +3,15 @@
        android:layout_width="fill_parent"
        android:layout_height="fill_parent">
 
+    <TextView
+        android:id="@+id/loadFail"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="@string/load_fail"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
@@ -19,28 +28,6 @@
             android:padding="5dp"
             android:scrollbarStyle="outsideOverlay"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <com.pnikosis.materialishprogress.ProgressWheel
-        android:id="@+id/loading"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        app:barColor="#5588FF"
-        app:barWidth="3dp"
-        app:circleRadius="30dp"
-        app:progressIndeterminate="true"
-        app:rimColor="#E1E8EC"
-        app:rimWidth="3dp"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/loadFail"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="@string/load_fail"
-        android:textSize="18sp"
-        android:visibility="gone"/>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/action"

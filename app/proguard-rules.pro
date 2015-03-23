@@ -16,7 +16,7 @@
 #   public *;
 #}
 
--keep class com.ywwxhz.entity.**{
+-keep class com.ywwxhz.entitys.**{
     *;
 }
 -keep class org.jsoup.nodes.**{

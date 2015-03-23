@@ -42,8 +42,8 @@
 
     <ImageView
         android:id="@+id/comment_more"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
         android:background="?android:attr/listChoiceBackgroundIndicator"
         android:src="@drawable/ic_more"
         android:layout_alignParentTop="true"
