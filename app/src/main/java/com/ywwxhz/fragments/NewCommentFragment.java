@@ -30,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by ywwxhz on 2014/11/5.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/5 17:54.
  */
 public class NewCommentFragment extends DialogFragment implements View.OnClickListener {
     private static final String SID_KEY = "key_sid";

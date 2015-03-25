@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:icon="@mipmap/ic_more_light"
-        android:showAsAction="always"
-        android:title="more">
-        <menu>
-            <item
-                android:id="@+id/menu_reflush"
-                android:title="@string/menu_reflush"/>
-            <item
-                android:id="@+id/menu_book_mark"
-                android:title="@string/menu_book_mark"/>
-            <item
-                android:id="@+id/menu_share"
-                android:title="@string/menu_share"/>
-            <item
-                android:id="@+id/menu_font_size"
-                android:title="@string/menu_font"/>
-            <item
-                android:id="@+id/menu_view_in_browser"
-                android:title="@string/menu_view_in_browser"/>
-        </menu>
-    </item>
+        android:id="@+id/menu_reflush"
+        android:title="@string/menu_reflush"/>
+    <item
+        android:id="@+id/menu_book_mark"
+        android:title="@string/menu_book_mark"/>
+    <item
+        android:id="@+id/menu_share"
+        android:title="@string/menu_share"/>
+    <item
+        android:id="@+id/menu_font_size"
+        android:title="@string/menu_font"/>
+    <item
+        android:id="@+id/menu_view_in_browser"
+        android:title="@string/menu_view_in_browser"/>
 </menu>

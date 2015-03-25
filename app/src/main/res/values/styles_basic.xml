@@ -2,19 +2,31 @@
 
 <resources>
 
-    <style name="Theme.Basic" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.Basic</item>
-        <item name="android:actionModeStyle">@style/ActionBar.Solid.Basic</item>
-        <item name="android:actionBarWidgetTheme">@style/ActionBar.Widget</item>
+
+    <style name="Theme.Basic" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="colorPrimary">@color/toolbarColor</item>
+        <item name="colorPrimaryDark">@color/statusColor</item>
+        <item name="actionModeBackground">@color/toolbarColor</item>
         <item name="android:preferenceCategoryStyle">@style/Preference.Category</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:textColor">#474747</item>
-        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
     </style>
+
+    <!--<style name="Theme.Basic" parent="@android:style/Theme.Holo.Light.DarkActionBar">-->
+        <!--<item name="android:actionBarStyle">@style/ActionBar.Solid.Basic</item>-->
+        <!--<item name="android:actionModeStyle">@style/ActionBar.Solid.Basic</item>-->
+        <!--<item name="android:actionBarWidgetTheme">@style/ActionBar.Widget</item>-->
+        <!--<item name="android:preferenceCategoryStyle">@style/Preference.Category</item>-->
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <!--<item name="android:textColor">#474747</item>-->
+        <!--<item name="android:windowAnimationStyle">@style/AnimationActivity</item>-->
+    <!--</style>-->
 
     <style name="Theme.Basic.NoAnim" parent="Theme.Basic">
         <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
     <style name="Theme.Basic.Image" parent="@android:style/Theme.Holo.NoActionBar">

@@ -8,7 +8,9 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.processers.NewsCommentProcesserImpl;
 
 /**
- * Created by ywwxhz on 2014/11/2.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/2 17:52.
  */
 public class NewsCommentActivity extends ExtendBaseActivity {
     private NewsCommentProcesserImpl mService;
@@ -18,6 +20,7 @@ public class NewsCommentActivity extends ExtendBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_layout);
         mService = new NewsCommentProcesserImpl(this,helper);
+        mService.loadData(true);
     }
 
     @Override

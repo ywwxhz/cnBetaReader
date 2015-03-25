@@ -1,16 +1,18 @@
 package com.ywwxhz.activitys;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 
 /**
- * Created by ywwxhz on 2014/11/3.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/3 17:51.
  */
-public abstract class ExtendBaseActivity extends BaseActivity {
+public abstract class ExtendBaseActivity extends BaseToolBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
     }
 }

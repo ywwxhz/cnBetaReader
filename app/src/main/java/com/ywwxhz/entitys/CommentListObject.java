@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by ywwxhz on 2014/11/2.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/2 17:53.
  */
 public class CommentListObject {
     private ArrayList<CommentItem> hotlist = new ArrayList<CommentItem>();

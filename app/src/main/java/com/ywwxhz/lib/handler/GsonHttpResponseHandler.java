@@ -1,5 +1,6 @@
 package com.ywwxhz.lib.handler;
 
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.ywwxhz.lib.kits.Toolkit;
 
@@ -12,11 +13,17 @@ import java.lang.reflect.Type;
  */
 public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler {
 
+    protected Type type;
+
+    public GsonHttpResponseHandler(TypeToken<T> typeToken) {
+        this.type = typeToken.getType();
+    }
+
     @Override
     public final void onSuccess(int statusCode, Header[] headers, String responseString) {
         if (statusCode == 200) {
             try {
-                T e = Toolkit.getGson().fromJson(responseString, getType());
+                T e = Toolkit.getGson().fromJson(responseString, type);
                 if (e != null) {
                     onSuccess(statusCode, headers, responseString, e);
                 } else {
@@ -29,8 +36,6 @@ public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler
     }
 
     protected abstract void onError(int statusCode, Header[] headers, String responseString, Throwable cause);
-
-    public abstract Type getType();
 
     public abstract void onSuccess(int statusCode, Header[] headers, String responseString, T object);
 

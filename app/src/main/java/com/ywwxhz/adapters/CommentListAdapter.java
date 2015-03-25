@@ -14,7 +14,9 @@ import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
 import java.util.List;
 
 /**
- * Created by ywwxhz on 2014/11/2.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/2 17:52.
  */
 public class CommentListAdapter extends BaseAdapter<CommentItem> {
     private boolean enable;

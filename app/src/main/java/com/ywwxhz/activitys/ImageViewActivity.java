@@ -39,7 +39,9 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 
 /**
- * Created by Sam on 14-4-15.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 14-4-15 17:51.
  */
 public class ImageViewActivity extends Activity {
     public static final String IMAGE_URL = "image_url";
@@ -66,10 +68,10 @@ public class ImageViewActivity extends Activity {
             this.action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Cnbeta Reader").toString()
+                    String path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "cnBetaReader").toString()
                             + "/" + Uri.parse(getIntent().getExtras().getString(IMAGE_URL)).getLastPathSegment();
                     FileKit.copyFile(image.getAbsolutePath(),
-                            new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Cnbeta Reader"),
+                            new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "cnBetaReader"),
                             Uri.parse(getIntent().getExtras().getString(IMAGE_URL)).getLastPathSegment());
                     Toast.makeText(ImageViewActivity.this, String.format(Locale.CHINA, "保存成功 文件路径：%s", path), Toast.LENGTH_LONG).show();
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
@@ -192,6 +194,11 @@ public class ImageViewActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 
     @Override

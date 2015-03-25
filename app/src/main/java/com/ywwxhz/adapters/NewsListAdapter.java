@@ -21,7 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by ywwxhz on 2014/11/1.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/1 17:53.
  */
 public class NewsListAdapter extends BaseAdapter<NewsItem> {
 
@@ -63,10 +65,6 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     }
 
     @Override
-    public void notifyDataSetChanged() {
-        notifyDataSetChanged(false);
-    }
-
     public void notifyDataSetChanged(boolean changeConfig) {
         if(changeConfig){
             showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);

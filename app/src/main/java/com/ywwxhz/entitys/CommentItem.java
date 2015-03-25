@@ -1,7 +1,9 @@
 package com.ywwxhz.entitys;
 
 /**
- * Created by ywwxhz on 2014/11/2.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/2 17:53.
  */
 public class CommentItem {
     private int score;

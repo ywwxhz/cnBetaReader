@@ -10,7 +10,9 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.processers.NewsDetailProcesserImpl;
 
 /**
- * Created by ywwxhz on 2014/11/1.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/1 17:52.
  */
 public class NewsDetailActivity extends ExtendBaseActivity {
 

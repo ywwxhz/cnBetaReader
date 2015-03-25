@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import java.util.List;
 
 /**
- * Created by ywwxhz on 2014/9/3.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/9/3 17:52.
  */
 public abstract class BaseAdapter<E> extends android.widget.BaseAdapter {
 
@@ -61,5 +63,8 @@ public abstract class BaseAdapter<E> extends android.widget.BaseAdapter {
 
     protected abstract View bindViewAndData(LayoutInflater infater, int position, View convertView, ViewGroup parent);
 
+    public void notifyDataSetChanged(boolean changeConfig) {
+        super.notifyDataSetChanged();
+    }
 
 }

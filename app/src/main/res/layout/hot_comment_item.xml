@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ywwxhz.hoderview.NewsHotCommentItemHoderView xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+    android:background="@drawable/list_item_background"
+    android:padding="8dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/comment_image"
+        android:layout_width="42sp"
+        android:layout_height="42sp"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="3dp"/>
+
+    <TextView
+        android:id="@+id/comment_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="#3c69ce"
+        android:layout_toLeftOf="@+id/comment_more"
+        android:textSize="18sp"
+        android:layout_toRightOf="@+id/comment_image"
+        android:layout_toEndOf="@+id/comment_image"
+        android:layout_marginRight="2dp"/>
+
+    <TextView
+        android:id="@+id/comment_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="from"
+        android:textColor="#5d5b5b"
+        android:textSize="12sp"
+        android:layout_below="@+id/comment_name"
+        android:layout_alignRight="@+id/comment_name"
+        android:layout_alignEnd="@+id/comment_name"
+        android:layout_marginBottom="2dp"
+        android:layout_alignLeft="@+id/comment_name"
+        />
+
+    <TextView
+        android:id="@+id/comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="1dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:text="comment"
+        android:textSize="15sp"
+        android:layout_below="@+id/comment_image"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"/>
+</com.ywwxhz.hoderview.NewsHotCommentItemHoderView>

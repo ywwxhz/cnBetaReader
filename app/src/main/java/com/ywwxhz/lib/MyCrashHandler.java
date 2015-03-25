@@ -17,6 +17,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 自定义的 异常处理类 , 实现了 UncaughtExceptionHandler接口
@@ -31,7 +32,7 @@ public class MyCrashHandler implements UncaughtExceptionHandler {
     private UncaughtExceptionHandler mDefaultHandler;
     private Context mContext;
     private SimpleDateFormat dataFormat = new SimpleDateFormat(
-            "yyyyMMddHHmmss");
+            "yyyyMMddHHmmss", Locale.CHINA);
     private File fileDir;
 
     // 1.私有化构造方法

@@ -21,4 +21,8 @@ public abstract class BaseProcesserImpl implements BaseProcesser {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
     }
+
+    @Override
+    public void loadData(boolean startup) {
+    }
 }

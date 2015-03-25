@@ -1,10 +1,10 @@
 package com.ywwxhz.processers;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,7 +17,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -47,18 +46,16 @@ import org.jsoup.select.Elements;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
- * Created by ywwxhz on 2014/11/1.
+ * cnBetaReader
+ * Created by 远望の无限(ywwxhz) on 2014/11/1 17:48.
  */
 public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     public static final String NEWS_ITEM_KEY = "key_news_item";
     private final TranslucentStatusHelper helper;
-    private View vg;
     private View loadFail;
-    private int margin = 0;
     private WebView mWebView;
     private Activity mContext;
     private boolean hascontent;
@@ -103,7 +100,6 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
             Toast.makeText(mContext, "缺少必要参数", Toast.LENGTH_SHORT).show();
             mContext.finish();
         }
-        fixPadding();
     }
 
     private void blindData(NewsItem mNews) {
@@ -121,8 +117,8 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         mProgressBar.setVisibility(View.GONE);
     }
 
+    @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
     private void initView() {
-        this.vg = mContext.findViewById(R.id.content);
         this.loadFail = mContext.findViewById(R.id.loadFail);
         this.mWebView = (WebView) mContext.findViewById(R.id.webview);
         this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
@@ -133,7 +129,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                 commentAction();
             }
         });
-        this.helper.getOption().setConfigView(vg) ;
+        this.helper.getOption().setConfigView(mContext.findViewById(R.id.content)) ;
         mActionButtom.setScaleX(0);
         mActionButtom.setScaleY(0);
         settings = mWebView.getSettings();
@@ -233,7 +229,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                     mWebView.setVisibility(View.VISIBLE);
                 }
                 mProgressBar.setVisibility(View.GONE);
-                Toast.makeText(mContext, R.string.message_no_network, Toast.LENGTH_SHORT).show();
+                Toolkit.showCrouton(mContext, R.string.message_no_network,Style.ALERT);
             }
 
             @Override
@@ -282,21 +278,6 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
 
     public Context getContext() {
         return mContext;
-    }
-
-    @Override
-    public Activity getActivity() {
-        return mContext;
-    }
-
-    private void fixPadding() {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mActionButtom.getLayoutParams();
-        if (margin == 0) {
-            margin = layoutParams.leftMargin;
-        }
-        layoutParams.bottomMargin = vg.getPaddingBottom() + margin;
-        mActionButtom.setLayoutParams(layoutParams);
-        vg.setPadding(vg.getPaddingLeft(), vg.getPaddingTop(), vg.getPaddingRight(), 0);
     }
 
     public void commentAction() {
@@ -352,16 +333,23 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     }
 
     public void doBookmark() {
-        try {
-            if( MyApplication.getInstance().getDbUtils().findById(NewsItem.class,mNewsItem.getSid())==null) {
-                MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
-                Crouton.makeText(mContext,"收藏成功", Style.INFO).show();
-            }else{
-                MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class,mNewsItem.getSid());
-                Crouton.makeText(mContext, "取消收藏成功", Style.INFO).show();
+        if(hascontent) {
+            String message;
+            Style style;
+            try {
+                if (MyApplication.getInstance().getDbUtils().findById(NewsItem.class, mNewsItem.getSid()) == null) {
+                    MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
+                    message = "收藏成功";
+                } else {
+                    MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class, mNewsItem.getSid());
+                    message = "取消收藏成功";
+                }
+                style = Style.INFO;
+            } catch (DbException e) {
+                message = "操作失败";
+                style = Style.ALERT;
             }
-        } catch (DbException e) {
-            Crouton.makeText(mContext,"操作失败", Style.ALERT).show();
+            Toolkit.showCrouton(mContext,message, style);
         }
     }
 
@@ -383,11 +371,6 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                 }
             });
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        fixPadding();
     }
 
     @Override

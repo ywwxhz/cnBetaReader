@@ -16,7 +16,9 @@ import com.ywwxhz.lib.kits.UIKit;
 import java.io.File;
 
 /**
- * Created by ywwxhz on 2014/11/3.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/3 17:52.
  */
 public class SettingsActivity extends ExtendBaseActivity {
 
@@ -27,7 +29,7 @@ public class SettingsActivity extends ExtendBaseActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             haschange = false;
-            getFragmentManager().beginTransaction().replace(android.R.id.content, new GeneralPreference()).commit();
+            getFragmentManager().beginTransaction().replace(R.id.content, new GeneralPreference()).commit();
         }
     }
 

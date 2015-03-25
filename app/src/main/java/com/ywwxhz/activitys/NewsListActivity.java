@@ -8,7 +8,7 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.processers.NewsListProcesserImpl;
 
 
-public class NewsListActivity extends BaseActivity {
+public class NewsListActivity extends BaseToolBarActivity {
 
     private NewsListProcesserImpl mService;
 
@@ -17,6 +17,7 @@ public class NewsListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_layout);
         mService = new NewsListProcesserImpl(this,helper);
+        mService.loadData(true);
     }
 
     @Override
