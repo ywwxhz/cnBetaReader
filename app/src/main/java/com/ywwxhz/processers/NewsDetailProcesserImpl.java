@@ -1,7 +1,6 @@
 package com.ywwxhz.processers;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +57,12 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     private final TranslucentStatusHelper helper;
     private View loadFail;
     private WebView mWebView;
-    private Activity mContext;
+    private ActionBarActivity mContext;
     private boolean hascontent;
     private NewsItem mNewsItem;
     private ProgressWheel mProgressBar;
     private FloatingActionButton mActionButtom;
+    private VideoWebChromeClient client = new VideoWebChromeClient() ;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<style>body{word-break: break-all;}video{width:100%% !important;height:auto !important}.content img{max-width: 100%% !important;height: auto; !important}a{text-decoration: none;color:#2f7cad;}" +
@@ -73,12 +74,12 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
             "<hr style=\"clear: both\"/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");" +
             "for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0)" +
-            "{a.onclick=function(){return false;}}}; function openImage(obj){window.Interface.showImage(obj.src);return false;}"+
+            "{a.onclick=function(){return false;}}}; function openImage(obj){window.Interface.showImage(obj.src);return false;}" +
             "</script></body></html>";
     private Handler myHandler;
     private WebSettings settings;
 
-    public NewsDetailProcesserImpl(Activity mContext, TranslucentStatusHelper helper) {
+    public NewsDetailProcesserImpl(ActionBarActivity mContext, TranslucentStatusHelper helper) {
         this.hascontent = false;
         this.mContext = mContext;
         this.mContext.setContentView(R.layout.activity_detail);
@@ -88,7 +89,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
             mContext.setTitle("详情：" + mNewsItem.getTitle());
-            NewsItem mNews = mNewsItem.getSN()==null?FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class):mNewsItem;
+            NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
             if (mNews == null) {
                 makeRequest();
             } else {
@@ -129,7 +130,6 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                 commentAction();
             }
         });
-        this.helper.getOption().setConfigView(mContext.findViewById(R.id.content)) ;
         mActionButtom.setScaleX(0);
         mActionButtom.setScaleY(0);
         settings = mWebView.getSettings();
@@ -152,54 +152,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         }
         settings.setTextZoom(PrefKit.getInt(mContext, "font_size", 100));
         mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Interface");
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            private View myView = null;
-            private CustomViewCallback myCallback = null;
-            private int orientation;
-
-            @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-                if (myCallback != null) {
-                    myCallback.onCustomViewHidden();
-                    myCallback = null;
-                    return;
-                }
-                orientation = mContext.getRequestedOrientation();
-                mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                mContext.getActionBar().hide();
-                helper.getOption().setWithActionBar(false);
-
-                ViewGroup parent = (ViewGroup) mWebView.getParent();
-                mWebView.setVisibility(View.GONE);
-                mActionButtom.setVisibility(View.GONE);
-                parent.addView(view);
-                myView = view;
-                myCallback = callback;
-            }
-
-            @Override
-            public void onHideCustomView() {
-
-                if (myView != null) {
-
-                    if (myCallback != null) {
-                        myCallback.onCustomViewHidden();
-                        myCallback = null;
-                    }
-                    mContext.setRequestedOrientation(orientation);
-                    mContext.getActionBar().show();
-                    helper.getOption().setWithActionBar(true);
-                    ViewGroup parent = (ViewGroup) myView.getParent();
-                    parent.removeView(myView);
-                    mWebView.setVisibility(View.VISIBLE);
-                    mActionButtom.setVisibility(View.VISIBLE);
-
-                    myView = null;
-                }
-            }
-
-
-        });
+        mWebView.setWebChromeClient(client);
         this.loadFail.setClickable(true);
         this.loadFail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,7 +182,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                     mWebView.setVisibility(View.VISIBLE);
                 }
                 mProgressBar.setVisibility(View.GONE);
-                Toolkit.showCrouton(mContext, R.string.message_no_network,Style.ALERT);
+                Toolkit.showCrouton(mContext, R.string.message_no_network, Style.ALERT);
             }
 
             @Override
@@ -244,8 +197,8 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                             mNewsItem.setFrom(newsHeadlines.select(".where").html());
                             mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
                             Elements content = newsHeadlines.select(".content");
-                            for(Element e:content.select("img")){
-                                e.attr("onclick","openImage(this)");
+                            for (Element e : content.select("img")) {
+                                e.attr("onclick", "openImage(this)");
                             }
                             mNewsItem.setContent(content.html());
                             Matcher snMatcher = Configure.SN_PATTERN.matcher(params[0]);
@@ -329,11 +282,15 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK&&client.myCallback!=null) {
+            client.onHideCustomView();
+            return true;
+        }
         return false;
     }
 
     public void doBookmark() {
-        if(hascontent) {
+        if (hascontent) {
             String message;
             Style style;
             try {
@@ -349,7 +306,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                 message = "操作失败";
                 style = Style.ALERT;
             }
-            Toolkit.showCrouton(mContext,message, style);
+            Toolkit.showCrouton(mContext, message, style);
         }
     }
 
@@ -361,12 +318,12 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         }
 
         @JavascriptInterface
-        public void showImage(final String imageSrc){
+        public void showImage(final String imageSrc) {
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(mContext, ImageViewActivity.class);
-                    intent.putExtra(ImageViewActivity.IMAGE_URL,imageSrc);
+                    intent.putExtra(ImageViewActivity.IMAGE_URL, imageSrc);
                     mContext.startActivity(intent);
                 }
             });
@@ -386,5 +343,51 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     @Override
     public void onPause() {
         mWebView.onPause();
+    }
+
+    private class VideoWebChromeClient extends WebChromeClient {
+        private View myView = null;
+        CustomViewCallback myCallback = null;
+        private int orientation;
+
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            if (myCallback != null) {
+                myCallback.onCustomViewHidden();
+                myCallback = null;
+                return;
+            }
+            orientation = mContext.getRequestedOrientation();
+            mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            mContext.getSupportActionBar().hide();
+            helper.getOption().setWithActionBar(false);
+            ViewGroup parent = (ViewGroup) mWebView.getParent();
+            mWebView.setVisibility(View.GONE);
+            mActionButtom.setVisibility(View.GONE);
+            parent.addView(view);
+            myView = view;
+            myCallback = callback;
+        }
+
+        @Override
+        public void onHideCustomView() {
+
+            if (myView != null) {
+
+                if (myCallback != null) {
+                    myCallback.onCustomViewHidden();
+                    myCallback = null;
+                }
+                mContext.setRequestedOrientation(orientation);
+                mContext.getSupportActionBar().show();
+                helper.getOption().setWithActionBar(true);
+                ViewGroup parent = (ViewGroup) myView.getParent();
+                parent.removeView(myView);
+                mWebView.setVisibility(View.VISIBLE);
+                mActionButtom.setVisibility(View.VISIBLE);
+
+                myView = null;
+            }
+        }
     }
 }

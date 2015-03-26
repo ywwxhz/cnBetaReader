@@ -22,7 +22,7 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.entitys.CommentListObject;
 import com.ywwxhz.entitys.ResponseObject;
-import com.ywwxhz.fragments.NewCommentFragment;
+import com.ywwxhz.fragments.AddNewCommentFragment;
 import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
@@ -124,7 +124,7 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements Swipe
         this.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewCommentFragment fragment = NewCommentFragment.getInstance(sid, "0", token);
+                AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(sid, "0", token);
                 fragment.show(mContext.getFragmentManager(), "new comment");
             }
         });

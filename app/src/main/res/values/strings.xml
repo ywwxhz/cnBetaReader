@@ -61,5 +61,10 @@
     <string name="menu_book_mark">收藏</string>
     <string name="pref_source_title">源代码</string>
     <string name="pref_source_summary">https://git.oschina.net/ywwxhz/cnBeta-reader</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="message_load_success">加载成功</string>
 
 </resources>

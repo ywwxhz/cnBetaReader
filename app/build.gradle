@@ -6,14 +6,14 @@ android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
-    def verName = "1.0.4"
+    def verName = "1.0.5"
     String buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
 
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
         minSdkVersion 15
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 5
+        versionCode 6
         versionName verName + buildDate
         resConfigs "zh-rCN"
         resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
@@ -50,8 +50,8 @@ android {
     def runTasks = gradle.startParameter.taskNames
     if ('b' in runTasks || 'build' in runTasks) {
         android.applicationVariants.all { variant ->
-            def file = variant.outputFile
-            variant.outputFile = new File(file.parent, file.name.replace(".apk", ("-" + defaultConfig.versionName + ".apk").replace(" ", "-")))
+            def file = variant.outputs[0].outputFile
+            variant.outputs[0].outputFile = new File(file.parent, file.name.replace(".apk", ("-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk").replace(" ", "-")))
         }
     }
     lintOptions {
@@ -71,4 +71,5 @@ dependencies {
     compile files('libs/jsoup-1.8.1.jar')
     compile files('libs/universal-image-loader-1.9.3-with-sources.jar')
     compile 'com.android.support:appcompat-v7:22.0.0'
+    compile project(':android-support-v4-preferencefragment')
 }

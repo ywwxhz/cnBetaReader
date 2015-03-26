@@ -20,7 +20,7 @@ public abstract class BaseToolBarActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_basetoolbar);
+        super.setContentView(getBasicContentLayout());
         helper = TranslucentStatusHelper.from(this)
                 .setStatusView(findViewById(R.id.statusView))
                 .setActionBarSizeAttr(R.attr.actionBarSize)
@@ -32,6 +32,7 @@ public abstract class BaseToolBarActivity extends ActionBarActivity {
                 .setStatusColor(getResources().getColor(R.color.statusColor))
                 .setInsertProxy(TranslucentStatusHelper.InsertProxy.NONE);
         helper.setOption(option);
+
     }
 
     @Override
@@ -74,5 +75,9 @@ public abstract class BaseToolBarActivity extends ActionBarActivity {
     protected void onDestroy() {
         Crouton.clearCroutonsForActivity(this);
         super.onDestroy();
+    }
+
+    protected int getBasicContentLayout(){
+        return R.layout.activity_basetoolbar;
     }
 }

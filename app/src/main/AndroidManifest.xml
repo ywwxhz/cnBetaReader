@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ywwxhz.cnbetareader">
+    package="com.ywwxhz.cnbetareader" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name="com.ywwxhz.MyApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name="com.ywwxhz.MyApplication"
-        android:theme="@style/Theme.Basic">
+        android:theme="@style/Theme.Basic" >
         <activity
+            android:name="com.ywwxhz.activitys.NewsDetailActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
+        <activity
+            android:name="com.ywwxhz.activitys.NewsCommentActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
+        <activity
+            android:name="com.ywwxhz.activitys.ImageViewActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/Theme.Basic.Image" />
+        <activity
+            android:name="com.ywwxhz.activitys.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:name="com.ywwxhz.activitys.NewsListActivity"
             android:theme="@style/Theme.Basic.NoAnim">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,20 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:name="com.ywwxhz.activitys.NewsDetailActivity"/>
-        <activity
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:name="com.ywwxhz.activitys.NewsCommentActivity"/>
-        <activity
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:label="@string/settings"
-            android:name="com.ywwxhz.activitys.SettingsActivity"/>
-        <activity
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:theme="@style/Theme.Basic.Image"
-            android:name="com.ywwxhz.activitys.ImageViewActivity"/>
     </application>
 
 </manifest>

@@ -34,7 +34,7 @@ import org.json.JSONObject;
  *
  * Created by 远望の无限(ywwxhz) on 2014/11/5 17:54.
  */
-public class NewCommentFragment extends DialogFragment implements View.OnClickListener {
+public class AddNewCommentFragment extends DialogFragment implements View.OnClickListener {
     private static final String SID_KEY = "key_sid";
     private static final String TOKEN_KEY = "key_token";
     private static final String TID_KEY = "key_tid";
@@ -48,8 +48,8 @@ public class NewCommentFragment extends DialogFragment implements View.OnClickLi
     private ImageView seccodeImage;
     private boolean flushing = false;
 
-    public static NewCommentFragment getInstance(int sid, String tid, String token) {
-        NewCommentFragment fragment = new NewCommentFragment();
+    public static AddNewCommentFragment getInstance(int sid, String tid, String token) {
+        AddNewCommentFragment fragment = new AddNewCommentFragment();
         Bundle args = new Bundle();
         args.putInt(SID_KEY, sid);
         args.putString(TID_KEY, tid);

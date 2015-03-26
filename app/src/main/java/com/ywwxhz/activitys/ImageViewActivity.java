@@ -97,6 +97,7 @@ public class ImageViewActivity extends Activity {
                 attacher.setOnViewTapListener(null);
                 attacher.setZoomable(true);
                 attacher.update();
+                progressWheel.setProgress(0);
                 progressWheel.setVisibility(View.VISIBLE);
             }
 

@@ -1,6 +1,7 @@
 package com.ywwxhz.widget;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,10 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
-import com.ywwxhz.adapters.BaseAdapter;
 import com.ywwxhz.cnbetareader.R;
 
-public class PagedLoader implements OnScrollListener, OnClickListener {
+public class PagedLoader extends DataSetObserver implements OnScrollListener, OnClickListener {
     private TextView normalTextView;
     private TextView finallyTextView;
     private ListAdapter adapter;
@@ -50,7 +50,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         // 滑到底部后自动加载，判断listview已经停止滚动并且最后可视的条目等于adapter的条目
-        if (enable && mode == Mode.AUTO_LOAD && !isLoading && scrollState == OnScrollListener.SCROLL_STATE_IDLE
+        if (enable && mode == Mode.AUTO_LOAD &&!isLoading&& scrollState == OnScrollListener.SCROLL_STATE_IDLE
                 && lastVisibleIndex == listView.getAdapter().getCount()) {
             if (mOnLoadListener != null) {
                 setLoading(true);
@@ -63,8 +63,8 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
 
     }
 
-    private void setListView(ListView listView) {
-        this.listView = listView;
+    public static Builder from(ListView listView) {
+        return new Builder(listView);
     }
 
     private void setLoading(boolean isloading, boolean isfinall) {
@@ -143,42 +143,17 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
         } else {
             moreView.setVisibility(View.GONE);
         }
-        finallyTextView.setVisibility(View.GONE);
     }
 
-    public void notifyDataSetChanged() {
-        ListAdapter adapter;
-        if (this.adapter != null) {
-            adapter = this.adapter;
-        } else if (listView.getAdapter() != null) {
-            adapter = this.listView.getAdapter();
-        } else {
+    public void onChanged() {
+        if (this.adapter == null) {
             throw new RuntimeException("must set adapter after notifyDataSetChanged");
         }
-        ((BaseAdapter) adapter).notifyDataSetChanged();
-        if (adapter.getCount() == 0) {
-            setEnable(false);
-        } else {
-            setEnable(true);
-        }
+        blindEvent();
     }
 
-
-    public void notifyDataSetInvalidated() {
-        ListAdapter adapter;
-        if (this.adapter != null) {
-            adapter = this.adapter;
-        } else if (listView.getAdapter() != null) {
-            adapter = this.listView.getAdapter();
-        } else {
-            throw new RuntimeException("must set adapter after notifyDataSetChanged");
-        }
-        ((BaseAdapter) adapter).notifyDataSetInvalidated();
-        if (adapter.getCount() == 0) {
-            setEnable(false);
-        } else {
-            setEnable(true);
-        }
+    public void onInvalidated() {
+       onChanged();
     }
 
     public ListAdapter getAdapter() {
@@ -186,9 +161,20 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     }
 
     public void setAdapter(ListAdapter adapter) {
+        if(this.adapter == null && adapter == null){
+            throw  new IllegalArgumentException("adapter not to be null");
+        }
+        if(this.adapter!=null) {
+            this.adapter.unregisterDataSetObserver(this);
+        }
         this.adapter = adapter;
+        this.adapter.registerDataSetObserver(this);
         this.listView.setAdapter(adapter);
-        if (adapter == null || adapter.getCount() == 0) {
+        blindEvent();
+    }
+
+    private void blindEvent(){
+        if (adapter.getCount() == 0) {
             setEnable(false);
         } else {
             // 判断是否绑定事件，如果没有任何事件绑定，不显示foot
@@ -231,31 +217,23 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
     }
 
     public interface OnLoadListener {
-        public void onLoading(PagedLoader pagedLoader, boolean isAutoLoad);
+        void onLoading(PagedLoader pagedLoader, boolean isAutoLoad);
     }
 
     public static class Builder {
         private Context mContext;
         private PagedLoader pagedLoader;
 
-        private Builder(Context context) {
-            this.mContext = context;
+        private Builder(ListView listView) {
+            this.mContext = listView.getContext();
             pagedLoader = new PagedLoader();
             // 实例化底部布局
             pagedLoader.moreView = LayoutInflater.from(mContext).inflate(R.layout.paged_foot,
                     pagedLoader.listView, false);
             pagedLoader.normalTextView = (TextView) pagedLoader.moreView.findViewById(R.id.bt_load);
             pagedLoader.finallyTextView = (TextView) pagedLoader.moreView.findViewById(R.id.bt_finally);
-            pagedLoader.progressBar = (ProgressWheel) pagedLoader.moreView.findViewById(R.id.pg);
-        }
-
-        public static Builder getInstance(Context context) {
-            return new Builder(context);
-        }
-
-        public Builder setListView(ListView listView) {
-            pagedLoader.setListView(listView);
-            return this;
+            pagedLoader.progressBar = (ProgressWheel)pagedLoader.moreView.findViewById(R.id.pg);
+            pagedLoader.listView = listView;
         }
 
         public Builder setMode(Mode mode) {
@@ -299,9 +277,7 @@ public class PagedLoader implements OnScrollListener, OnClickListener {
         }
 
         public PagedLoader builder() {
-            if (pagedLoader.listView == null) {
-                throw new RuntimeException("must set listView before builder()");
-            } else if (pagedLoader.listView.getAdapter() != null) {
+            if (pagedLoader.listView.getAdapter() != null) {
                 throw new RuntimeException("must set footview before set adapter");
             }
             // 加上底部View，注意要放在setAdapter方法前

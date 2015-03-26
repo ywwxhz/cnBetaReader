@@ -1,1 +1,1 @@
-include ':app', ':Crouton', ':FloatingActionButton',':materialish-progress',':PhotoView',':discreteSeekBar'
+include ':app', ':Crouton', ':FloatingActionButton',':materialish-progress',':PhotoView',':discreteSeekBar',':android-support-v4-preferencefragment'
