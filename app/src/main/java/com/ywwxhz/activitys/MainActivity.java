@@ -7,6 +7,8 @@ import android.support.v4.widget.DrawerLayout;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.fragments.NavigationDrawerFragment;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+
 public class MainActivity extends BaseToolBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -31,6 +33,7 @@ public class MainActivity extends BaseToolBarActivity
     @Override
     public void onNavigationDrawerItemSelected(Fragment fragment,int pos) {
         if(fragment!=null&&current!=pos){
+            Crouton.clearCroutonsForActivity(this);
             getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
             current = pos;
         }

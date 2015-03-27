@@ -195,6 +195,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                             Document doc = Jsoup.parse(params[0]);
                             Elements newsHeadlines = doc.select(".body");
                             mNewsItem.setFrom(newsHeadlines.select(".where").html());
+                            mNewsItem.setInputtime(newsHeadlines.select(".date").html());
                             mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
                             Elements content = newsHeadlines.select(".content");
                             for (Element e : content.select("img")) {

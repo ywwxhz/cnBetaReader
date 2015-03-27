@@ -10,17 +10,16 @@ import com.ywwxhz.adapters.BaseAdapter;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/25 20:33.
  */
-public abstract class ListDataProvider<DataAdapter extends BaseAdapter> {
+public abstract class ListDataProvider<DataAdapter extends BaseAdapter> extends BaseDataProvider {
     private DataAdapter adapter;
     private Activity mActivity;
-    protected DataProviderCallback callback;
     private int pageSize;
 
-    public ListDataProvider(Activity mActivity){
-        this.mActivity = mActivity;
-    }
-
     protected boolean hasCached;
+
+    public ListDataProvider(Activity activity) {
+        super(activity);
+    }
 
     public DataAdapter getAdapter() {
         if(adapter==null){
@@ -43,16 +42,6 @@ public abstract class ListDataProvider<DataAdapter extends BaseAdapter> {
 
     public boolean isCached() {
         return hasCached;
-    }
-
-    public abstract void loadData(boolean startup);
-
-    public Activity getActivity() {
-        return mActivity;
-    }
-
-    public void setCallback(DataProviderCallback callback) {
-        this.callback = callback;
     }
 
     public int getPageSize() {

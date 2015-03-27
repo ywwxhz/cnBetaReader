@@ -21,6 +21,7 @@ public class NewsHotCommentItemHoderView extends RelativeLayout {
     private ImageView mCommentImage;
     private TextView mCommentName;
     private TextView mCommentFrom;
+    private TextView mNewsTitle;
 
     public NewsHotCommentItemHoderView(Context context) {
         super(context);
@@ -41,12 +42,14 @@ public class NewsHotCommentItemHoderView extends RelativeLayout {
         mCommentImage = (ImageView) findViewById(R.id.comment_image);
         mCommentName = (TextView) findViewById(R.id.comment_name);
         mCommentFrom = (TextView) findViewById(R.id.comment_from);
+        mNewsTitle = (TextView) findViewById(R.id.news_title);
     }
 
     public void showComment(HotCommentItem item, TextDrawable.IBuilder mDrawableBuilder, ColorGenerator mColorGenerator){
         mCommentContent.setText(item.getTitle());
-        mCommentFrom.setText(item.getDescription());
-        mCommentImage.setImageDrawable(mDrawableBuilder.build(String.valueOf(item.getNewstitle().charAt(0)), mColorGenerator.getColor(item.getNewstitle())));
-        mCommentName.setText(item.getNewstitle());
+        mCommentFrom.setText(item.getFrom());
+        mCommentImage.setImageDrawable(mDrawableBuilder.build(String.valueOf(item.getDescription().charAt(0)), mColorGenerator.getColor(item.getSid())));
+        mCommentName.setText(item.getDescription());
+        mNewsTitle.setText(item.getNewstitle());
     }
 }

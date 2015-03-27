@@ -44,7 +44,8 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentAdapte
             for (HotCommentItem item:result){
                 Matcher hotMatcher = Configure.HOT_COMMENT_PATTERN.matcher(item.getDescription());
                 if (hotMatcher.find()) {
-                    item.setDescription(hotMatcher.group(2) + " [" + hotMatcher.group(1) + "]");
+                    item.setFrom(hotMatcher.group(1));
+                    item.setDescription(hotMatcher.group(2));
                     item.setSid(Integer.parseInt(hotMatcher.group(3)));
                     item.setNewstitle(hotMatcher.group(4));
                 }
