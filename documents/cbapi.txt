@@ -18,8 +18,11 @@ http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.DoCmt&op=sup
 support against 这里sid为评论的tid
 http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.DoCmt&op=against&sid=&tid=0&timestamp=&v=1.0&sign=
 
-get commentList
+get commentList 24小时内的评论
 http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.Comment&page=&sid=&timestamp=&v=1.0&sign=
+
+get commentList 可以查看24小时后的评论
+http://api.cnbeta.com/capi?app_key=10000&article=&format=json&method=phone.Comment&timestamp=&v=1.0&sign=
 
 get NewsList
 http://api.cnbeta.com/capi?app_key=10000&format=json&method=Article.Lists&timestamp=&v=1.0&sign=

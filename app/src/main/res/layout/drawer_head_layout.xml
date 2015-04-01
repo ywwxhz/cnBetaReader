@@ -7,6 +7,6 @@
         android:src="?attr/colorPrimary"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="180dp"/>
 
 </LinearLayout>

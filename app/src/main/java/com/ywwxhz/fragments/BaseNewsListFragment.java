@@ -3,6 +3,9 @@ package com.ywwxhz.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +19,12 @@ import com.ywwxhz.processers.NewsListProcesserImpl;
  * Created by 远望の无限(ywwxhz) on 2015/3/25 18:06.
  */
 public abstract class BaseNewsListFragment extends Fragment {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(hasOptionMenu());
+    }
 
     private NewsListProcesserImpl processer;
 
@@ -37,5 +46,19 @@ public abstract class BaseNewsListFragment extends Fragment {
         processer.onResume();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        processer.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return processer.onOptionsItemSelected(item)|| super.onOptionsItemSelected(item);
+    }
+
     public abstract ListDataProvider getProvider();
+
+    public boolean hasOptionMenu(){
+        return false;
+    }
 }

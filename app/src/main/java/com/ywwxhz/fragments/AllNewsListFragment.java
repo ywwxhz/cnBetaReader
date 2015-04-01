@@ -23,4 +23,9 @@ public class AllNewsListFragment extends BaseNewsListFragment {
             }
         };
     }
+
+    @Override
+    public boolean hasOptionMenu() {
+        return true;
+    }
 }

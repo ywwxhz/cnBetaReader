@@ -5,9 +5,13 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
@@ -91,6 +95,11 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
     }
 
     @Override
+    public void onLoadSuccess(Object obj) {
+
+    }
+
+    @Override
     public void onLoadFinish() {
         provider.getAdapter().notifyDataSetChanged();
         if (provider.getAdapter().getCount() < provider.getPageSize()) {
@@ -101,5 +110,23 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
         if (mSwipeLayout.isRefreshing()) {
             mSwipeLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onLoadFailure() {
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.menu_cache){
+            Toast.makeText(mContext,"function not implement.",Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_news_list,menu);
     }
 }

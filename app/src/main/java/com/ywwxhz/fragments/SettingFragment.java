@@ -54,6 +54,6 @@ public class SettingFragment extends PreferenceFragment {
     }
 
     private String getVersionName() {
-        return "Ver. " + BuildConfig.VERSION_NAME;
+        return "Ver. " + BuildConfig.VERSION_NAME +" " +BuildConfig.BUILD_TYPE;
     }
 }

@@ -9,7 +9,7 @@
     <include layout="@layout/activity_basetoolbar"/>
 
     <fragment android:id="@+id/navigation_drawer"
-              android:layout_width="320dp"
+              android:layout_width="300dp"
               android:layout_height="match_parent"
               android:layout_gravity="start"
               android:name="com.ywwxhz.fragments.NavigationDrawerFragment"

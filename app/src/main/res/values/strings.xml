@@ -6,7 +6,7 @@
     <string name="choise_browser">选择浏览器</string>
     <string name="load_fail">加载失败 ,点击重试。</string>
 
-    <string name="share_templates">我觉得这篇新闻不错 《%1$s》 (%2$s) 分享自cnBeta 中文业界资讯。</string>
+    <string name="share_templates">我觉得这篇新闻不错 《%1$s》 (%2$s) 分享自 cnBeta Plus。</string>
 
     <string name="message_comment_close">评论已关闭</string>
     <string name="message_no_comment">暂无评论，快抢沙发吧。</string>
@@ -52,6 +52,11 @@
     <string name="pref_show_large_image_key">largeImage</string>
     <string name="pref_show_large_image_title">新闻列表显示大图</string>
     <string name="pref_show_large_image_summary">开启后将会消耗大量流量,平均消耗大于 2M, 推荐在Wifi下使用。</string>
+    <string name="pref_swipeback_key">swipeback</string>
+    <string name="pref_swipeback_title">启用滑动返回</string>
+    <string name="pref_swipeback_summary">启用后从屏幕左侧滑向右侧可以返回上一级</string>
+    <string name="pref_source_title">源代码</string>
+    <string name="pref_source_summary">https://git.oschina.net/ywwxhz/cnBeta-reader</string>
 
 
     <string name="button_temporary_save">确定</string>
@@ -59,8 +64,6 @@
     <string name="buttom_permanent_save">保存</string>
     <string name="menu_font">字体</string>
     <string name="menu_book_mark">收藏</string>
-    <string name="pref_source_title">源代码</string>
-    <string name="pref_source_summary">https://git.oschina.net/ywwxhz/cnBeta-reader</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

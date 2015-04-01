@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/comment_image"
-        android:layout_width="42sp"
-        android:layout_height="42sp"
+        android:layout_width="38sp"
+        android:layout_height="38sp"
         android:layout_marginRight="3dp"
         android:layout_marginBottom="3dp"/>
 
@@ -20,7 +20,7 @@
         android:singleLine="true"
         android:textColor="#3c69ce"
         android:layout_toLeftOf="@+id/comment_more"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:layout_toRightOf="@+id/comment_image"
         android:layout_toEndOf="@+id/comment_image"
         android:layout_marginRight="2dp"/>
@@ -73,7 +73,7 @@
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:text="comment"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:layout_below="@+id/comment_ref"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

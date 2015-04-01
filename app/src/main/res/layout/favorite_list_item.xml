@@ -7,15 +7,15 @@
               android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/image"
-        android:layout_width="70sp"
+        android:layout_width="60sp"
         android:layout_gravity="center_vertical"
-        android:layout_height="70sp"/>
+        android:layout_height="60sp"/>
     <TextView
         android:id="@+id/title"
         android:textColor="@color/title_color"
         android:layout_width="match_parent"
         android:paddingLeft="5dp"
-        android:textSize="20sp"
+        android:textSize="19sp"
         android:paddingRight="5dp"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"

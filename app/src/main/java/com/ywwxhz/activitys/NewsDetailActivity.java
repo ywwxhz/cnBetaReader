@@ -21,7 +21,7 @@ public class NewsDetailActivity extends ExtendBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mService = new NewsDetailProcesserImpl(this,helper);
+        mService = new NewsDetailProcesserImpl(this);
     }
 
     @Override
@@ -51,32 +51,13 @@ public class NewsDetailActivity extends ExtendBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+        mService.onCreateOptionsMenu(menu,getMenuInflater());
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                break;
-            case R.id.menu_share:
-                mService.shareAction();
-                break;
-            case R.id.menu_view_in_browser:
-                mService.viewInBrowser();
-                break;
-            case R.id.menu_reflush:
-                mService.makeRequest();
-                break;
-            case R.id.menu_font_size:
-                mService.handleFontSize();
-                break;
-            case R.id.menu_book_mark:
-                mService.doBookmark();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+        return mService.onOptionsItemSelected(item)||super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -19,13 +21,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.loopj.android.http.TextHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
 import com.ywwxhz.activitys.NewsCommentActivity;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.data.DataProviderCallback;
+import com.ywwxhz.data.impl.NewsDetailProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.fragments.FontSizeFragment;
 import com.ywwxhz.lib.Configure;
@@ -34,17 +37,10 @@ import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
-import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-import org.apache.http.Header;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.Locale;
-import java.util.regex.Matcher;
 
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -52,9 +48,8 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  * cnBetaReader
  * Created by 远望の无限(ywwxhz) on 2014/11/1 17:48.
  */
-public class NewsDetailProcesserImpl extends BaseProcesserImpl {
+public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataProviderCallback<String> {
     public static final String NEWS_ITEM_KEY = "key_news_item";
-    private final TranslucentStatusHelper helper;
     private View loadFail;
     private WebView mWebView;
     private ActionBarActivity mContext;
@@ -62,29 +57,46 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     private NewsItem mNewsItem;
     private ProgressWheel mProgressBar;
     private FloatingActionButton mActionButtom;
-    private VideoWebChromeClient client = new VideoWebChromeClient() ;
+    private VideoWebChromeClient client = new VideoWebChromeClient();
+    private NewsDetailProvider provider;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<style>body{word-break: break-all;}video{width:100%% !important;height:auto !important}.content img{max-width: 100%% !important;height: auto; !important}a{text-decoration: none;color:#2f7cad;}" +
-            ".content p iframe{width: 100%% !important;height:auto !important}.introduce img{padding:3pt;width:50pt;height:auto}.introduce p{margin:0}.introduce div{margin: 0px !important;}" +
-            ".content embed{width: 100%% !important;height:auto; !important}.title{font-size: 18pt;color: #1473af;}" +
-            ".from{font-size: 10pt;padding-top: 4pt;}.introduce{border: 1px solid #E5E5E5;background-color: #FBFBFB;font-size: 11pt;padding: 2pt;}" +
-            ".content{padding-top:10pt;font-size: 12pt;}.clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
+            "<style>body{word-break: break-all;font-size: 11pt;}" +
+            ".title{font-size: 18pt;color: #1473af;}" +
+            ".from{font-size: 10pt;padding-top: 4pt;}" +
+            ".introduce{clear: both;background-color:#F1F1F1;color: #444;padding: 13pt 5pt 8pt 5pt;margin-top: 5pt;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
+            ".introduce img{padding:0;width:0;height:0}" +
+            ".introduce p:before {color:#ccc;content:open-quote;font-size:4em;line-height:.1em;margin-right:.25em;vertical-align:-.4em;}"+
+            ".introduce p{margin:0;line-height: 16pt}" +
+            ".introduce div{margin: 0px !important;}" +
+            ".content{padding-top:10pt;}" +
+            ".content p {text-indent: 2em;line-height: 16pt;}"+
+            ".content p iframe{display: block;width: 100%% !important}" +
+            "ol, ul, li {list-style: none;margin: 0;padding: 0;vertical-align: baseline;}"+
+            ".content table, .content td{border: 1px solid #000;border-collapse: collapse;border-spacing: 0;}"+
+            ".content table p {text-indent: 0;}"+
+            ".content video{display: block;width:100%% !important;height:auto !important}" +
+            ".content img{display: block;max-width: 100%% !important;height: auto; !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
+            ".content blockquote {margin: 0; background: url(\"file:///android_asset/left_quote.jpg\") no-repeat scroll 1%% 4pt #F1F1F1; color: #878787;padding: 1pt 2pt 1pt 10pt;}"+
+            ".content embed{display: block;width: 100%% !important;}" +
+            ".clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
             "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
-            "<hr style=\"clear: both\"/><div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
+            "<div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");" +
             "for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0)" +
             "{a.onclick=function(){return false;}}}; function openImage(obj){window.Interface.showImage(obj.src);return false;}" +
+            "var iframes = document.getElementsByTagName('iframe');for(var i=0;i<iframes.length;i++){var iframe = iframes[i];iframe.style.height = iframe.offsetWidth *3/4+\"px\"}var embeds = document.getElementsByTagName('embed');for(var i=0;i<embeds.length;i++){var embed = embeds[i];embed.style.height = embed.offsetWidth *3/4+\"px\"}var videos = document.getElementsByTagName('video');for(var i=0;i<videos.length;i++){var video = videos[i];video.style.height = video.offsetWidth *3/4+\"px\"}"+
             "</script></body></html>";
     private Handler myHandler;
     private WebSettings settings;
 
-    public NewsDetailProcesserImpl(ActionBarActivity mContext, TranslucentStatusHelper helper) {
+    public NewsDetailProcesserImpl(ActionBarActivity mContext) {
         this.hascontent = false;
         this.mContext = mContext;
         this.mContext.setContentView(R.layout.activity_detail);
+        this.provider = new NewsDetailProvider(mContext);
+        this.provider.setCallback(this);
         this.myHandler = new Handler();
-        this.helper = helper;
         initView();
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
@@ -163,71 +175,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
     }
 
     public void makeRequest() {
-
-        NetKit.getInstance().getNewsBySid(mNewsItem.getSid() + "", new TextHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                mProgressBar.setVisibility(View.VISIBLE);
-                mWebView.setVisibility(View.GONE);
-                loadFail.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (!hascontent) {
-                    loadFail.setVisibility(View.VISIBLE);
-                } else {
-                    blindData(mNewsItem);
-                    mWebView.setVisibility(View.VISIBLE);
-                }
-                mProgressBar.setVisibility(View.GONE);
-                Toolkit.showCrouton(mContext, R.string.message_no_network, Style.ALERT);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                if (Configure.STANDRA_PATTERN.matcher(responseString).find()) {
-                    new AsyncTask<String, Integer, Boolean>() {
-
-                        @Override
-                        protected Boolean doInBackground(String... params) {
-                            Document doc = Jsoup.parse(params[0]);
-                            Elements newsHeadlines = doc.select(".body");
-                            mNewsItem.setFrom(newsHeadlines.select(".where").html());
-                            mNewsItem.setInputtime(newsHeadlines.select(".date").html());
-                            mNewsItem.setHometext(newsHeadlines.select(".introduction").html());
-                            Elements content = newsHeadlines.select(".content");
-                            for (Element e : content.select("img")) {
-                                e.attr("onclick", "openImage(this)");
-                            }
-                            mNewsItem.setContent(content.html());
-                            Matcher snMatcher = Configure.SN_PATTERN.matcher(params[0]);
-                            if (snMatcher.find())
-                                mNewsItem.setSN(snMatcher.group(1));
-                            hascontent = true;
-                            FileCacheKit.getInstance().putAsync(mNewsItem.getSid() + "", Toolkit.getGson().toJson(mNewsItem), null);
-                            return true;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Boolean result) {
-                            if (result) {
-                                blindData(mNewsItem);
-                            }
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-                    }.execute(responseString);
-                } else {
-                    onFailure(statusCode, headers, responseString, new RuntimeException());
-                }
-            }
-
-            @Override
-            public void onProgress(int bytesWritten, int totalSize) {
-            }
-        });
-
+        provider.loadNewsAsync(mNewsItem.getSid()+"");
     }
 
     public Context getContext() {
@@ -311,6 +259,55 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         }
     }
 
+    @Override
+    public void onLoadStart() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mWebView.setVisibility(View.GONE);
+        loadFail.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onLoadSuccess(String resp) {
+        if (Configure.STANDRA_PATTERN.matcher(resp).find()) {
+            new AsyncTask<String,String,Boolean>(){
+                @Override
+                protected Boolean doInBackground(String... strings) {
+                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem,strings[0]);
+                    return hascontent;
+                }
+
+                @Override
+                protected void onPostExecute(Boolean hascontent) {
+                    if(hascontent){
+                        blindData(mNewsItem);
+                        mProgressBar.setVisibility(View.GONE);
+                    }else{
+                        onLoadFailure();
+                    }
+                }
+            }.execute(resp);
+        } else {
+            onLoadFailure();
+        }
+    }
+
+    @Override
+    public void onLoadFinish() {
+
+    }
+
+    @Override
+    public void onLoadFailure() {
+        if (!hascontent) {
+            loadFail.setVisibility(View.VISIBLE);
+        } else {
+            blindData(mNewsItem);
+            mWebView.setVisibility(View.VISIBLE);
+        }
+        mProgressBar.setVisibility(View.GONE);
+        Toolkit.showCrouton(mContext, R.string.message_no_network, Style.ALERT);
+    }
+
     private class JavaScriptInterface {
         Context mContext;
 
@@ -350,6 +347,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
         private View myView = null;
         CustomViewCallback myCallback = null;
         private int orientation;
+        private int requiredOrientation;
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
@@ -358,14 +356,15 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                 myCallback = null;
                 return;
             }
-            orientation = mContext.getRequestedOrientation();
+            requiredOrientation = mContext.getRequestedOrientation();
+            orientation = mContext.getResources().getConfiguration().orientation;
             mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             mContext.getSupportActionBar().hide();
-            helper.getOption().setWithActionBar(false);
             ViewGroup parent = (ViewGroup) mWebView.getParent();
             mWebView.setVisibility(View.GONE);
             mActionButtom.setVisibility(View.GONE);
             parent.addView(view);
+            view.setBackgroundColor(Color.BLACK);
             myView = view;
             myCallback = callback;
         }
@@ -380,9 +379,9 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                     myCallback = null;
                 }
                 mContext.setRequestedOrientation(orientation);
+                mContext.setRequestedOrientation(requiredOrientation);
                 mContext.getSupportActionBar().show();
-                helper.getOption().setWithActionBar(true);
-                ViewGroup parent = (ViewGroup) myView.getParent();
+                ViewGroup parent = (ViewGroup) mWebView.getParent();
                 parent.removeView(myView);
                 mWebView.setVisibility(View.VISIBLE);
                 mActionButtom.setVisibility(View.VISIBLE);
@@ -390,5 +389,31 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl {
                 myView = null;
             }
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mContext.finish();
+                break;
+            case R.id.menu_share:
+                shareAction();
+                break;
+            case R.id.menu_view_in_browser:
+                viewInBrowser();
+                break;
+            case R.id.menu_reflush:
+                makeRequest();
+                break;
+            case R.id.menu_font_size:
+                handleFontSize();
+                break;
+            case R.id.menu_book_mark:
+                doBookmark();
+                break;
+        }
+        return false;
     }
 }

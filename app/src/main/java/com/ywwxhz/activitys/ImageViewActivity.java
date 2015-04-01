@@ -1,6 +1,5 @@
 package com.ywwxhz.activitys;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,6 +24,7 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.FileKit;
 import com.ywwxhz.lib.kits.NetKit;
+import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import org.apache.http.Header;
@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.Locale;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -43,7 +43,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  *
  * Created by 远望の无限(ywwxhz) on 14-4-15 17:51.
  */
-public class ImageViewActivity extends Activity {
+public class ImageViewActivity extends SwipeBackActivity {
     public static final String IMAGE_URL = "image_url";
 
     private PhotoView photoView;
@@ -68,10 +68,10 @@ public class ImageViewActivity extends Activity {
             this.action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "cnBetaReader").toString()
+                    String path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "cnBetaPlus").toString()
                             + "/" + Uri.parse(getIntent().getExtras().getString(IMAGE_URL)).getLastPathSegment();
                     FileKit.copyFile(image.getAbsolutePath(),
-                            new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "cnBetaReader"),
+                            new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "cnBetaPlus"),
                             Uri.parse(getIntent().getExtras().getString(IMAGE_URL)).getLastPathSegment());
                     Toast.makeText(ImageViewActivity.this, String.format(Locale.CHINA, "保存成功 文件路径：%s", path), Toast.LENGTH_LONG).show();
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
@@ -85,6 +85,7 @@ public class ImageViewActivity extends Activity {
             }
 
         }
+        setSwipeBackEnable(PrefKit.getBoolean(this, R.string.pref_swipeback_key, true));
     }
 
     private void makeRequest() {
@@ -114,7 +115,7 @@ public class ImageViewActivity extends Activity {
                     }
                 });
                 progressWheel.setVisibility(View.GONE);
-                makeText("图片下载失败");
+                makeText("图片下载失败",0xFF98473E);
             }
 
             @Override
@@ -135,14 +136,14 @@ public class ImageViewActivity extends Activity {
         });
     }
 
-    private void makeText(String message) {
+    private void makeText(String message,int color) {
         LinearLayout infoHoder = (LinearLayout) getLayoutInflater().inflate(R.layout.infolayout, (ViewGroup) getWindow().getDecorView(),false);
         TextView text1 = (TextView) infoHoder.findViewById(R.id.message);
         int[] ints = helper.getInsertPixs(false);
         infoHoder.setPadding(0,  ints[1],
                 ints[2], 0);
         text1.setText(message);
-        infoHoder.setBackgroundColor(Style.holoRedLight);
+        infoHoder.setBackgroundColor(color);
         Crouton.make(ImageViewActivity.this, infoHoder).show();
     }
 
@@ -163,12 +164,13 @@ public class ImageViewActivity extends Activity {
                         action.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
                     }
                 }, 200);
+                makeText(getResources().getString(R.string.message_load_success), 0xFF11659A);
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 loadFail();
-                makeText("图片加载失败");
+                makeText("图片加载失败",0xFF98473E);
             }
         });
     }

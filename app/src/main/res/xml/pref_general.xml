@@ -35,6 +35,10 @@
             android:key="@string/pref_debug_key"
             android:title="@string/pref_debug_title"
             android:summary="@string/pref_debug_summary"/>
+        <CheckBoxPreference android:defaultValue="true"
+                            android:key="@string/pref_swipeback_key"
+                            android:title="@string/pref_swipeback_title"
+                            android:summary="@string/pref_swipeback_summary"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_hardware_accelerated_key"
