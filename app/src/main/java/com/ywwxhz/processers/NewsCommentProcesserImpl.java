@@ -99,7 +99,7 @@ public class NewsCommentProcesserImpl extends BaseProcesserImpl implements Swipe
         this.mTextView = (TextView) mContext.findViewById(R.id.loadFail);
         this.mListView = (ListView) mContext.findViewById(android.R.id.list);
         mSwipeLayout = (SwipeRefreshLayout) mContext.findViewById(R.id.swipe_container);
-        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
+        mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.statusColor, R.color.toolbarColor, R.color.title_color);
         this.helper.getOption().setConfigView(mSwipeLayout);

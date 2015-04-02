@@ -1,5 +1,6 @@
 package me.imid.swipebacklayout.lib;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -468,6 +469,7 @@ public class SwipeBackLayout extends FrameLayout {
     }
 
     @Override
+    @SuppressLint("NewApi")
     public void computeScroll() {
         mScrimOpacity = 1 - mScrollPercent;
         if (mDragHelper.continueSettling(true)) {

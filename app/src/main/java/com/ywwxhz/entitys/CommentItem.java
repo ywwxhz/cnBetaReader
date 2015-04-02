@@ -9,7 +9,7 @@ public class CommentItem {
     private int score;
     private String tid;
     private String pid;
-    private String sid;
+    private int sid;
     private int reason;
     private String icon;
     private String date;
@@ -43,11 +43,11 @@ public class CommentItem {
         this.pid = pid;
     }
 
-    public String getSid() {
+    public int getSid() {
         return sid;
     }
 
-    public void setSid(String sid) {
+    public void setSid(int sid) {
         this.sid = sid;
     }
 

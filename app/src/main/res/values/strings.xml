@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings">设置</string>
     <string name="app_name">cnBeta Plus</string>
     <string name="choise_browser">选择浏览器</string>
     <string name="load_fail">加载失败 ,点击重试。</string>
@@ -57,6 +56,9 @@
     <string name="pref_swipeback_summary">启用后从屏幕左侧滑向右侧可以返回上一级</string>
     <string name="pref_source_title">源代码</string>
     <string name="pref_source_summary">https://git.oschina.net/ywwxhz/cnBeta-reader</string>
+    <string name="pref_show_detail_image_key">show_detail_image</string>
+    <string name="pref_show_detail_image_title">正文显示图片</string>
+    <string name="pref_show_detail_image_summary">新闻正文显示图片</string>
 
 
     <string name="button_temporary_save">确定</string>
@@ -64,7 +66,6 @@
     <string name="buttom_permanent_save">保存</string>
     <string name="menu_font">字体</string>
     <string name="menu_book_mark">收藏</string>
-    <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

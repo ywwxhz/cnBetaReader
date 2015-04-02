@@ -11,13 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.DataProviderCallback;
 import com.ywwxhz.data.ListDataProvider;
+import com.ywwxhz.data.NewsCacheHandler;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 import com.ywwxhz.widget.PagedLoader;
@@ -32,6 +32,7 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
     private PagedLoader mLoader;
     private SwipeRefreshLayout mSwipeLayout;
     private ListDataProvider provider;
+    private NewsCacheHandler handler;
 
     public NewsListProcesserImpl(FragmentActivity activity, View view, ListDataProvider provider) {
         this.mContext = activity;
@@ -39,7 +40,7 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
         provider.setCallback(this);
         ListView listView = (ListView) view.findViewById(android.R.id.list);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
+        mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.statusColor, R.color.toolbarColor, R.color.title_color);
         TextView headView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.type_head, listView, false);
@@ -120,7 +121,11 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.menu_cache){
-            Toast.makeText(mContext,"function not implement.",Toast.LENGTH_LONG).show();
+            if(handler==null) {
+                handler = new NewsCacheHandler(mContext);
+            }
+            handler.setCacheList(provider.getAdapter().getDataSet());
+            handler.start();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -128,5 +133,13 @@ public class NewsListProcesserImpl extends BaseProcesserImpl implements SwipeRef
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_news_list,menu);
+    }
+
+    @Override
+    public void onDestroy() {
+        if(handler!=null){
+            handler.stop();
+            handler.cleanNotification();
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.ywwxhz.activitys;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.fragments.NavigationDrawerFragment;
@@ -17,6 +19,7 @@ public class MainActivity extends BaseToolBarActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private int current = -1;
+    private long lastpass;
 
 
     @Override
@@ -37,6 +40,20 @@ public class MainActivity extends BaseToolBarActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
             current = pos;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            if(System.currentTimeMillis()-lastpass< 1000) {
+                this.finish();
+            }else {
+                lastpass = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次返回退出程序", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

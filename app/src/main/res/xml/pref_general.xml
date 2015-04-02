@@ -14,6 +14,11 @@
             android:summaryOn="@string/pref_auto_page_on"
             android:title="@string/pref_auto_page_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_show_detail_image_key"
+            android:title="@string/pref_show_detail_image_title"
+            android:summary="@string/pref_show_detail_image_summary"/>
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_show_list_news_image_key"
             android:title="@string/pref_show_list_news_image_title"

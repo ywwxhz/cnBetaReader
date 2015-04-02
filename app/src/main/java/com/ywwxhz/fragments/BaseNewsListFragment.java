@@ -61,4 +61,10 @@ public abstract class BaseNewsListFragment extends Fragment {
     public boolean hasOptionMenu(){
         return false;
     }
+
+    @Override
+    public void onDestroy() {
+        processer.onDestroy();
+        super.onDestroy();
+    }
 }

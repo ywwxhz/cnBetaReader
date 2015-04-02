@@ -35,15 +35,20 @@ public class ExtendPopMenu extends PopupMenu {
                 switch (item.getItemId()) {
                     case R.id.comment_support:
                         action = SUPPORT;
-                        NetKit.getInstance().setCommentAction("support", citem.getSid(), citem.getTid(), token, chandler);
+                        NetKit.getInstance().setCommentAction("support", citem.getSid()+"", citem.getTid(), token, chandler);
                         break;
                     case R.id.comment_against:
                         action = AGAINST;
-                        NetKit.getInstance().setCommentAction("against", citem.getSid(), citem.getTid(), token, chandler);
+                        NetKit.getInstance().setCommentAction("against", citem.getSid()+"", citem.getTid(), token, chandler);
                         break;
                     case R.id.comment_report:
                         action = REPORT;
-                        NetKit.getInstance().setCommentAction("report", citem.getSid(), citem.getTid(), token, chandler);
+                        NetKit.getInstance().setCommentAction("report", citem.getSid()+"", citem.getTid(), token, chandler);
+                        break;
+                    case R.id.comment_replay:
+                        Toast.makeText(mContext,"function not impletment",Toast.LENGTH_SHORT).show();
+//                        AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(citem.getSid(), citem.getTid(), token);
+//                        fragment.show(mContext.getFragmentManager(), "new comment");
                         break;
                 }
                 return true;

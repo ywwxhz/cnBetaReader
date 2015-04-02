@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by ywwxhz on 2014/10/17.
@@ -196,12 +197,12 @@ public class FileCacheKit {
         }
     }
 
-    private class FileCacheHandler extends Handler {
-        private FileCacheListener listener;
+    private static class FileCacheHandler extends Handler {
+        private WeakReference<FileCacheListener> listener;
 
         private FileCacheHandler(FileCacheListener listener) {
             super(Looper.getMainLooper());
-            this.listener = listener;
+            this.listener =  new WeakReference<>(listener);
         }
 
         @Override
@@ -209,7 +210,7 @@ public class FileCacheKit {
             switch (msg.what) {
                 case MESSAGE_FINISH:
                     if (listener != null) {
-                        listener.onFinish((String) msg.obj);
+                        listener.get().onFinish((String) msg.obj);
                     }
                     break;
             }

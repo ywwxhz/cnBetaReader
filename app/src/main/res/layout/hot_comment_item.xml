@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ywwxhz.hoderview.NewsHotCommentItemHoderView xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="match_parent"
-    android:background="@drawable/list_item_background"
-    android:padding="8dp"
-    android:layout_height="wrap_content">
+                                                  xmlns:tools="http://schemas.android.com/tools"
+                                                  android:layout_width="match_parent"
+                                                  android:background="@drawable/list_item_background"
+                                                  android:padding="10dp"
+                                                  tools:ignore="ContentDescription"
+                                                  android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/comment_image"
         android:layout_width="38sp"
         android:layout_height="38sp"
-        android:layout_marginRight="3dp"
-        android:layout_marginBottom="3dp"/>
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="5dp"/>
 
     <TextView
         android:id="@+id/comment_name"
@@ -51,8 +53,7 @@
         android:layout_below="@+id/comment_image"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"/>
+        android:layout_marginBottom="2dp"/>
 
     <TextView
         style="@style/SubText"

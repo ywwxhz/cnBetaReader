@@ -3,7 +3,7 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:background="@drawable/list_item_background"
-              android:padding="9dp"
+              android:padding="10dp"
               android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/image"

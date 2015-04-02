@@ -13,7 +13,6 @@ import com.ywwxhz.lib.kits.Toolkit;
 import org.apache.http.Header;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.regex.Matcher;
@@ -70,11 +69,7 @@ public class NewsDetailProvider extends BaseDataProvider {
         Elements introduce = newsHeadlines.select(".introduction");
         introduce.select("div").remove();
         item.setHometext(introduce.html());
-        Elements content = newsHeadlines.select(".content");
-        for (Element e : content.select("img")) {
-            e.attr("onclick", "openImage(this)");
-        }
-        item.setContent(content.html());
+        item.setContent(newsHeadlines.select(".content").html());
         Matcher snMatcher = Configure.SN_PATTERN.matcher(resp);
         if (snMatcher.find())
             item.setSN(snMatcher.group(1));

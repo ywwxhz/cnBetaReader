@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +61,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     private FloatingActionButton mActionButtom;
     private VideoWebChromeClient client = new VideoWebChromeClient();
     private NewsDetailProvider provider;
+    private boolean showImage;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<style>body{word-break: break-all;font-size: 11pt;}" +
@@ -80,12 +83,12 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
             ".content blockquote {margin: 0; background: url(\"file:///android_asset/left_quote.jpg\") no-repeat scroll 1%% 4pt #F1F1F1; color: #878787;padding: 1pt 2pt 1pt 10pt;}"+
             ".content embed{display: block;width: 100%% !important;}" +
             ".clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
-            "</style></head><body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
+            "</style><script>window.onerror = function(){return true;};</script></head>" +
+            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
             "<div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
-            "<div class=\"clear foot\">--- The End ---</div></div><script>var as = document.getElementsByTagName(\"a\");" +
-            "for(var i=0;i<as.length;i++){var a = as[i];if(a.getElementsByTagName('img').length>0)" +
-            "{a.onclick=function(){return false;}}}; function openImage(obj){window.Interface.showImage(obj.src);return false;}" +
-            "var iframes = document.getElementsByTagName('iframe');for(var i=0;i<iframes.length;i++){var iframe = iframes[i];iframe.style.height = iframe.offsetWidth *3/4+\"px\"}var embeds = document.getElementsByTagName('embed');for(var i=0;i<embeds.length;i++){var embed = embeds[i];embed.style.height = embed.offsetWidth *3/4+\"px\"}var videos = document.getElementsByTagName('video');for(var i=0;i<videos.length;i++){var video = videos[i];video.style.height = video.offsetWidth *3/4+\"px\"}"+
+            "<div class=\"clear foot\">--- The End ---</div></div>" +
+            "<script>" +
+            "var enableImage=%s;var image=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+WKoOi9veWbvueJhwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTc3LjY1NjI1IiB5PSIxNjMuMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij7ngrnlh7vliqDovb3lm77niYc8L3RleHQ+PC9nPjwvc3ZnPg==\";var error=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+mHjeivlQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjE4LjQzNzUiIHk9IjE2My4yIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQiPueCueWHu+mHjeivlTwvdGV4dD48L2c+PC9zdmc+\";var loading=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OuWKoOi9veS4rQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjM4LjgyODEyNSIgeT0iMTYzLjIiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5Yqg6L295LitPC90ZXh0PjwvZz48L3N2Zz4=\";(function(){var d=document.getElementsByTagName(\"a\");for(var g=0;g<d.length;g++){var m=d[g];if(m.getElementsByTagName(\"img\").length>0){m.onclick=function(){return false}}}var j=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var g=0;g<j.length;g++){var h=j[g];h.setAttribute(\"dest-src\",h.src);if(enableImage){loadImage(h)}else{h.removeAttribute(\"src\");h.setAttribute(\"src\",image);h.onclick=function(){loadImage(this)}}}var k=document.getElementsByTagName(\"iframe\");for(var g=0;g<k.length;g++){var f=k[g];f.style.height=f.offsetWidth*3/4+\"px\"}var c=document.getElementsByTagName(\"embed\");for(var g=0;g<c.length;g++){var l=c[g];l.style.height=l.offsetWidth*3/4+\"px\"}var e=document.getElementsByTagName(\"video\");for(var g=0;g<e.length;g++){var b=e[g];b.style.height=b.offsetWidth*3/4+\"px\"}})();function showAllImage(){var b=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var a=0;a<b.length;a++){loadImage(b[a])}}function loadImage(a){var b=new Image();a.setAttribute(\"src\",loading);b.src=a.getAttribute(\"dest-src\");b.onload=function(){a.setAttribute(\"src\",a.getAttribute(\"dest-src\"));a.onclick=function(){openImage(this)}};b.onerror=function(){a.setAttribute(\"src\",error);a.onclick=function(){loadImage(this)}}}function openImage(a){window.Interface.showImage(a.getAttribute(\"dest-src\"));return false};"+
             "</script></body></html>";
     private Handler myHandler;
     private WebSettings settings;
@@ -99,6 +102,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
         this.myHandler = new Handler();
         initView();
         if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
+            showImage = PrefKit.getBoolean(mContext, R.string.pref_show_detail_image_key,true);
             mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
             mContext.setTitle("详情：" + mNewsItem.getTitle());
             NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
@@ -117,7 +121,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
 
     private void blindData(NewsItem mNews) {
         String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                , mNews.getHometext(), mNews.getContent());
+                , mNews.getHometext(), mNews.getContent(),showImage);
         mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
         mActionButtom.postDelayed(new Runnable() {
@@ -413,7 +417,22 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
             case R.id.menu_book_mark:
                 doBookmark();
                 break;
+            case 0:
+                showAllImage();
+                break;
         }
         return false;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if(!showImage) {
+            menu.add(0, 0, 0, "显示全部图片");
+        }
+    }
+
+    private void showAllImage(){
+        mWebView.loadUrl("javascript:showAllImage()");
     }
 }

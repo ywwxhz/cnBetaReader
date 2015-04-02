@@ -9,15 +9,15 @@
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/loading"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         app:barColor="#5588FF"
-        app:barWidth="5dp"
-        app:circleRadius="35dp"
+        app:barWidth="2dp"
+        app:circleRadius="30dp"
         app:progressIndeterminate="true"
         app:rimColor="#E1E8EC"
-        app:rimWidth="5dp" />
+        app:rimWidth="2dp" />
 
     <TextView
         android:id="@+id/loadFail"

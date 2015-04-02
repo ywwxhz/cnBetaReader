@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.ResponseHandlerInterface;
+import com.loopj.android.http.SyncHttpClient;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.lib.Configure;
 
@@ -21,6 +22,8 @@ public class NetKit {
 
     private static NetKit instance;
     private AsyncHttpClient mClient;
+
+    private SyncHttpClient mSyncHttpClient;
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private NetKit() {
@@ -30,6 +33,7 @@ public class NetKit {
         mClient.setResponseTimeout(6000);
         mClient.setMaxRetriesAndTimeout(3, 200);
         mClient.setUserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36");
+        mSyncHttpClient = new SyncHttpClient();
     }
 
     public static int getConnectedType() {
@@ -59,6 +63,10 @@ public class NetKit {
 
     public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
         mClient.get(Configure.buildArticleUrl(sid), handlerInterface);
+    }
+
+    public void getNewsBySidSync(String sid, ResponseHandlerInterface handlerInterface) {
+        mSyncHttpClient.get(Configure.buildArticleUrl(sid), handlerInterface);
     }
 
     public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
