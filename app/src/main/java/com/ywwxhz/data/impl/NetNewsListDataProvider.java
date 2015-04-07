@@ -11,27 +11,24 @@ import com.loopj.android.http.ResponseHandlerInterface;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.cnbetareader.R;
-import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.entitys.NewsListObject;
 import com.ywwxhz.entitys.ResponseObject;
+import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
-import com.ywwxhz.processers.NewsDetailProcesserImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * cnBetaReader
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/25 21:19.
  */
-public abstract class NetNewsListDataProvider extends ListDataProvider<NewsListAdapter> {
+public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<NewsListAdapter> {
 
     private int topSid;
     private int current;
@@ -82,7 +79,9 @@ public abstract class NetNewsListDataProvider extends ListDataProvider<NewsListA
             if (!hasCached || result.getPage() == 1) {
                 hasCached = true;
                 getAdapter().setDataSet(itemList);
-                topSid = itemList.get(1).getSid();
+                if(itemList.size()>2) {
+                    topSid = itemList.get(1).getSid();
+                }
                 showToastAndCache(itemList, size - 1);
             } else {
                 dataSet.addAll(itemList);
@@ -115,12 +114,16 @@ public abstract class NetNewsListDataProvider extends ListDataProvider<NewsListA
 
     @Override
     public void loadNewData() {
-        NetKit.getInstance().getNewslistByPage(1, getTypeKey(), newsPage);
+        makeRequest(1, getTypeKey(), newsPage);
     }
 
     @Override
     public void loadNextData() {
-        NetKit.getInstance().getNewslistByPage(current + 1, getTypeKey(), newsPage);
+        makeRequest(current + 1, getTypeKey(), newsPage);
+    }
+
+    public void makeRequest(int page, String type, ResponseHandlerInterface handlerInterface){
+        NetKit.getInstance().getNewslistByPage(page, type, handlerInterface);
     }
 
     @Override
@@ -129,7 +132,7 @@ public abstract class NetNewsListDataProvider extends ListDataProvider<NewsListA
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra(NewsDetailProcesserImpl.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
+                intent.putExtra(NewsDetailActivity.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
                 getActivity().startActivity(intent);
             }
         };
@@ -152,9 +155,9 @@ public abstract class NetNewsListDataProvider extends ListDataProvider<NewsListA
 
     private void showToastAndCache(List<NewsItem> itemList, int size) {
         if (size < 1) {
-            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_no_new_news), Style.CONFIRM);
+            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_no_new_news), CroutonStyle.CONFIRM);
         } else {
-            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_new_news, size), Style.INFO);
+            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_new_news, size), CroutonStyle.INFO);
         }
         FileCacheKit.getInstance().putAsync(getTypeKey().hashCode() + "", Toolkit.getGson().toJson(itemList), "list", null);
     }

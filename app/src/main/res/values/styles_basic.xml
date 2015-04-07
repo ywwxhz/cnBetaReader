@@ -3,37 +3,80 @@
 <resources>
 
 
-    <style name="Theme.Basic" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Basic" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/toolbarColor</item>
         <item name="colorPrimaryDark">@color/statusColor</item>
-        <item name="actionModeBackground">@color/toolbarColor</item>
+        <item name="textSelectColor">?colorPrimary</item>
+        <item name="actionModeBackground">?colorPrimary</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:preferenceCategoryStyle">@style/Preference.Category</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:textColor">#474747</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="colorAccent">#3c69ce</item>
+        <item name="cardBackground">@drawable/list_item_background</item>
+        <item name="refBackground">@drawable/ref_background</item>
+        <item name="titleColor">?colorPrimary</item>
+        <item name="subTitleColor">#5d5b5b</item>
+    </style>
+    <style name="Theme.Basic.TEAL">
+        <item name="colorPrimary">#009688</item>
+        <item name="colorPrimaryDark">#00796B</item>
+        <item name="colorAccent">#009688</item>
     </style>
 
-    <!--<style name="Theme.Basic" parent="@android:style/Theme.Holo.Light.DarkActionBar">-->
-        <!--<item name="android:actionBarStyle">@style/ActionBar.Solid.Basic</item>-->
-        <!--<item name="android:actionModeStyle">@style/ActionBar.Solid.Basic</item>-->
-        <!--<item name="android:actionBarWidgetTheme">@style/ActionBar.Widget</item>-->
-        <!--<item name="android:preferenceCategoryStyle">@style/Preference.Category</item>-->
-        <!--<item name="android:windowIsTranslucent">true</item>-->
-        <!--<item name="android:textColor">#474747</item>-->
-        <!--<item name="android:windowAnimationStyle">@style/AnimationActivity</item>-->
-    <!--</style>-->
+    <style name="Theme.Basic.BROWN">
+        <item name="colorPrimary">#795548</item>
+        <item name="colorPrimaryDark">#5D4037</item>
+        <item name="colorAccent">#795548</item>
+    </style>
+    <style name="Theme.Basic.ORANGE">
+        <item name="colorPrimary">#FF9800</item>
+        <item name="colorPrimaryDark">#F57C00</item>
+        <item name="colorAccent">#FF9800</item>
+    </style>
 
-    <style name="Theme.Basic.NoAnim" parent="Theme.Basic">
+    <style name="Theme.Basic.PURPLE">
+        <item name="colorPrimary">#9C27B0</item>
+        <item name="colorPrimaryDark">#7B1FA2</item>
+        <item name="colorAccent">#7C4DFF</item>
+    </style>
+    <style name="Theme.Basic.Night" >
+        <item name="colorPrimary">#232b38</item>
+        <item name="colorPrimaryDark">#191f29</item>
+        <item name="colorAccent">@color/accent_material_dark</item>
+        <item name="android:windowBackground">@color/background_night</item>
+        <item name="textSelectColor">@android:color/white</item>
+        <item name="android:textColor">#9bafcc</item>
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+        <item name="cardBackground">@drawable/list_item_background_night</item>
+        <item name="titleColor">?android:textColor</item>
+        <item name="subTitleColor">#707e94</item>
+        <item name="refBackground">@drawable/ref_background_night</item>
+    </style>
+
+    <style name="Theme.Basic.NoAnim">
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
-    <style name="Theme.Basic.Image" parent="@android:style/Theme.Holo.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/gray_80</item>
+    <style name="Theme.Basic.TEAL.NoAnim">
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
+    <style name="Theme.Basic.BROWN.NoAnim">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="Theme.Basic.ORANGE.NoAnim">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="Theme.Basic.PURPLE.NoAnim">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="Theme.Basic.Night.NoAnim">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
 
 </resources>

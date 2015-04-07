@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,19 +20,20 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
 import com.ywwxhz.activitys.NewsCommentActivity;
+import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.DataProviderCallback;
 import com.ywwxhz.data.impl.NewsDetailProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.fragments.FontSizeFragment;
 import com.ywwxhz.lib.Configure;
+import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
@@ -50,78 +50,62 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  * cnBetaReader
  * Created by 远望の无限(ywwxhz) on 2014/11/1 17:48.
  */
-public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataProviderCallback<String> {
-    public static final String NEWS_ITEM_KEY = "key_news_item";
+public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailProvider> implements DataProviderCallback<String> {
     private View loadFail;
     private WebView mWebView;
-    private ActionBarActivity mContext;
     private boolean hascontent;
     private NewsItem mNewsItem;
     private ProgressWheel mProgressBar;
     private FloatingActionButton mActionButtom;
     private VideoWebChromeClient client = new VideoWebChromeClient();
-    private NewsDetailProvider provider;
     private boolean showImage;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<style>body{word-break: break-all;font-size: 11pt;}" +
-            ".title{font-size: 18pt;color: #1473af;}" +
+            "#title{font-size: 18pt;color: #%s;}" +
             ".from{font-size: 10pt;padding-top: 4pt;}" +
-            ".introduce{clear: both;background-color:#F1F1F1;color: #444;padding: 13pt 5pt 8pt 5pt;margin-top: 5pt;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
-            ".introduce img{padding:0;width:0;height:0}" +
-            ".introduce p:before {color:#ccc;content:open-quote;font-size:4em;line-height:.1em;margin-right:.25em;vertical-align:-.4em;}"+
-            ".introduce p{margin:0;line-height: 16pt}" +
-            ".introduce div{margin: 0px !important;}" +
+            "#introduce{clear: both;padding: 13pt 5pt 8pt 5pt;margin-top: 5pt;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
+            "#introduce img{padding:0;width:0;height:0}%s" +
+            "#introduce p:before {color:#ccc;content:open-quote;font-size:4em;line-height:.1em;margin-right:.25em;vertical-align:-.4em;}" +
+            "#introduce p{margin:0;line-height: 16pt}" +
+            "#introduce div{margin: 0px !important;}" +
             ".content{padding-top:10pt;}" +
-            ".content p {text-indent: 2em;line-height: 16pt;}"+
+            ".content p {text-indent: 2em;line-height: 16pt;}" +
             ".content p iframe{display: block;width: 100%% !important}" +
-            "ol, ul, li {list-style: none;margin: 0;padding: 0;vertical-align: baseline;}"+
-            ".content table, .content td{border: 1px solid #000;border-collapse: collapse;border-spacing: 0;}"+
-            ".content table p {text-indent: 0;}"+
+            "ol, ul, li {list-style: none;margin: 0;padding: 0;vertical-align: baseline;}" +
+            ".content table, .content td{border: 1px solid #000;border-collapse: collapse;border-spacing: 0;}" +
+            ".content table p {text-indent: 0;}" +
             ".content video{display: block;width:100%% !important;height:auto !important}" +
-            ".content img{display: block;max-width: 100%% !important;height: auto; !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
-            ".content blockquote {margin: 0; background: url(\"file:///android_asset/left_quote.jpg\") no-repeat scroll 1%% 4pt #F1F1F1; color: #878787;padding: 1pt 2pt 1pt 10pt;}"+
+            ".content img{display: block;max-width: 100%% !important;height: auto !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
+            ".content blockquote {margin: 0; background: url(\"file:///android_asset/left_quote.jpg\") no-repeat scroll 1%% 4pt #F1F1F1; color: #878787;padding: 1pt 2pt 1pt 10pt;}" +
             ".content embed{display: block;width: 100%% !important;}" +
             ".clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
-            "</style><script>window.onerror = function(){return true;};</script></head>" +
-            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
-            "<div class=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
+            "</style><script>function setNight(isNight){if(isNight){document.body.style.backgroundColor=\"#202733\";document.body.style.color = \"#9bafcb\";document.getElementById('introduce').style.backgroundColor=\"#262f3d\";document.getElementById('introduce').style.color=\"#616d80\";}else{document.body.style.backgroundColor=\"#FFF\";document.body.style.color = \"#000\";document.getElementById('introduce').style.backgroundColor=\"#F1F1F1\";document.getElementById('introduce').style.color=\"#444\";}}</script></head>" +
+            "<body><div><div id=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
+            "<div id=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div>" +
             "<script>" +
-            "var enableImage=%s;var image=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+WKoOi9veWbvueJhwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTc3LjY1NjI1IiB5PSIxNjMuMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij7ngrnlh7vliqDovb3lm77niYc8L3RleHQ+PC9nPjwvc3ZnPg==\";var error=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+mHjeivlQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjE4LjQzNzUiIHk9IjE2My4yIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQiPueCueWHu+mHjeivlTwvdGV4dD48L2c+PC9zdmc+\";var loading=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OuWKoOi9veS4rQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjM4LjgyODEyNSIgeT0iMTYzLjIiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5Yqg6L295LitPC90ZXh0PjwvZz48L3N2Zz4=\";(function(){var d=document.getElementsByTagName(\"a\");for(var g=0;g<d.length;g++){var m=d[g];if(m.getElementsByTagName(\"img\").length>0){m.onclick=function(){return false}}}var j=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var g=0;g<j.length;g++){var h=j[g];h.setAttribute(\"dest-src\",h.src);if(enableImage){loadImage(h)}else{h.removeAttribute(\"src\");h.setAttribute(\"src\",image);h.onclick=function(){loadImage(this)}}}var k=document.getElementsByTagName(\"iframe\");for(var g=0;g<k.length;g++){var f=k[g];f.style.height=f.offsetWidth*3/4+\"px\"}var c=document.getElementsByTagName(\"embed\");for(var g=0;g<c.length;g++){var l=c[g];l.style.height=l.offsetWidth*3/4+\"px\"}var e=document.getElementsByTagName(\"video\");for(var g=0;g<e.length;g++){var b=e[g];b.style.height=b.offsetWidth*3/4+\"px\"}})();function showAllImage(){var b=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var a=0;a<b.length;a++){loadImage(b[a])}}function loadImage(a){var b=new Image();a.setAttribute(\"src\",loading);b.src=a.getAttribute(\"dest-src\");b.onload=function(){a.setAttribute(\"src\",a.getAttribute(\"dest-src\"));a.onclick=function(){openImage(this)}};b.onerror=function(){a.setAttribute(\"src\",error);a.onclick=function(){loadImage(this)}}}function openImage(a){window.Interface.showImage(a.getAttribute(\"dest-src\"));return false};"+
+            "var enableImage=%s;var image=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+WKoOi9veWbvueJhwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTc3LjY1NjI1IiB5PSIxNjMuMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij7ngrnlh7vliqDovb3lm77niYc8L3RleHQ+PC9nPjwvc3ZnPg==\";var error=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+mHjeivlQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjE4LjQzNzUiIHk9IjE2My4yIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQiPueCueWHu+mHjeivlTwvdGV4dD48L2c+PC9zdmc+\";var loading=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OuWKoOi9veS4rQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjM4LjgyODEyNSIgeT0iMTYzLjIiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5Yqg6L295LitPC90ZXh0PjwvZz48L3N2Zz4=\";(function(){var d=document.getElementsByTagName(\"a\");for(var g=0;g<d.length;g++){var m=d[g];if(m.getElementsByTagName(\"img\").length>0){m.onclick=function(){return false}}}var j=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var g=0;g<j.length;g++){var h=j[g];h.setAttribute(\"dest-src\",h.src);if(enableImage){loadImage(h)}else{h.removeAttribute(\"src\");h.setAttribute(\"src\",image);h.onclick=function(){loadImage(this)}}}var k=document.getElementsByTagName(\"iframe\");for(var g=0;g<k.length;g++){var f=k[g];f.style.height=f.offsetWidth*3/4+\"px\"}var c=document.getElementsByTagName(\"embed\");for(var g=0;g<c.length;g++){var l=c[g];l.style.height=l.offsetWidth*3/4+\"px\"}var e=document.getElementsByTagName(\"video\");for(var g=0;g<e.length;g++){var b=e[g];b.style.height=b.offsetWidth*3/4+\"px\"}})();function showAllImage(){var b=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var a=0;a<b.length;a++){loadImage(b[a])}}function loadImage(a){var b=new Image();a.setAttribute(\"src\",loading);b.src=a.getAttribute(\"dest-src\");b.onload=function(){a.setAttribute(\"src\",a.getAttribute(\"dest-src\"));a.onclick=function(){openImage(this)}};b.onerror=function(){a.setAttribute(\"src\",error);a.onclick=function(){loadImage(this)}}}function openImage(a){window.Interface.showImage(a.getAttribute(\"dest-src\"));return false}" +
             "</script></body></html>";
+    private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}";
+    private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
     private Handler myHandler;
     private WebSettings settings;
 
-    public NewsDetailProcesserImpl(ActionBarActivity mContext) {
-        this.hascontent = false;
-        this.mContext = mContext;
-        this.mContext.setContentView(R.layout.activity_detail);
-        this.provider = new NewsDetailProvider(mContext);
-        this.provider.setCallback(this);
-        this.myHandler = new Handler();
-        initView();
-        if (mContext.getIntent().getExtras().containsKey(NEWS_ITEM_KEY)) {
-            showImage = PrefKit.getBoolean(mContext, R.string.pref_show_detail_image_key,true);
-            mNewsItem = (NewsItem) mContext.getIntent().getSerializableExtra(NEWS_ITEM_KEY);
-            mContext.setTitle("详情：" + mNewsItem.getTitle());
-            NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
-            if (mNews == null) {
-                makeRequest();
-            } else {
-                hascontent = true;
-                mNewsItem = mNews;
-                blindData(mNews);
-            }
-        } else {
-            Toast.makeText(mContext, "缺少必要参数", Toast.LENGTH_SHORT).show();
-            mContext.finish();
-        }
+    public NewsDetailProcesser(NewsDetailProvider provider) {
+        super(provider);
     }
 
     private void blindData(NewsItem mNews) {
-        String data = String.format(Locale.CHINA, webTemplate, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                , mNews.getHometext(), mNews.getContent(),showImage);
+        String colorString = Integer.toHexString(titleColor);
+        String add;
+        if (ThemeManger.isNightTheme(getActivity())) {
+            add = night;
+        } else {
+            add = light;
+        }
+        String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()), add, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
+                , mNews.getHometext(), mNews.getContent(), showImage);
         mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
         mActionButtom.postDelayed(new Runnable() {
@@ -135,11 +119,15 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     }
 
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
+
     private void initView() {
-        this.loadFail = mContext.findViewById(R.id.loadFail);
-        this.mWebView = (WebView) mContext.findViewById(R.id.webview);
-        this.mProgressBar = (ProgressWheel) mContext.findViewById(R.id.loading);
-        this.mActionButtom = (FloatingActionButton) mContext.findViewById(R.id.action);
+        this.loadFail = mActivity.findViewById(R.id.message);
+        this.mWebView = (WebView) mActivity.findViewById(R.id.webview);
+        if (ThemeManger.isNightTheme(getActivity())) {
+            this.mWebView.setBackgroundColor(windowBackground);
+        }
+        this.mProgressBar = (ProgressWheel) mActivity.findViewById(R.id.loading);
+        this.mActionButtom = (FloatingActionButton) mActivity.findViewById(R.id.action);
         this.mActionButtom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,7 +146,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        if (!PrefKit.getBoolean(mContext, mContext.getString(R.string.pref_hardware_accelerated_key), true)) {
+        if (!PrefKit.getBoolean(mActivity, mActivity.getString(R.string.pref_hardware_accelerated_key), true)) {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         if (NetKit.isWifiConnected()) {
@@ -166,8 +154,8 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
         } else {
             settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
-        settings.setTextZoom(PrefKit.getInt(mContext, "font_size", 100));
-        mWebView.addJavascriptInterface(new JavaScriptInterface(mContext), "Interface");
+        settings.setTextZoom(PrefKit.getInt(mActivity, "font_size", 100));
+        mWebView.addJavascriptInterface(new JavaScriptInterface(mActivity), "Interface");
         mWebView.setWebChromeClient(client);
         this.loadFail.setClickable(true);
         this.loadFail.setOnClickListener(new View.OnClickListener() {
@@ -179,28 +167,24 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     }
 
     public void makeRequest() {
-        provider.loadNewsAsync(mNewsItem.getSid()+"");
-    }
-
-    public Context getContext() {
-        return mContext;
+        provider.loadNewsAsync(mNewsItem.getSid() + "");
     }
 
     public void commentAction() {
-        Intent intent = new Intent(mContext, NewsCommentActivity.class);
-        intent.putExtra(NewsCommentProcesserImpl.SN_KEY, mNewsItem.getSN());
-        intent.putExtra(NewsCommentProcesserImpl.SID_KEY, mNewsItem.getSid());
-        intent.putExtra(NewsCommentProcesserImpl.TITLE_KEY, mNewsItem.getTitle());
-        mContext.startActivity(intent);
+        Intent intent = new Intent(mActivity, NewsCommentActivity.class);
+        intent.putExtra(NewsCommentActivity.SN_KEY, mNewsItem.getSN());
+        intent.putExtra(NewsCommentActivity.SID_KEY, mNewsItem.getSid());
+        intent.putExtra(NewsCommentActivity.TITLE_KEY, mNewsItem.getTitle());
+        mActivity.startActivity(intent);
     }
 
     public void shareAction() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.share_templates
+        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_templates
                 , mNewsItem.getTitle(), Configure.buildArticleUrl(mNewsItem.getSid() + "")));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(Intent.createChooser(intent, mContext.getString(R.string.menu_share)));
+        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.menu_share)));
     }
 
     public void viewInBrowser() {
@@ -208,12 +192,12 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
         intent.setAction(Intent.ACTION_VIEW);
         Uri content_url = Uri.parse(Configure.buildArticleUrl(mNewsItem.getSid() + ""));
         intent.setData(content_url);
-        mContext.startActivity(Intent.createChooser(intent, mContext.getString(R.string.choise_browser)));
+        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.choise_browser)));
     }
 
     public void handleFontSize() {
         FontSizeFragment fragment = FontSizeFragment.getInstance(settings.getTextZoom());
-        fragment.show(mContext.getFragmentManager(), "Font Size");
+        fragment.show(mActivity.getFragmentManager(), "Font Size");
         fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
@@ -235,7 +219,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK&&client.myCallback!=null) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && client.myCallback != null) {
             client.onHideCustomView();
             return true;
         }
@@ -259,7 +243,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
                 message = "操作失败";
                 style = Style.ALERT;
             }
-            Toolkit.showCrouton(mContext, message, style);
+            Toolkit.showCrouton(mActivity, message, style);
         }
     }
 
@@ -273,19 +257,19 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     @Override
     public void onLoadSuccess(String resp) {
         if (Configure.STANDRA_PATTERN.matcher(resp).find()) {
-            new AsyncTask<String,String,Boolean>(){
+            new AsyncTask<String, String, Boolean>() {
                 @Override
                 protected Boolean doInBackground(String... strings) {
-                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem,strings[0]);
+                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem, strings[0]);
                     return hascontent;
                 }
 
                 @Override
                 protected void onPostExecute(Boolean hascontent) {
-                    if(hascontent){
+                    if (hascontent) {
                         blindData(mNewsItem);
                         mProgressBar.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         onLoadFailure();
                     }
                 }
@@ -309,7 +293,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
             mWebView.setVisibility(View.VISIBLE);
         }
         mProgressBar.setVisibility(View.GONE);
-        Toolkit.showCrouton(mContext, R.string.message_no_network, Style.ALERT);
+        Toolkit.showCrouton(mActivity, R.string.message_no_network, Style.ALERT);
     }
 
     private class JavaScriptInterface {
@@ -338,6 +322,28 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     }
 
     @Override
+    public void assumeView(View view) {
+        this.hascontent = false;
+        this.myHandler = new Handler();
+        initView();
+        showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
+        mNewsItem = (NewsItem) mActivity.getIntent().getSerializableExtra(NewsDetailActivity.NEWS_ITEM_KEY);
+        mActivity.setTitle("详情：" + mNewsItem.getTitle());
+    }
+
+    @Override
+    public void loadData(boolean startup) {
+        NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
+        if (mNews == null) {
+            makeRequest();
+        } else {
+            hascontent = true;
+            mNewsItem = mNews;
+            blindData(mNews);
+        }
+    }
+
+    @Override
     public void onResume() {
         mWebView.onResume();
     }
@@ -360,10 +366,10 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
                 myCallback = null;
                 return;
             }
-            requiredOrientation = mContext.getRequestedOrientation();
-            orientation = mContext.getResources().getConfiguration().orientation;
-            mContext.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            mContext.getSupportActionBar().hide();
+            requiredOrientation = mActivity.getRequestedOrientation();
+            orientation = mActivity.getResources().getConfiguration().orientation;
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            mActivity.getSupportActionBar().hide();
             ViewGroup parent = (ViewGroup) mWebView.getParent();
             mWebView.setVisibility(View.GONE);
             mActionButtom.setVisibility(View.GONE);
@@ -382,9 +388,9 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
                     myCallback.onCustomViewHidden();
                     myCallback = null;
                 }
-                mContext.setRequestedOrientation(orientation);
-                mContext.setRequestedOrientation(requiredOrientation);
-                mContext.getSupportActionBar().show();
+                mActivity.setRequestedOrientation(orientation);
+                mActivity.setRequestedOrientation(requiredOrientation);
+                mActivity.getSupportActionBar().show();
                 ViewGroup parent = (ViewGroup) mWebView.getParent();
                 parent.removeView(myView);
                 mWebView.setVisibility(View.VISIBLE);
@@ -400,7 +406,7 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mContext.finish();
+                mActivity.finish();
                 break;
             case R.id.menu_share:
                 shareAction();
@@ -427,12 +433,16 @@ public class NewsDetailProcesserImpl extends BaseProcesserImpl implements DataPr
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if(!showImage) {
+        if (!showImage) {
             menu.add(0, 0, 0, "显示全部图片");
         }
     }
 
-    private void showAllImage(){
+    private void showAllImage() {
         mWebView.loadUrl("javascript:showAllImage()");
+    }
+
+    private void nightMode() {
+        mWebView.loadUrl("javascript:setNight(true)");
     }
 }

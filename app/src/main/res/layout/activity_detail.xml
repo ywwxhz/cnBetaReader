@@ -12,7 +12,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        app:barColor="#5588FF"
+        app:barColor="?colorPrimary"
         app:barWidth="2dp"
         app:circleRadius="30dp"
         app:progressIndeterminate="true"
@@ -20,7 +20,7 @@
         app:rimWidth="2dp" />
 
     <TextView
-        android:id="@+id/loadFail"
+        android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -36,6 +36,6 @@
         android:alpha="0.8"
         android:visibility="gone"
         android:src="@mipmap/ic_comment"
-        app:fab_colorNormal="@color/color_normal"
-        app:fab_colorPressed="@color/color_passed" />
+        app:fab_colorNormal="?colorPrimary"
+        app:fab_colorPressed="?colorPrimaryDark"/>
 </merge>

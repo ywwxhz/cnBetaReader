@@ -14,7 +14,7 @@ import java.util.List;
  */
 public abstract class BaseAdapter<E> extends android.widget.BaseAdapter {
 
-    protected final LayoutInflater infater;
+    protected LayoutInflater infater;
     protected List<E> items;
     protected Context context;
 
@@ -25,8 +25,12 @@ public abstract class BaseAdapter<E> extends android.widget.BaseAdapter {
 
     public BaseAdapter(Context context) {
         this.context = context;
-        this.infater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.infater = LayoutInflater.from(context);
+    }
+
+    public void setContext(Context context){
+        this.context = context;
+        this.infater = LayoutInflater.from(context);
     }
 
     @Override

@@ -3,8 +3,8 @@
     android:id="@android:id/title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dip"
-    android:textColor="@color/green_1"
+    android:textColor="?attr/textSelectColor"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="16dip" />
+    android:paddingTop="12dp"
+    android:paddingBottom="2dp"/>

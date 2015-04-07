@@ -1,0 +1,391 @@
+A	3	ATI	http://static.cnbetacdn.com/topics/2-6-2009 9-18-16 AM.gif
+A	9	Apple 苹果	http://static.cnbetacdn.com/topics/apple.png
+A	13	Adobe	http://static.cnbetacdn.com/topics/adobe.gif
+A	42	AMD	http://static.cnbetacdn.com/topics/amdcn.gif
+A	49	AOL / AIM	http://static.cnbetacdn.com/topics/aol.gif
+A	50	Apple QuickTime	http://static.cnbetacdn.com/topics/quicktimex.gif
+A	53	ACDSee	http://static.cnbetacdn.com/topics/13-05-22 11-41-41.gif
+A	59	Apache OpenOffice	http://static.cnbetacdn.com/topics/1386209213.gif
+A	66	Apple iTunes / App Store	http://static.cnbetacdn.com/topics/d7a79f321c9aa99.png
+A	79	Apple Mac OS X	http://static.cnbetacdn.com/topics/osx.gif
+A	93	ASUS 华硕	http://static.cnbetacdn.com/topics/asus.gif
+A	118	Alcohol	http://static.cnbetacdn.com/topics/118_alcohol.gif
+A	158	Apple Safari	http://static.cnbetacdn.com/topics/2-6-2009 1-48-20 AM.gif
+A	169	AnyDVD	http://static.cnbetacdn.com/topics/anydvd.gif
+A	183	AutoDesk	http://static.cnbetacdn.com/topics/183_autodesk.gif
+A	188	Avant Browser	http://static.cnbetacdn.com/topics/188_avant.gif
+A	325	ARSwp Windows 清理助手	http://static.cnbetacdn.com/topics/logo_14.gif
+A	343	Apple iPod	http://static.cnbetacdn.com/topics/12-09-13 08-16-08.gif
+A	346	avast! Antivirus	http://static.cnbetacdn.com/topics/avastav.gif
+A	356	Ashampoo	http://static.cnbetacdn.com/topics/Ashampoo.gif
+A	364	Avira AntiVir	http://static.cnbetacdn.com/topics/avira.gif
+A	370	AVG Antivirus	http://static.cnbetacdn.com/topics/avg.gif
+A	379	Apple iPhone	http://static.cnbetacdn.com/topics/1410918123.png
+A	464	Apple iPad	http://static.cnbetacdn.com/topics/1410918153.png
+A	535	Apple Watch	http://static.cnbetacdn.com/topics/0b0d9526b3a0ab9.png
+B	77	BitTorrent	http://static.cnbetacdn.com/topics/bittorrent.gif
+B	200	BitSpirit 比特精灵	http://static.cnbetacdn.com/topics/200_bitspirit.gif
+B	209	BitComet	http://static.cnbetacdn.com/topics/bitcomet1.gif
+B	232	BlackIce	http://static.cnbetacdn.com/topics/232_blackice.gif
+B	261	Baidu 百度	http://static.cnbetacdn.com/topics/aada0e439b8da89.png
+B	376	Bluetooth 蓝牙	http://static.cnbetacdn.com/topics/2-6-2009 2-11-24 AM.gif
+B	377	Blu-Ray Disc 蓝光	http://static.cnbetacdn.com/topics/2-6-2009 2-16-36 AM.gif
+B	400	Blog 博客	http://static.cnbetacdn.com/topics/blog.gif
+B	411	BlackBerry 黑莓	http://static.cnbetacdn.com/topics/blackberry.gif
+B	414	BitDefender	http://static.cnbetacdn.com/topics/2011-9-20 11-28-03.gif
+B	419	Blizzard 暴雪	http://static.cnbetacdn.com/topics/blizzard.gif
+C	8	cnBeta 软件新闻	http://static.cnbetacdn.com/topics/1386207221.gif
+C	70	cnBeta 硬件新闻	http://static.cnbetacdn.com/topics/hardware.gif
+C	105	CA technologies	http://static.cnbetacdn.com/topics/2010-5-18 8-10-56.gif
+C	125	cnBeta 原创独家	http://static.cnbetacdn.com/topics/original.gif
+C	135	cnBeta 人物 - Bill Gates	http://static.cnbetacdn.com/topics/6289ff1e0f2de7f.png
+C	165	cnBeta 七日谈	http://static.cnbetacdn.com/topics/0834692ea183f84.png
+C	186	CloneCD / CloneDVD	http://static.cnbetacdn.com/topics/clonecd.gif
+C	219	Counter-Strike 反恐精英 / 半条命	http://static.cnbetacdn.com/topics/2-6-2009 2-22-09 AM.gif
+C	228	Cisco 思科	http://static.cnbetacdn.com/topics/228_cisco.gif
+C	243	Cellphones 手机	http://static.cnbetacdn.com/topics/cell.gif
+C	245	cnBeta 精品软件	http://static.cnbetacdn.com/topics/cbsoft.gif
+C	246	cnBeta 精品驱动	http://static.cnbetacdn.com/topics/drivers.gif
+C	260	cnBeta 最新消息	http://static.cnbetacdn.com/topics/8e366435864b910.png
+C	291	cnBeta 团队新闻	http://static.cnbetacdn.com/topics/9cf4a8edf8d0f3c.png
+C	293	cnBeta 网站推介	http://static.cnbetacdn.com/topics/7196181f9e9a3de.png
+C	294	CuteFTP	http://static.cnbetacdn.com/topics/294_cuteftp.gif
+C	305	cnBeta 视点观察	http://static.cnbetacdn.com/topics/201fc12d7e546a0.png
+C	306	cnBeta 访客互动	http://static.cnbetacdn.com/topics/ea7b1eb14c6d020.png
+C	311	cnBeta 博客文摘	http://static.cnbetacdn.com/topics/aef6d47889f95b7.png
+C	316	China Telecom 中国电信	http://static.cnbetacdn.com/topics/b221d21ee42e75d.png
+C	348	China Mobile 中国移动	http://static.cnbetacdn.com/topics/d1727b9ae21e1e3.png
+C	350	CCleaner	http://static.cnbetacdn.com/topics/13-05-28 04-14-52.gif
+C	357	CyberLink PowerDVD	http://static.cnbetacdn.com/topics/powerdvd.gif
+C	358	China Mobile Fetion 飞信	http://static.cnbetacdn.com/topics/ec6b83eca06d85e.png
+C	369	cnBeta 人物 - Steve Jobs	http://static.cnbetacdn.com/topics/6b6702c2167e5a2.jpg
+C	375	cnBeta 人物 - Steve Ballmer	http://static.cnbetacdn.com/topics/d6c66b3becf1a4c.jpg
+C	391	China Unicom 中国联通	http://static.cnbetacdn.com/topics/884bc7f6b70e428.png
+C	420	comsenz 康盛创想 / Discuz!	http://static.cnbetacdn.com/topics/comsenz.gif
+C	424	CHINA 中国	http://static.cnbetacdn.com/topics/china.gif
+C	425	cFos Software	http://static.cnbetacdn.com/topics/cfos.gif
+C	428	cnBeta 人物 - 马云	http://static.cnbetacdn.com/topics/0638f8cec914846.jpg
+C	430	cnBeta 现场报道	http://static.cnbetacdn.com/topics/445d09e1000e41b.png
+C	432	Creative 创新	http://static.cnbetacdn.com/topics/creative.gif
+C	448	cnBeta 科学探索	http://static.cnbetacdn.com/topics/79d0969d43aab92.png
+C	451	cnBeta 硬件 - 摄影器材	http://static.cnbetacdn.com/topics/1ce83500eac07e2.png
+C	453	cnBeta 人物	http://static.cnbetacdn.com/topics/97823206d522f55.jpg
+C	466	cnBeta 专栏	http://static.cnbetacdn.com/topics/49180707755b808.jpg
+C	479	cnBeta 评测室	http://static.cnbetacdn.com/topics/1ac594fa2d6ecb0.png
+C	488	cnBeta 人物 - Tim Cook	http://static.cnbetacdn.com/topics/be31c649af25b9f.png
+C	491	Chubao 触宝输入法	http://static.cnbetacdn.com/topics/4d2a390409b3dc6.png
+C	495	Camera 360	http://static.cnbetacdn.com/topics/3cd4fcc515a2020.png
+C	525	Coocaa 创维酷开	http://static.cnbetacdn.com/topics/5c0065f3b50f107.png
+D	82	DELL 戴尔	http://static.cnbetacdn.com/topics/dell.gif
+D	121	DVD	http://static.cnbetacdn.com/topics/121_dvd.gif
+D	191	DAEMON Tools	http://static.cnbetacdn.com/topics/daemon.gif
+D	218	DreamMail 梦幻快车	http://static.cnbetacdn.com/topics/2010-4-9 8-53-08.gif
+D	253	DivX Codec	http://static.cnbetacdn.com/topics/divx.gif
+D	256	电子商务 - C2C	http://static.cnbetacdn.com/topics/09afef83c4df10b.png
+D	281	电子商务 - 支付平台	http://static.cnbetacdn.com/topics/20f9edcfe5778b0.png
+D	353	电子商务 - B2C / B2B	http://static.cnbetacdn.com/topics/4fe416f1fb73112.png
+D	431	Debian GNU/Linux	http://static.cnbetacdn.com/topics/debian.gif
+D	502	Duzhe 读者手机	http://static.cnbetacdn.com/topics/7ed2e10fff7b92a.png
+E	54	eMule	http://static.cnbetacdn.com/topics/054_172_emule.gif
+E	171	emEditor	http://static.cnbetacdn.com/topics/171_emeditor.gif
+E	194	email 电子邮件	http://static.cnbetacdn.com/topics/2010-4-9 8-48-36.gif
+E	229	Edit+	http://static.cnbetacdn.com/topics/229_edit+.gif
+E	449	EA Games	http://static.cnbetacdn.com/topics/ea.gif
+F	36	FTPRush	http://static.cnbetacdn.com/topics/036_ftprush.gif
+F	72	FlashFXP	http://static.cnbetacdn.com/topics/072_flashfxp.gif
+F	104	FreeBSD	http://static.cnbetacdn.com/topics/freebsd.gif
+F	108	foobar2000	http://static.cnbetacdn.com/topics/foobar2000.gif
+F	166	Flashget 快车	http://static.cnbetacdn.com/topics/flashget.gif
+F	189	FileZilla	http://static.cnbetacdn.com/topics/filezilla.gif
+F	262	FlashBT	http://static.cnbetacdn.com/topics/262_flashbt.gif
+F	277	Foxit Reader 福昕阅读器	http://static.cnbetacdn.com/topics/2013-04-18_08-29-22.gif
+F	280	FeedDemon	http://static.cnbetacdn.com/topics/2010-4-9 8-57-06.gif
+F	363	FastStone	http://static.cnbetacdn.com/topics/2010-4-9 8-55-30.gif
+F	435	Flock	http://static.cnbetacdn.com/topics/flock.gif
+F	470	Foxconn 富士康	http://static.cnbetacdn.com/topics/2010-5-21 11-56-16.gif
+G	52	Google / 谷歌	http://static.cnbetacdn.com/topics/850a52010eb551a.png
+G	101	GNOME	http://static.cnbetacdn.com/topics/101_gnome.gif
+G	126	GreenBrowser	http://static.cnbetacdn.com/topics/GreenBrowser.GIF
+G	142	Google Buzz / Google Wave	http://static.cnbetacdn.com/topics/wavebuzz.gif
+G	192	Google Toolbar	http://static.cnbetacdn.com/topics/192_gtool.gif
+G	215	Google Gmail	http://static.cnbetacdn.com/topics/gmail.gif
+G	257	Google Talk	http://static.cnbetacdn.com/topics/gtalk.gif
+G	275	GoSURF	http://static.cnbetacdn.com/topics/275_gosurf.gif
+G	326	Google GLASS	http://static.cnbetacdn.com/topics/google_glass.gif
+G	347	Google Earth	http://static.cnbetacdn.com/topics/gearth.gif
+G	373	Google YouTube	http://static.cnbetacdn.com/topics/youtube.gif
+G	443	Google Chrome 谷歌浏览器	http://static.cnbetacdn.com/topics/chrome1.gif
+G	444	Google Android	http://static.cnbetacdn.com/topics/android.gif
+G	486	Google Plus	http://static.cnbetacdn.com/topics/5f333930cf35e38.png
+G	493	Google Drive	http://static.cnbetacdn.com/topics/421ad303daa6f12.png
+H	71	Hasee 神舟	http://static.cnbetacdn.com/topics/1387602536.gif
+H	122	HyperSnap	http://static.cnbetacdn.com/topics/2010-4-9 8-35-35.gif
+H	150	Hewlett-Packard 惠普	http://static.cnbetacdn.com/topics/2009-7-25 21-49-25.gif
+H	331	Huawei 华为	http://static.cnbetacdn.com/topics/huawei.gif
+H	439	HTC	http://static.cnbetacdn.com/topics/htc.gif
+I	31	Internet Explorer	http://static.cnbetacdn.com/topics/12-08-26 21-26-48.gif
+I	32	Intel 英特尔	http://static.cnbetacdn.com/topics/intel.gif
+I	58	ICQ	http://static.cnbetacdn.com/topics/1386209086.gif
+I	87	IBM	http://static.cnbetacdn.com/topics/2010-4-9 8-33-55.gif
+I	100	intel Centrino 英特尔迅驰	http://static.cnbetacdn.com/topics/2010-4-9 8-31-57.gif
+I	159	Intel Core 英特尔酷睿	http://static.cnbetacdn.com/topics/2010-4-9 8-29-36.gif
+I	175	IT与体育	http://static.cnbetacdn.com/topics/175_sports.gif
+I	354	Internet Download Manager	http://static.cnbetacdn.com/topics/1163781012_0.gif
+I	403	IM 即时通信	http://static.cnbetacdn.com/topics/im.gif
+I	416	InstallShield	http://static.cnbetacdn.com/topics/installshield.gif
+I	421	IT与交通	http://static.cnbetacdn.com/topics/5cf96895bcff60f.png
+I	484	iFly 讯飞	http://static.cnbetacdn.com/topics/3c4c7ccc6eb2223.jpeg
+I	511	IUNI 智能手机	http://static.cnbetacdn.com/topics/c6e723a194d6639.png
+J	45	警告!	http://static.cnbetacdn.com/topics/1386207671.gif
+J	537	就医宝	http://static.cnbetacdn.com/topics/fa31f81617a8506.png
+K	89	KDE	http://static.cnbetacdn.com/topics/kde.gif
+K	102	Kingsoft 金山	http://static.cnbetacdn.com/topics/2010-4-9 8-21-37.gif
+K	133	Kaspersky 卡巴斯基	http://static.cnbetacdn.com/topics/Kaspersky_logo.gif
+K	409	KV 江民杀毒软件	http://static.cnbetacdn.com/topics/2010-4-9 8-04-56.gif
+K	415	K-Meleon	http://static.cnbetacdn.com/topics/K-Meleon.gif
+K	426	Kodak 柯达	http://static.cnbetacdn.com/topics/kodak.gif
+K	472	Kingsoft Security 金山安全	http://static.cnbetacdn.com/topics/2010-12-2 13-37-48.gif
+K	476	Kingsoft 金山快快	http://static.cnbetacdn.com/topics/2010-8-16 13-33-44.gif
+K	481	Kanbox 酷盘	http://static.cnbetacdn.com/topics/bf26083a10990b6.png
+K	498	Kingsoft 金山猎豹浏览器	http://static.cnbetacdn.com/topics/33f619852580e9c.png
+K	513	Kaiboer 开博尔	http://static.cnbetacdn.com/topics/b6905c33b1bcc07.png
+L	7	历史 - Microsoft Office 2003	http://static.cnbetacdn.com/topics/mso2003.gif
+L	17	历史 - Windows 2000	http://static.cnbetacdn.com/topics/Win2000.gif
+L	28	历史 - Messenger Plus!	http://static.cnbetacdn.com/topics/028_msg_plus.gif
+L	40	历史 - Macromedia	http://static.cnbetacdn.com/topics/2010-4-9 8-07-40.gif
+L	44	历史 - Sun	http://static.cnbetacdn.com/topics/sun.gif
+L	83	LG	http://static.cnbetacdn.com/topics/8b3ccc58abe35ea.png
+L	84	历史 - Napster	http://static.cnbetacdn.com/topics/2009-3-23 16-09-04.gif
+L	95	Linux	http://static.cnbetacdn.com/topics/linux.gif
+L	103	Logitech 罗技	http://static.cnbetacdn.com/topics/logitech.gif
+L	114	历史 - NetCaptor	http://static.cnbetacdn.com/topics/2009-3-23 16-17-32.gif
+L	120	历史 - TGTSoft StyleXP	http://static.cnbetacdn.com/topics/stylexp.gif
+L	124	历史 - AOL Netscape	http://static.cnbetacdn.com/topics/2009-3-23 15-47-55.gif
+L	181	历史 - MSN Messenger	http://static.cnbetacdn.com/topics/2009-3-23 16-01-49.gif
+L	199	历史 - Microsoft Encarta	http://static.cnbetacdn.com/topics/encarta.gif
+L	222	Lycos 莱科斯	http://static.cnbetacdn.com/topics/2010-4-9 8-12-12.gif
+L	239	Lenovo 联想	http://static.cnbetacdn.com/topics/lenovo.gif
+L	265	历史 - Microsoft Office 2007	http://static.cnbetacdn.com/topics/mso2007.gif
+L	269	历史 - Windows 桌面搜索	http://static.cnbetacdn.com/topics/11-12-12 10-45-49.gif
+L	292	历史 - 风雷软件	http://static.cnbetacdn.com/topics/2009-3-23 15-45-04.gif
+L	296	历史 - Mess Patch	http://static.cnbetacdn.com/topics/296_mess.gif
+L	312	历史 - Windows Live Spaces	http://static.cnbetacdn.com/topics/livespaces.png
+L	319	Lingoes 灵格斯	http://static.cnbetacdn.com/topics/319_lingoes.gif
+L	362	历史 - CNC 中国网通	http://static.cnbetacdn.com/topics/CNClogo.gif
+L	367	历史 - Mozilla Sunbird	http://static.cnbetacdn.com/topics/sunbird.gif
+L	405	历史 - CoralQQ 珊瑚虫	http://static.cnbetacdn.com/topics/coralqq.gif
+L	408	历史 - HD-DVD / EVD	http://static.cnbetacdn.com/topics/hddvd.png
+L	434	历史 - Sony-Ericsson 索尼爱立信	http://static.cnbetacdn.com/topics/sonyeric.gif
+M	2	MSN	http://static.cnbetacdn.com/topics/msn.gif
+M	4	Microsoft 微软	http://static.cnbetacdn.com/topics/12-08-24 23-03-07.gif
+M	15	Mozilla 谋智网络	http://static.cnbetacdn.com/topics/015_mozilla.gif
+M	27	Microsoft Visual Studio	http://static.cnbetacdn.com/topics/12-08-24 23-47-29.gif
+M	33	Microsoft SQL Server	http://static.cnbetacdn.com/topics/13-05-22 10-51-01.gif
+M	34	Microsoft DirectX	http://static.cnbetacdn.com/topics/12-08-24 23-11-43.gif
+M	43	MySQL	http://static.cnbetacdn.com/topics/mysql.gif
+M	47	Microsoft .NET	http://static.cnbetacdn.com/topics/msdotnet.png
+M	57	Maxthon 傲游	http://static.cnbetacdn.com/topics/1386207765.gif
+M	61	Microsoft Bing 必应	http://static.cnbetacdn.com/topics/1379404649.gif
+M	67	mIRC	http://static.cnbetacdn.com/topics/mirc.gif
+M	73	Mandriva Linux	http://static.cnbetacdn.com/topics/2-6-2009 9-00-24 AM.gif
+M	75	McAfee	http://static.cnbetacdn.com/topics/mcafee.gif
+M	85	Microsoft XBOX	http://static.cnbetacdn.com/topics/13-05-22 10-44-13.gif
+M	86	Microsoft Skype	http://static.cnbetacdn.com/topics/1384414426.gif
+M	153	Microsoft 法律相关	http://static.cnbetacdn.com/topics/mslaw.gif
+M	155	Microsoft 服务器相关	http://static.cnbetacdn.com/topics/msserver.gif
+M	163	Mozilla FireFox	http://static.cnbetacdn.com/topics/firefox.gif
+M	177	Microsoft TechNet / MSDN	http://static.cnbetacdn.com/topics/msdn-tn.gif
+M	179	Microsoft Office for Mac	http://static.cnbetacdn.com/topics/officemac.gif
+M	187	MindSoft	http://static.cnbetacdn.com/topics/MindSoft.gif
+M	207	Microsoft 硬件	http://static.cnbetacdn.com/topics/ms_mouse.gif
+M	210	MSN Shell	http://static.cnbetacdn.com/topics/210_msnshell.gif
+M	211	Microsoft Office 2013	http://static.cnbetacdn.com/topics/7-18-2012 8-48-00 AM.gif
+M	214	Mozilla ThunderBird	http://static.cnbetacdn.com/topics/thunderbird.gif
+M	223	Microsoft Hyper-V Server	http://static.cnbetacdn.com/topics/hyperv.gif
+M	251	Microsoft 会议	http://static.cnbetacdn.com/topics/12-08-24 23-40-27.gif
+M	263	Microsoft Office	http://static.cnbetacdn.com/topics/12-08-24 23-15-44.gif
+M	308	Microsoft Zune	http://static.cnbetacdn.com/topics/zune.gif
+M	329	Microsoft Expression	http://static.cnbetacdn.com/topics/expression.gif
+M	359	Microsoft Silverlight	http://static.cnbetacdn.com/topics/12-08-24 23-32-07.gif
+M	361	Microsoft Outlook / Hotmail	http://static.cnbetacdn.com/topics/12-08-26 21-37-43.gif
+M	382	Motorola 摩托罗拉	http://static.cnbetacdn.com/topics/11-12-14 08-34-57.gif
+M	397	Media 全球媒体	http://static.cnbetacdn.com/topics/090595492f3e4c2.png
+M	423	Microsoft Error	http://static.cnbetacdn.com/topics/13-05-22 10-58-13.gif
+M	429	Microsoft Surface	http://static.cnbetacdn.com/topics/13-05-22 11-25-08.gif
+M	436	Meizu 魅族	http://static.cnbetacdn.com/topics/1378388808.gif
+M	438	MicroPoint 微点	http://static.cnbetacdn.com/topics/13-05-22 11-01-45.gif
+M	456	Microsoft Office 2010	http://static.cnbetacdn.com/topics/12-08-24 23-20-36.gif
+M	462	Microsoft Security Essentials	http://static.cnbetacdn.com/topics/12-08-24 23-24-38.gif
+M	496	MyMoney 金蝶随手记	http://static.cnbetacdn.com/topics/fba30e1089291e9.png
+M	509	Mele 迈乐	http://static.cnbetacdn.com/topics/d41fe50220900ed.png
+M	533	Microsoft Hololens	http://static.cnbetacdn.com/topics/f28444d27a59413.png
+N	23	Nero	http://static.cnbetacdn.com/topics/nero.gif
+N	55	NVIDIA	http://static.cnbetacdn.com/topics/nvidia.gif
+N	90	Novell	http://static.cnbetacdn.com/topics/novell.gif
+N	123	Net Transport 网络传送带	http://static.cnbetacdn.com/topics/123_transport.gif
+N	144	Netbook 上网本 / 平板 / Ultrabook	http://static.cnbetacdn.com/topics/11-12-14 08-41-43.gif
+N	147	NOKIA 诺基亚	http://static.cnbetacdn.com/topics/nokiapure.gif
+N	182	NVIDIA ForceWare	http://static.cnbetacdn.com/topics/2010-4-9 9-01-29.gif
+N	203	Netease POPO 网易泡泡	http://static.cnbetacdn.com/topics/203_popo.gif
+N	276	NetEase 网易	http://static.cnbetacdn.com/topics/netease.png
+N	330	nod32 Antivirus	http://static.cnbetacdn.com/topics/330_nod32.gif
+N	360	nLite / vLite	http://static.cnbetacdn.com/topics/nvlite.gif
+N	442	Nikon 尼康	http://static.cnbetacdn.com/topics/nikon.gif
+N	459	NetEase 网易有道	http://static.cnbetacdn.com/topics/2010-4-9 10-10-52.gif
+N	519	nubia 努比亚	http://static.cnbetacdn.com/topics/ad795eb3c4727ec.png
+O	48	Opera / 欧朋浏览器	http://static.cnbetacdn.com/topics/2009-8-28 16-18-09.gif
+O	160	Oracle Java	http://static.cnbetacdn.com/topics/11-12-14 12-06-10.gif
+O	212	Outpost Firewall	http://static.cnbetacdn.com/topics/outpost.gif
+O	244	Oracle 甲骨文	http://static.cnbetacdn.com/topics/oracle.gif
+O	283	Open Source 开源	http://static.cnbetacdn.com/topics/opensource2.png
+O	393	OpenBSD	http://static.cnbetacdn.com/topics/openbsd.gif
+O	463	oppo 欧珀	http://static.cnbetacdn.com/topics/1410403690.png
+O	478	Oray 图度	http://static.cnbetacdn.com/topics/b11ea7bc582c4c4.png
+O	499	OnekeyROM 甜椒	http://static.cnbetacdn.com/topics/eed566387e4092e.png
+P	21	PHP	http://static.cnbetacdn.com/topics/021_php.gif
+P	107	Palm	http://static.cnbetacdn.com/topics/palm.gif
+P	134	Panda Software 熊猫反病毒	http://static.cnbetacdn.com/topics/pandasec.gif
+P	152	PHILIPS 飞利浦	http://static.cnbetacdn.com/topics/2010-4-9 9-26-01.gif
+P	270	Paint.NET	http://static.cnbetacdn.com/topics/paintnet.gif
+P	352	PHPWind	http://static.cnbetacdn.com/topics/logo1.gif
+P	452	Panasonic 松下电器	http://static.cnbetacdn.com/topics/2009-3-23 16-19-15.gif
+Q	208	Qihoo 奇虎鲁大师 / Windows优化大师	http://static.cnbetacdn.com/topics/11-12-12 10-48-39.gif
+Q	300	Qihoo 奇虎 360 安全卫士	http://static.cnbetacdn.com/topics/2011-4-20 22-34-42.gif
+Q	489	QY 群英 CC 企业通讯	http://static.cnbetacdn.com/topics/d3b847577abfd58.png
+Q	490	QY 群英网络	http://static.cnbetacdn.com/topics/4be38b4d1e6dd8b.png
+R	37	RedHat	http://static.cnbetacdn.com/topics/redhat.gif
+R	174	Rising 瑞星	http://static.cnbetacdn.com/topics/174_rising.gif
+R	337	Raxco PerfectDisk	http://static.cnbetacdn.com/topics/perfectdisk.gif
+R	368	RedHat Fedora	http://static.cnbetacdn.com/topics/fedora.gif
+R	388	RSS	http://static.cnbetacdn.com/topics/11-12-12 10-52-53.gif
+R	412	Returnil Virtual System	http://static.cnbetacdn.com/topics/returnil.gif
+R	467	RockChip 瑞芯微电子	http://static.cnbetacdn.com/topics/2010-4-9 9-29-39.gif
+R	468	RFID / 增强现实 / 物联网	http://static.cnbetacdn.com/topics/rfid.gif
+R	492	Ramos 蓝魔	http://static.cnbetacdn.com/topics/2255c9250689e6f.png
+S	10	视频网站 / 媒体播放器 - K-Lite (Mega)	http://static.cnbetacdn.com/topics/010_klite.gif
+S	19	视频网站 / 媒体播放器	http://static.cnbetacdn.com/topics/13-04-26 16-30-11.gif
+S	20	视频网站 / 媒体播放器 - AOL Winamp	http://static.cnbetacdn.com/topics/winamp1.gif
+S	25	Symantec 赛门铁克	http://static.cnbetacdn.com/topics/11-12-14 08-56-54.gif
+S	35	视频网站 / 媒体播放器 - WinDVD	http://static.cnbetacdn.com/topics/2-6-2009 2-44-00 AM.gif
+S	46	视频网站 / 媒体播放器 - MPC	http://static.cnbetacdn.com/topics/mpc.gif
+S	112	SCO Unix	http://static.cnbetacdn.com/topics/sco.gif
+S	115	Stardock	http://static.cnbetacdn.com/topics/stardock.gif
+S	132	视频网站 / 媒体播放器 - JetAudio	http://static.cnbetacdn.com/topics/jetaudio.gif
+S	145	视频网站 / 媒体播放器 - Real	http://static.cnbetacdn.com/topics/real.gif
+S	151	SuSE Linux / OpenSuSE	http://static.cnbetacdn.com/topics/suse.gif
+S	176	视频网站 / 媒体播放器 - VLC	http://static.cnbetacdn.com/topics/vlc.gif
+S	196	视频网站 / 媒体播放器 - KazaA	http://static.cnbetacdn.com/topics/kazaa.gif
+S	197	SONY 索尼	http://static.cnbetacdn.com/topics/0f3333ff586a53b.png
+S	217	Super Rabbit 超级兔子	http://static.cnbetacdn.com/topics/srabbit.gif
+S	220	Shanda 盛大网络	http://static.cnbetacdn.com/topics/shanda.gif
+S	221	世界之窗浏览器	http://static.cnbetacdn.com/topics/12-19-2008 7-45-07 PM.gif
+S	224	视频网站 / 媒体播放器 - Monkey's Audio	http://static.cnbetacdn.com/topics/224_monkeyaud.gif
+S	226	Seagate 希捷	http://static.cnbetacdn.com/topics/64c286d8c08ced6.png
+S	230	Smartisan OS 锤子ROM	http://static.cnbetacdn.com/topics/13-04-07 18-01-29.gif
+S	267	Serv-U	http://static.cnbetacdn.com/topics/servu_logo.gif
+S	282	视频网站 / 媒体播放器 - 千千静听	http://static.cnbetacdn.com/topics/282_ttplayer.gif
+S	302	视频网站 / 媒体播放器 - PPS	http://static.cnbetacdn.com/topics/2010-4-9 9-17-35.gif
+S	303	视频网站 / 媒体播放器 - PPTV	http://static.cnbetacdn.com/topics/2010-4-9 9-12-30.gif
+S	315	视频网站 / 媒体播放器 - KMPlayer	http://static.cnbetacdn.com/topics/kmp.gif
+S	322	视频网站 / 媒体播放器 - ToToLook 偷偷看	http://static.cnbetacdn.com/topics/totolook.gif
+S	340	视频网站 / 媒体播放器 - GOM Player	http://static.cnbetacdn.com/topics/340_gom.gif
+S	345	视频网站 / 媒体播放器 - UUSEE 悠视	http://static.cnbetacdn.com/topics/2010-4-9 9-47-02.gif
+S	365	视频网站 / 媒体播放器 - Lame	http://static.cnbetacdn.com/topics/lame.gif
+S	371	Samsung 三星	http://static.cnbetacdn.com/topics/d807a9ee35b0a33.png
+S	385	Sogou 搜狗	http://static.cnbetacdn.com/topics/sogou.gif
+S	394	视频网站 / 媒体播放器 - KuGoo 酷狗	http://static.cnbetacdn.com/topics/2010-4-9 8-16-42.gif
+S	407	视频网站 / 媒体播放器 - MPlayer	http://static.cnbetacdn.com/topics/mplayer.gif
+S	433	视频网站 / 媒体播放器 - My Codec Pack	http://static.cnbetacdn.com/topics/mcp.gif
+S	457	SHARP 夏普	http://static.cnbetacdn.com/topics/sharp.gif
+S	465	Sogou 搜狗浏览器	http://static.cnbetacdn.com/topics/11-12-14 11-52-49.gif
+S	494	Shuame 刷机精灵	http://static.cnbetacdn.com/topics/a3c49c63c97cd63.png
+S	500	Shendu 深度	http://static.cnbetacdn.com/topics/76f040e64ab3bcb.jpeg
+T	18	Tencent 腾讯 QQ	http://static.cnbetacdn.com/topics/ac145a46763ca90.png
+T	138	通信技术	http://static.cnbetacdn.com/topics/communication.png
+T	173	Tencent 腾讯其他产品	http://static.cnbetacdn.com/topics/2009-3-23 12-06-35.gif
+T	204	TuneUp Utilities	http://static.cnbetacdn.com/topics/tuneup.gif
+T	237	Trend Micro 趋势科技	http://static.cnbetacdn.com/topics/237_trendm.gif
+T	274	Tencent 腾讯	http://static.cnbetacdn.com/topics/2010-4-9 9-35-15.gif
+T	278	TweakAssist 全能助手	http://static.cnbetacdn.com/topics/tweakassist.gif
+T	341	TuoTu 脱兔	http://static.cnbetacdn.com/topics/tuotu.gif
+T	344	Total Commander	http://static.cnbetacdn.com/topics/tc.gif
+T	372	通信运营商	http://static.cnbetacdn.com/topics/carrier.gif
+T	422	the United States 美国	http://static.cnbetacdn.com/topics/11-12-14 08-53-40.gif
+T	437	通信技术 - 4G/LTE	http://static.cnbetacdn.com/topics/ba60367cb0b82cf.png
+T	482	Top10 十大	http://static.cnbetacdn.com/topics/9ab65630bf4ede1.png
+T	485	Tongbu 同步助手	http://static.cnbetacdn.com/topics/ceaf1e31d2f1616.png
+U	68	UltraEdit	http://static.cnbetacdn.com/topics/ue.gif
+U	225	UltraISO	http://static.cnbetacdn.com/topics/ultraiso.gif
+U	317	Ubuntu	http://static.cnbetacdn.com/topics/ubuntu.gif
+U	339	uTorrent	http://static.cnbetacdn.com/topics/2010-4-9 9-52-08.gif
+U	446	USB 通用串行总线	http://static.cnbetacdn.com/topics/2010-4-9 9-50-50.gif
+U	458	UC 优视浏览器	http://static.cnbetacdn.com/topics/12-12-03 19-45-33.gif
+U	461	Updrv 驱动人生	http://static.cnbetacdn.com/topics/2010-4-9 9-48-18.gif
+U	471	UM 悠米视频聊天	http://static.cnbetacdn.com/topics/um_logo.png
+U	474	unispim 紫光华宇拼音	http://static.cnbetacdn.com/topics/11-12-12 09-30-02.gif
+U	510	UMI 优米手机	http://static.cnbetacdn.com/topics/382ac8a6d95f5b2.png
+V	16	VIA 威盛	http://static.cnbetacdn.com/topics/2010-4-9 9-55-41.gif
+V	60	VMware	http://static.cnbetacdn.com/topics/vmware.gif
+V	231	VBulletin	http://static.cnbetacdn.com/topics/0012.png
+V	410	Vista优化大师	http://static.cnbetacdn.com/topics/vtweak.gif
+W	11	Windows	http://static.cnbetacdn.com/topics/12-08-26 21-30-16.gif
+W	12	Windows XP	http://static.cnbetacdn.com/topics/fd78901a4aa9fd1.png
+W	14	Windows Server 2003	http://static.cnbetacdn.com/topics/2009-3-23 15-18-07.gif
+W	29	Windows Small Business	http://static.cnbetacdn.com/topics/1386207386.gif
+W	41	Windows 次世代	http://static.cnbetacdn.com/topics/win7.gif
+W	69	WinACE	http://static.cnbetacdn.com/topics/winace.gif
+W	76	Windows 安全	http://static.cnbetacdn.com/topics/11-12-12 10-58-56.gif
+W	92	WiFi	http://static.cnbetacdn.com/topics/wifi.gif
+W	94	Windows + IE	http://static.cnbetacdn.com/topics/WinIE.gif
+W	98	WinRAR	http://static.cnbetacdn.com/topics/11-12-12 10-15-00.gif
+W	128	网络软件	http://static.cnbetacdn.com/topics/global.png
+W	129	Windows 通信网络	http://static.cnbetacdn.com/topics/winnet.gif
+W	131	Windows 存储	http://static.cnbetacdn.com/topics/winstore.gif
+W	139	Windows Media Center	http://static.cnbetacdn.com/topics/139_ms_win_mce.gif
+W	146	WinZip	http://static.cnbetacdn.com/topics/11-12-12 10-01-21.gif
+W	180	Windows Live Messenger	http://static.cnbetacdn.com/topics/12-08-26 21-40-33.gif
+W	184	Windows Phone	http://static.cnbetacdn.com/topics/11-12-12 10-56-36.gif
+W	185	Windows 个性化	http://static.cnbetacdn.com/topics/2009-3-23 15-31-05.gif
+W	190	Windows X	http://static.cnbetacdn.com/topics/2010-4-9 7-56-01.gif
+W	227	Windows Media	http://static.cnbetacdn.com/topics/wmplayer.png
+W	241	Windows Server	http://static.cnbetacdn.com/topics/Windows-S8-Logo.png
+W	247	Windows Update	http://static.cnbetacdn.com/topics/11-12-12 11-02-35.gif
+W	248	Windows Defender	http://static.cnbetacdn.com/topics/windef.gif
+W	254	Windows Vista	http://static.cnbetacdn.com/topics/64e277ceeec131d.png
+W	259	Windows Essentials	http://static.cnbetacdn.com/topics/12-08-26 21-42-14.gif
+W	264	Windows Server 2008	http://static.cnbetacdn.com/topics/2009-3-23 15-21-36.gif
+W	266	Wikipedia 维基百科	http://static.cnbetacdn.com/topics/2010-5-15 9-55-14.gif
+W	268	Windows Live	http://static.cnbetacdn.com/topics/2009-3-23 12-34-39.gif
+W	285	Widgets 小工具 / 侧边栏	http://static.cnbetacdn.com/topics/sidebar.png
+W	320	Windows Virtual PC	http://static.cnbetacdn.com/topics/11-12-12 11-01-21.gif
+W	332	Windows 7	http://static.cnbetacdn.com/topics/5ac39790d90005f.png
+W	334	Windows Home Server	http://static.cnbetacdn.com/topics/ws_HmSvr_v_c_100x67.gif
+W	335	WineHQ	http://static.cnbetacdn.com/topics/11-12-12 10-22-4.gif
+W	349	WordPress	http://static.cnbetacdn.com/topics/11-12-12 09-57-49.gif
+W	404	WinPatrol 看门狗	http://static.cnbetacdn.com/topics/11-12-12 10-11-29.gif
+W	406	WinMount	http://static.cnbetacdn.com/topics/winmount.gif
+W	427	Windows 画图	http://static.cnbetacdn.com/topics/a4873ca809c73da.png
+W	454	Web2.0 - Microblogging 微博	http://static.cnbetacdn.com/topics/11-12-14 08-11-26.gif
+W	455	Web2.0 - SNS 社交网络	http://static.cnbetacdn.com/topics/51f49c3834029e0.png
+W	480	Windows 8	http://static.cnbetacdn.com/topics/ae9e4662520d905.png
+W	506	Windows 8.1	http://static.cnbetacdn.com/topics/9dda76c94727ce6.png
+W	527	网络软件 - 飞兔云传	http://static.cnbetacdn.com/topics/07fe9b33c66a5d0.png
+W	531	Windows 10	http://static.cnbetacdn.com/topics/c9300802dd8cde2.png
+X	56	系统工具	http://static.cnbetacdn.com/topics/1386208204.gif
+X	157	系统安全	http://static.cnbetacdn.com/topics/security.png
+X	168	XnView	http://static.cnbetacdn.com/topics/xnview.gif
+X	318	XunLei 迅雷	http://static.cnbetacdn.com/topics/xunleinew.gif
+X	487	Xiaomi 小米科技	http://static.cnbetacdn.com/topics/milogo.gif
+X	507	系统工具 - Magican Mac 优化	http://static.cnbetacdn.com/topics/72a51e7fb05edb4.png
+Y	39	游戏	http://static.cnbetacdn.com/topics/game.png
+Y	91	Yahoo! 雅虎	http://static.cnbetacdn.com/topics/1378386655.gif
+Y	473	Yunduan 云端软件	http://static.cnbetacdn.com/topics/5611975784.gif
+Y	503	应用 - PP助手	http://static.cnbetacdn.com/topics/c61db69798dd678.jpg
+Y	504	应用 - Root 精灵	http://static.cnbetacdn.com/topics/3d6ebbae8fb93be.png
+Y	508	应用 - 刷机大师	http://static.cnbetacdn.com/topics/fb24fe55f046a4c.png
+Y	515	应用 - 卓大师 一键 Root	http://static.cnbetacdn.com/topics/9467c9a1ef6df79.png
+Y	523	应用 - 卓大师 字体大师	http://static.cnbetacdn.com/topics/761733fdeaf2bc1.png
+Y	529	硬件 - iMagic	http://static.cnbetacdn.com/topics/c40e6d898a8f2f4.png
+Z	74	Zonealarm	http://static.cnbetacdn.com/topics/11-12-12 09-43-47.gif
+Z	517	ZTE 中兴红牛V5手机	http://static.cnbetacdn.com/topics/8556f2c47051f75.png
+Z	521	ZTE 中兴	http://static.cnbetacdn.com/topics/20b15bd69c6a6c6.png

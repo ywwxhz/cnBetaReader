@@ -79,4 +79,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
+    compile project(':SuperSaiyanScrollView')
 }

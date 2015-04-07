@@ -20,9 +20,11 @@
             android:name="com.ywwxhz.activitys.NewsCommentActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
         <activity
+            android:name="com.ywwxhz.activitys.TopicNewsListActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"/>
+        <activity
             android:name="com.ywwxhz.activitys.ImageViewActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:theme="@style/Theme.Basic.Image" />
+            android:configChanges="screenSize|keyboardHidden|orientation" />
         <activity
             android:name="com.ywwxhz.activitys.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"

@@ -26,7 +26,7 @@
         android:alpha="0.8"
         android:visibility="gone"
         android:src="@android:drawable/ic_menu_save"
-        app:fab_colorNormal="@color/color_normal"
-        app:fab_colorPressed="@color/color_passed"
+        app:fab_colorNormal="?attr/colorPrimary"
+        app:fab_colorPressed="?attr/colorPrimaryDark"
         app:fab_shadow="true"/>
 </merge>

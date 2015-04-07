@@ -9,4 +9,13 @@
         <attr name="ex_Reversal" format="boolean" />
         <attr name="ex_proportion" format="float" />
     </declare-styleable>
+    <declare-styleable name="CircleImageView">
+        <attr name="ci_border_width" format="dimension" />
+        <attr name="ci_border_color" format="color" />
+    </declare-styleable>
+    <attr name="textSelectColor" format="color|reference"/>
+    <attr name="cardBackground" format="color|reference"/>
+    <attr name="refBackground" format="color|reference"/>
+    <attr name="titleColor" format="color|reference"/>
+    <attr name="subTitleColor" format="color|reference"/>
 </resources>

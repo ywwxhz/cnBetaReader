@@ -1,6 +1,9 @@
 package com.ywwxhz.hoderview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,6 +29,7 @@ public class NewsListItemHoderView extends RelativeLayout {
     private ImageView news_image_large;
     private ImageView news_image_small;
 
+    @SuppressLint("NewApi")
     public NewsListItemHoderView(Context context, LayoutInflater infater) {
         super(context);
         infater.inflate(R.layout.news_list_item, this);
@@ -36,7 +40,13 @@ public class NewsListItemHoderView extends RelativeLayout {
         this.news_comment = (TextView) findViewById(R.id.news_comments);
         this.news_image_large = (ImageView) findViewById(R.id.news_image_large);
         this.news_image_small = (ImageView) findViewById(R.id.news_image_small);
-        setBackgroundResource(R.drawable.list_item_background);
+        TypedArray array = context.obtainStyledAttributes(new int[]{R.attr.cardBackground});
+        if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT) {
+            setBackground(array.getDrawable(0));
+        } else {
+            setBackgroundDrawable(array.getDrawable(0));
+        }
+        array.recycle();
     }
 
     public void showNews(NewsItem item, boolean showImage, boolean showLarge, DisplayImageOptions optionsLarge, DisplayImageOptions optionsSmall, NewsListAdapter.AnimateFirstDisplayListener listener) {

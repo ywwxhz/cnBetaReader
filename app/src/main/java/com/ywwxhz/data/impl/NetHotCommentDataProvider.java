@@ -15,24 +15,22 @@ import com.ywwxhz.entitys.HotCommentItem;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.lib.Configure;
+import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
-import com.ywwxhz.processers.NewsDetailProcesserImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * cnBetaReader
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/26 14:02.
  */
-public class NetHotCommentDataProvider extends ListDataProvider<HotCommentAdapter> {
+public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,HotCommentAdapter> {
 
     private int current;
 
@@ -52,7 +50,7 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentAdapte
             }
             if(current == 1){
                 getAdapter().setDataSet(result);
-                Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_load_success), Style.INFO);
+                Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_flush_success), CroutonStyle.INFO);
                 FileCacheKit.getInstance().putAsync(getTypeKey().hashCode() + "", Toolkit.getGson().toJson(result), "list", null);
             }else{
                 getAdapter().getDataSet().addAll(result);
@@ -114,7 +112,7 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentAdapte
                 HotCommentItem commentItem = getAdapter().getDataSetItem(i - 1);
                 item.setSid(commentItem.getSid());
                 item.setTitle(commentItem.getNewstitle());
-                intent.putExtra(NewsDetailProcesserImpl.NEWS_ITEM_KEY, item);
+                intent.putExtra(NewsDetailActivity.NEWS_ITEM_KEY, item);
                 getActivity().startActivity(intent);
             }
         };

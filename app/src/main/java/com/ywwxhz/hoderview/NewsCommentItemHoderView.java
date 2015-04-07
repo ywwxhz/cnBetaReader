@@ -90,12 +90,18 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
             reason = item.getReason() + "";
         }
         comment_reason.setText(reason);
-        if (enable && !item.isHasscored()) {
+        if (enable) {
+            if(comment_more.getVisibility()==GONE) {
+                comment_more.setVisibility(VISIBLE);
+            }
             comment_more.setOnClickListener(this);
             popMenu.setCitem(item);
             popMenu.setAdapter(adapter);
             popMenu.setToken(token);
         } else {
+            if(comment_more.getVisibility()==VISIBLE) {
+                comment_more.setVisibility(GONE);
+            }
             comment_more.setOnClickListener(null);
         }
     }

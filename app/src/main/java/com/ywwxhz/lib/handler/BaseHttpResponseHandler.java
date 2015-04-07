@@ -10,7 +10,6 @@ import com.ywwxhz.lib.kits.Toolkit;
 
 import org.apache.http.Header;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
@@ -43,7 +42,7 @@ public abstract class BaseHttpResponseHandler<T> extends GsonHttpResponseHandler
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         Log.e(this.getClass().getSimpleName(), responseString + "");
         throwable.printStackTrace();
-        Crouton.makeText(getActivity(), R.string.message_no_network, Style.ALERT,R.id.content).show();
+        Toolkit.showCrouton(getActivity(), R.string.message_no_network, Style.ALERT);
     }
 
     protected abstract void onSuccess(T result);

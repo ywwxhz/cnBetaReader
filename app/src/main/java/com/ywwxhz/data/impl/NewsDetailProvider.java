@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/31 11:13.
  */
-public class NewsDetailProvider extends BaseDataProvider {
+public class NewsDetailProvider extends BaseDataProvider<String> {
 
     private TextHttpResponseHandler handler =  new TextHttpResponseHandler() {
 

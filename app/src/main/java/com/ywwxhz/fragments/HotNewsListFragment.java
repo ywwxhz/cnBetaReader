@@ -1,6 +1,6 @@
 package com.ywwxhz.fragments;
 
-import com.ywwxhz.data.ListDataProvider;
+import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.data.impl.NetNewsListDataProvider;
 
 /**
@@ -8,9 +8,9 @@ import com.ywwxhz.data.impl.NetNewsListDataProvider;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/25 22:55.
  */
-public class HotNewsListFragment extends BaseNewsListFragment {
+public class HotNewsListFragment extends BaseNewsListFragment<NewsListAdapter,NetNewsListDataProvider> {
     @Override
-    public ListDataProvider getProvider() {
+    public NetNewsListDataProvider getProvider() {
         return new NetNewsListDataProvider(getActivity()){
             @Override
             public String getTypeKey() {

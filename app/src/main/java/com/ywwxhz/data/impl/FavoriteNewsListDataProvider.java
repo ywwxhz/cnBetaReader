@@ -8,11 +8,9 @@ import android.widget.AdapterView;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.FavoriteListAdapter;
-import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.database.sqlite.Selector;
-import com.ywwxhz.processers.NewsDetailProcesserImpl;
 
 import java.util.ArrayList;
 
@@ -21,7 +19,7 @@ import java.util.ArrayList;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/26 14:28.
  */
-public class FavoriteNewsListDataProvider extends ListDataProvider<FavoriteListAdapter> {
+public class FavoriteNewsListDataProvider extends BaseNewsListDataProvider<FavoriteListAdapter> {
     private int current;
 
     public FavoriteNewsListDataProvider(Activity mActivity) {
@@ -85,7 +83,7 @@ public class FavoriteNewsListDataProvider extends ListDataProvider<FavoriteListA
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra(NewsDetailProcesserImpl.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
+                intent.putExtra(NewsDetailActivity.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
                 getActivity().startActivity(intent);
             }
         };

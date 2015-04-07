@@ -61,6 +61,14 @@ public class NetKit {
         mClient.get(null, Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
     }
 
+    public void getNewslistByTopic(int page, String type, ResponseHandlerInterface handlerInterface) {
+        RequestParams params = new RequestParams();
+        params.add("id", type);
+        params.add("page", page + "");
+        params.add("_", System.currentTimeMillis() + "");
+        mClient.get(null, Configure.TOPIC_NEWS_LIST, getAuthHeader(), params, handlerInterface);
+    }
+
     public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
         mClient.get(Configure.buildArticleUrl(sid), handlerInterface);
     }

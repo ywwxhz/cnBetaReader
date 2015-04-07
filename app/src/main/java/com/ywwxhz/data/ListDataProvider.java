@@ -5,14 +5,18 @@ import android.widget.AdapterView;
 
 import com.ywwxhz.adapters.BaseAdapter;
 
+import java.util.List;
+
 /**
  * cnBetaReader
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/25 20:33.
  */
-public abstract class ListDataProvider<DataAdapter extends BaseAdapter> extends BaseDataProvider {
+public abstract class ListDataProvider<DataType,DataAdapter extends BaseAdapter<DataType>> extends BaseDataProvider<List<DataType>> {
     private DataAdapter adapter;
     private Activity mActivity;
+    private int minPageSize;
+
     private int pageSize;
 
     protected boolean hasCached;
@@ -22,10 +26,16 @@ public abstract class ListDataProvider<DataAdapter extends BaseAdapter> extends 
     }
 
     public DataAdapter getAdapter() {
-        if(adapter==null){
+        if(adapter == null){
             adapter = newAdapter();
         }
         return adapter;
+    }
+
+    @Override
+    public void setActivity(Activity activity) {
+        super.setActivity(activity);
+        getAdapter().setContext(activity);
     }
 
     protected abstract DataAdapter newAdapter();
@@ -44,11 +54,19 @@ public abstract class ListDataProvider<DataAdapter extends BaseAdapter> extends 
         return hasCached;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getMinPageSize() {
+        return minPageSize;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setMinPageSize(int pageSize) {
+        this.minPageSize = pageSize;
+    }
+
+    public void setPageSize(int pageSize){
+        this.minPageSize = this.pageSize = pageSize;
+    }
+
+    public int getPageSize() {
+        return pageSize;
     }
 }

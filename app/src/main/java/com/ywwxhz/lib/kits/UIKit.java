@@ -1,9 +1,13 @@
 package com.ywwxhz.lib.kits;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.preference.PreferenceFragment;
+import android.view.View;
 import android.widget.ListView;
 
 import java.lang.reflect.Method;
@@ -39,5 +43,35 @@ public class UIKit {
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    /** 对TextView设置不同状态时其文字颜色。 */
+    public static ColorStateList createColorStateList(int normal, int actived) {
+        int[] colors = new int[] {actived,normal};
+        int[][] states = new int[2][];
+        states[0] = new int[] { android.R.attr.state_activated };
+        states[1] = new int[] {};
+        return new ColorStateList(states, colors);
+    }
+    /** 对TextView设置不同状态时其文字颜色。 */
+    public static ColorStateList createColorStateList(int normal, int actived,boolean passed) {
+        if(!passed){
+            return  createColorStateList(normal, actived);
+        }
+        int[] colors = new int[] {actived,actived,normal};
+        int[][] states = new int[3][];
+        states[0] = new int[] { android.R.attr.state_pressed };
+        states[1] = new int[] { android.R.attr.state_focused };
+        states[2] = new int[] {};
+        return new ColorStateList(states, colors);
+    }
+
+    @SuppressLint("NewApi")
+    public  static void setBackgroundCompt(View view,Drawable drawable){
+        if(Build.VERSION_CODES.JELLY_BEAN>=Build.VERSION.SDK_INT){
+            view.setBackground(drawable);
+        }else{
+            view.setBackgroundDrawable(drawable);
+        }
     }
 }

@@ -22,7 +22,7 @@
 -keep class org.jsoup.nodes.**{
     *;
 }
--keep class com.ywwxhz.processers.NewsDetailProcesserImpl$JavaScriptInterface{
+-keep class com.ywwxhz.processers.NewsDetailProcesser$JavaScriptInterface{
     *;
 }
 # Gson uses generic type information stored in a class file when working with fields. Proguard

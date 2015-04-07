@@ -83,7 +83,7 @@ public class Style {
      * <p/>
      * NOT_SET for no value.
      */
-    final int backgroundColorValue;
+    public final int backgroundColorValue;
 
     /**
      * Whether we should isTileEnabled the backgroundResourceId or not.

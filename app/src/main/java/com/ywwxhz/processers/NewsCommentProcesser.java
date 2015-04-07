@@ -1,0 +1,96 @@
+package com.ywwxhz.processers;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.melnykov.fab.FloatingActionButton;
+import com.ywwxhz.adapters.CommentListAdapter;
+import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.data.impl.NewsCommentProvider;
+import com.ywwxhz.entitys.CommentItem;
+import com.ywwxhz.fragments.AddNewCommentFragment;
+import com.ywwxhz.lib.kits.Toolkit;
+
+/**
+ * Created by ywwxhz on 2014/11/2.
+ */
+public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsCommentProvider> {
+    private TextView message;
+    private FloatingActionButton actionButton;
+
+    public NewsCommentProcesser(NewsCommentProvider provider, int sid, String sn) {
+        super(provider);
+        provider.setSid(sid);
+        provider.setSn(sn);
+    }
+
+    @Override
+    public void assumeView(View view) {
+        super.assumeView(view);
+        this.message = (TextView) mActivity.findViewById(R.id.message);
+        this.actionButton = (FloatingActionButton) mActivity.findViewById(R.id.action);
+        this.message.setClickable(true);
+        this.actionButton.attachToListView(getListView());
+        this.actionButton.setImageResource(R.mipmap.ic_edit);
+        this.actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(provider.getSid(), "0", provider.getToken());
+                fragment.show(mActivity.getFragmentManager(), "new comment");
+            }
+        });
+        this.actionButton.setScaleX(0);
+        this.actionButton.setScaleY(0);
+        provider.setMessage(message);
+        provider.setActionButton(actionButton);
+        provider.setListView(getListView());
+        provider.setSwipeLayout(getSwipeLayout());
+    }
+
+    @Override
+    public void loadData(boolean startup) {
+        Toolkit.runInUIThread(new Runnable() {
+            @Override
+            public void run() {
+                getSwipeLayout().setRefreshing(true);
+                makeRequest();
+            }
+        }, 400);
+    }
+
+    private void makeRequest() {
+        this.message.setVisibility(View.GONE);
+        provider.loadNewData();
+    }
+
+    @Override
+    public void onLoadFinish() {
+        super.onLoadFinish();
+        if(getProvider().getAdapter().getCount()!=0){
+            getLoader().setFinally();
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        makeRequest();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_comment_list,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.menu_reverse){
+            CommentListAdapter adapter = getProvider().getAdapter();
+            adapter.setReverse(!adapter.isReverse());
+            adapter.notifyDataSetChanged();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

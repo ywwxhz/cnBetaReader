@@ -29,7 +29,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -40,7 +39,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewParent;
 
 import org.adw.library.widgets.discreteseekbar.internal.PopupIndicator;
-import org.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat;
+import org.adw.library.widgets.discreteseekbar.internal.compat.Animator;
 import org.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
 import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
 import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
@@ -62,10 +61,10 @@ public class DiscreteSeekBar extends View {
          * @param value    the new value
          * @param fromUser if the change was made from the user or not (i.e. the developer calling {@link #setProgress(int)}
          */
-        public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser);
+        void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser);
 
-        public void onStartTrackingTouch(DiscreteSeekBar seekBar);
-        public void onStopTrackingTouch(DiscreteSeekBar seekBar);
+        void onStartTrackingTouch(DiscreteSeekBar seekBar);
+        void onStopTrackingTouch(DiscreteSeekBar seekBar);
     }
 
     /**
@@ -155,7 +154,7 @@ public class DiscreteSeekBar extends View {
     private Rect mInvalidateRect = new Rect();
     private Rect mTempRect = new Rect();
     private PopupIndicator mIndicator;
-    private AnimatorCompat mPositionAnimator;
+    private Animator mPositionAnimator;
     private float mAnimationPosition;
     private int mAnimationTarget;
     private float mDownX;
@@ -257,8 +256,7 @@ public class DiscreteSeekBar extends View {
         mScrubber = shapeDrawable;
         mScrubber.setCallback(this);
 
-        ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, thumbSize);
-        mThumb = thumbDrawable;
+        mThumb = new ThumbDrawable(progressColor, thumbSize);
         mThumb.setCallback(this);
         mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
 
@@ -620,7 +618,7 @@ public class DiscreteSeekBar extends View {
         if (!isEnabled()) {
             return false;
         }
-        int actionMasked = MotionEventCompat.getActionMasked(event);
+        int actionMasked = event.getAction() & MotionEvent.ACTION_MASK;
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = event.getX();
@@ -735,8 +733,8 @@ public class DiscreteSeekBar extends View {
         }
 
         mAnimationTarget = progress;
-        mPositionAnimator = AnimatorCompat.create(curProgress,
-                progress, new AnimatorCompat.AnimationFrameUpdateListener() {
+        mPositionAnimator = new Animator(curProgress,
+                progress, new Animator.AnimationFrameUpdateListener() {
                     @Override
                     public void onAnimationFrame(float currentValue) {
                         setAnimationPosition(currentValue);

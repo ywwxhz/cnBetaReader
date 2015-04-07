@@ -1,5 +1,6 @@
 package com.ywwxhz.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,10 +22,11 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.lib.CroutonStyle;
+import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.FileKit;
 import com.ywwxhz.lib.kits.NetKit;
-import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import org.apache.http.Header;
@@ -33,7 +35,6 @@ import java.io.File;
 import java.util.Locale;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -43,7 +44,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  *
  * Created by 远望の无限(ywwxhz) on 14-4-15 17:51.
  */
-public class ImageViewActivity extends SwipeBackActivity {
+public class ImageViewActivity extends Activity {
     public static final String IMAGE_URL = "image_url";
 
     private PhotoView photoView;
@@ -54,6 +55,8 @@ public class ImageViewActivity extends SwipeBackActivity {
     private File image;
 
     public void onCreate(Bundle savedInstanceState) {
+        ThemeManger.onActivityCreateSetTheme(this);
+        getWindow().setBackgroundDrawableResource(R.color.gray_80);
         super.onCreate(savedInstanceState);
         if (getIntent().getExtras().containsKey(IMAGE_URL)) {
             helper = TranslucentStatusHelper.from(this)
@@ -85,7 +88,6 @@ public class ImageViewActivity extends SwipeBackActivity {
             }
 
         }
-        setSwipeBackEnable(PrefKit.getBoolean(this, R.string.pref_swipeback_key, true));
     }
 
     private void makeRequest() {
@@ -115,7 +117,7 @@ public class ImageViewActivity extends SwipeBackActivity {
                     }
                 });
                 progressWheel.setVisibility(View.GONE);
-                makeText("图片下载失败",0xFF98473E);
+                makeText("图片下载失败",0xD098473E);
             }
 
             @Override
@@ -164,13 +166,13 @@ public class ImageViewActivity extends SwipeBackActivity {
                         action.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
                     }
                 }, 200);
-                makeText(getResources().getString(R.string.message_load_success), 0xFF11659A);
+                makeText(getResources().getString(R.string.message_flush_success), CroutonStyle.INFO.backgroundColorValue);
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 loadFail();
-                makeText("图片加载失败",0xFF98473E);
+                makeText("图片加载失败",0xD098473E);
             }
         });
     }

@@ -13,37 +13,54 @@
             android:summaryOff="@string/pref_auto_page_off"
             android:summaryOn="@string/pref_auto_page_on"
             android:title="@string/pref_auto_page_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_show_detail_image_key"
-            android:title="@string/pref_show_detail_image_title"
-            android:summary="@string/pref_show_detail_image_summary"/>
+        <Preference
+            android:key="theme"
+            android:title="@string/theme"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="流量">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_show_list_news_image_key"
             android:title="@string/pref_show_list_news_image_title"
-            android:summary="@string/pref_show_list_news_image_summary"/>
+            android:summary="@string/pref_show_list_news_image_summary" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:dependency="@string/pref_show_list_news_image_key"
             android:key="@string/pref_show_large_image_key"
             android:title="@string/pref_show_large_image_title"
-            android:summary="@string/pref_show_large_image_summary"/>
+            android:summary="@string/pref_show_large_image_summary" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_show_detail_image_key"
+            android:title="@string/pref_show_detail_image_title"
+            android:summary="@string/pref_show_detail_image_summary" />
         <Preference
             android:key="@string/pref_clean_cache_key"
             android:title="@string/pref_clean_cache_title" />
-
-
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="评论">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_reverse_key"
+            android:title="@string/pref_reverse_title"
+            android:summaryOn="@string/pref_reverse_on"
+            android:summaryOff="@string/pref_reverse_off" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_advience_categroy">
-        <CheckBoxPreference android:defaultValue="false"
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/pref_debug_key"
             android:title="@string/pref_debug_title"
-            android:summary="@string/pref_debug_summary"/>
-        <CheckBoxPreference android:defaultValue="true"
-                            android:key="@string/pref_swipeback_key"
-                            android:title="@string/pref_swipeback_title"
-                            android:summary="@string/pref_swipeback_summary"/>
+            android:summary="@string/pref_debug_summary" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_swipeback_key"
+            android:title="@string/pref_swipeback_title"
+            android:summary="@string/pref_swipeback_summary" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_hardware_accelerated_key"
@@ -57,7 +74,9 @@
         <Preference
             android:title="@string/pref_source_title"
             android:summary="@string/pref_source_summary">
-            <intent android:action="android.intent.action.VIEW" android:data="@string/pref_source_summary"/>
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/pref_source_summary" />
         </Preference>
         <Preference
             android:summary="@string/pref_author_summary"

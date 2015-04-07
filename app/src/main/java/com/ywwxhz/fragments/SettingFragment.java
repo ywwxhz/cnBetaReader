@@ -1,13 +1,18 @@
 package com.ywwxhz.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.format.Formatter;
 
+import com.ywwxhz.activitys.MainActivity;
 import com.ywwxhz.cnbetareader.BuildConfig;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.lib.CroutonStyle;
+import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.FileKit;
+import com.ywwxhz.lib.kits.Toolkit;
 
 import java.io.File;
 
@@ -19,6 +24,8 @@ import java.io.File;
 public class SettingFragment extends PreferenceFragment {
 
     private Preference preference;
+    private Preference theme;
+    private boolean running = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,14 +36,47 @@ public class SettingFragment extends PreferenceFragment {
         preference.setSummary(getFileSize());
         preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
-                FileKit.deleteDir(getActivity().getCacheDir());
-                try {
-                    FileKit.deleteDir(getActivity().getExternalCacheDir());
-                } catch (Exception ignored) {
+            public boolean onPreferenceClick(final Preference preference) {
+                if (!running) {
+                    running = true;
+                    Toolkit.showCrouton(getActivity(), "正在清理缓存中。请稍候。。", CroutonStyle.CONFIRM);
+                    new AsyncTask<Object, Object, Object>() {
+                        @Override
+                        protected Object doInBackground(Object[] params) {
+                            FileKit.deleteDir(getActivity().getCacheDir());
+                            try {
+                                FileKit.deleteDir(getActivity().getExternalCacheDir());
+                            } catch (Exception ignored) {
+                            }
+                            FileKit.deleteDir(new File(getActivity().getCacheDir().getAbsolutePath() + "/../app_webview"));
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Object o) {
+                            Toolkit.showCrouton(getActivity(), "缓存清理完成", CroutonStyle.INFO);
+                            preference.setSummary(getFileSize());
+                            running = false;
+                        }
+                    }.execute();
                 }
-                FileKit.deleteDir(new File(getActivity().getCacheDir().getAbsolutePath() + "/../app_webview"));
-                preference.setSummary(getFileSize());
+                return false;
+            }
+        });
+        theme = findPreference("theme");
+        theme.setSummary(getResources().getStringArray(R.array.theme_text)[ThemeManger.getCurrentTheme(getActivity())]);
+        theme.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new ChoiseThemeFragment().setCallBack(new ChoiseThemeFragment.callBack() {
+                    @Override
+                    public void onSelect(int which) {
+                        if (getActivity() instanceof MainActivity) {
+                            ((MainActivity) getActivity()).changeTheme = true;
+                        }
+                        ThemeManger.changeToTheme(getActivity(), which);
+                    }
+                }).show(getActivity().getFragmentManager(),"theme");
                 return false;
             }
         });

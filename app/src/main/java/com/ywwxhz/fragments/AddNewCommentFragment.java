@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
     private String token;
     private EditText content;
     private EditText seccode;
-    private View send;
+    private Button send;
     private ProgressWheel progress;
     private ImageView seccodeImage;
     private boolean flushing = false;
@@ -102,8 +103,13 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
             public void afterTextChanged(Editable s) {
             }
         });
-        send = view.findViewById(R.id.send);
+        send = (Button)view.findViewById(R.id.send);
         send.setOnClickListener(this);
+        if("0".equals(tid)){
+            send.setText("发布");
+        }else{
+            send.setText("回复");
+        }
         reflushscecode();
         seccodeImage.setOnClickListener(reflushscecode);
         progress.setOnClickListener(reflushscecode);

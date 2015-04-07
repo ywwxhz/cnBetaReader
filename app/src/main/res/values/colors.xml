@@ -2,10 +2,8 @@
 <resources>
     <color name="statusColor">#11659a</color>
     <color name="toolbarColor">#1473af</color>
-    <color name="title_color">#3c69ce</color>
-    <color name="color_normal">#1473af</color>
-    <color name="color_passed">#3A85B5</color>
     <color name="green_1">#307351</color>
-
+    <color name="background_night">#202733</color>
     <color name="gray_80">#CC000000</color>
+    <color name="textColor" >#474747</color>
 </resources>

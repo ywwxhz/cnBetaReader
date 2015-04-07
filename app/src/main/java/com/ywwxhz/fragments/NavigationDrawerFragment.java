@@ -2,7 +2,9 @@ package com.ywwxhz.fragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -17,9 +19,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.NavigationDrawerManger;
+import com.ywwxhz.lib.kits.UIKit;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -56,16 +60,17 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private ListView mListView;
+    private ColorStateList textColorStateList;
 
     private static NavigationDrawerManger manger = new NavigationDrawerManger();
 
     static {
-        manger.registerFragment("全部资讯",new AllNewsListFragment());
-        manger.registerFragment("人气推荐",new HotNewsListFragment());
-        manger.registerFragment("精彩评论",new HotCommentFragment());
-        //manger.registerFragment("分类浏览",null);
-        manger.registerFragment("收藏列表",new FavoriteNewsListFragment());
-        manger.registerFragment("偏好设置",new SettingFragment());
+        manger.registerFragment("全部资讯", new AllNewsListFragment());
+        manger.registerFragment("人气推荐", new HotNewsListFragment());
+        manger.registerFragment("精彩评论", new HotCommentFragment());
+        manger.registerFragment("新闻主题", new SubscribeHostFragment());
+        manger.registerFragment("收藏列表", new FavoriteNewsListFragment());
+        manger.registerFragment("偏好设置", new SettingFragment());
     }
 
     public NavigationDrawerFragment() {
@@ -77,13 +82,13 @@ public class NavigationDrawerFragment extends Fragment {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
-
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
         selectItem(mCurrentSelectedPosition);
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -94,12 +99,19 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mHeadView =  inflater.inflate(
+        View mHeadView = inflater.inflate(
                 R.layout.drawer_head_layout, container, false);
-        mListView= (ListView)inflater.inflate(
+        mListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        mListView.addHeaderView(mHeadView,null,false);
-        mListView.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.drawer_list_item,manger.getTitles()));
+        mListView.addHeaderView(mHeadView, null, false);
+        mListView.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.drawer_list_item, manger.getTitles()) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+                view.setTextColor(textColorStateList);
+                return view;
+            }
+        });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -181,14 +193,15 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        if(mListView!=null){
+        if (mListView != null) {
+            getActionBar().setTitle(manger.getTitle(position - 1));
             mListView.setItemChecked(position, true);
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(manger.getFragment(position - 1),position-1);
+            mCallbacks.onNavigationDrawerItemSelected(manger.getFragment(position - 1), position - 1);
         }
     }
 
@@ -200,6 +213,11 @@ public class NavigationDrawerFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
+        TypedArray array = activity.getTheme().obtainStyledAttributes(new int[]{R.attr.textSelectColor,android.R.attr.textColor});
+        textColorStateList = UIKit.createColorStateList(
+                array.getColor(1, getResources().getColor(R.color.textColor)),
+                array.getColor(0, getResources().getColor(R.color.toolbarColor)));
+        array.recycle();
     }
 
     @Override
@@ -239,6 +257,6 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(Fragment fragment,int pos);
+        void onNavigationDrawerItemSelected(Fragment fragment, int pos);
     }
 }

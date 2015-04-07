@@ -17,7 +17,6 @@ public class CommentItem {
     private String comment;
     private String host_name;
     private String refContent;
-    private boolean hasscored = false;
 
     public int getScore() {
         return score;
@@ -117,11 +116,4 @@ public class CommentItem {
         this.host_name = item.getHost_name();
     }
 
-    public boolean isHasscored() {
-        return hasscored;
-    }
-
-    public void setHasscored(boolean hasscored) {
-        this.hasscored = hasscored;
-    }
 }

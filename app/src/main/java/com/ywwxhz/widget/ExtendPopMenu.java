@@ -1,5 +1,6 @@
 package com.ywwxhz.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.CommentItem;
+import com.ywwxhz.fragments.AddNewCommentFragment;
 import com.ywwxhz.lib.kits.NetKit;
 
 import org.apache.http.Header;
@@ -46,9 +48,12 @@ public class ExtendPopMenu extends PopupMenu {
                         NetKit.getInstance().setCommentAction("report", citem.getSid()+"", citem.getTid(), token, chandler);
                         break;
                     case R.id.comment_replay:
-                        Toast.makeText(mContext,"function not impletment",Toast.LENGTH_SHORT).show();
-//                        AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(citem.getSid(), citem.getTid(), token);
-//                        fragment.show(mContext.getFragmentManager(), "new comment");
+                        if(mContext instanceof Activity) {
+                            AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(citem.getSid(), citem.getTid(), token);
+                            fragment.show(((Activity) mContext).getFragmentManager(), "new comment");
+                        }else{
+                            Toast.makeText(mContext,"function not impletment",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
                 return true;
@@ -78,7 +83,6 @@ public class ExtendPopMenu extends PopupMenu {
                     } else {
                         actionString = "举报";
                     }
-                    citem.setHasscored(true);
                     adapter.notifyDataSetChanged();
                     Toast.makeText(mContext, actionString + "成功", Toast.LENGTH_SHORT).show();
                 } else {

@@ -17,22 +17,20 @@
 package org.adw.library.widgets.discreteseekbar.internal.compat;
 
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
-import android.os.Build;
 
 /**
  * Class to wrap a {@link android.animation.ValueAnimator}
  * for use with AnimatorCompat
  *
  * @hide
- * @see {@link org.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat}
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class AnimatorCompatV11 extends AnimatorCompat {
-
+public class Animator {
+    public interface AnimationFrameUpdateListener {
+        void onAnimationFrame(float currentValue);
+    }
     ValueAnimator animator;
 
-    public AnimatorCompatV11(float start, float end, final AnimationFrameUpdateListener listener) {
+    public Animator(float start, float end, final AnimationFrameUpdateListener listener) {
         super();
         animator = ValueAnimator.ofFloat(start, end);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -43,22 +41,18 @@ public class AnimatorCompatV11 extends AnimatorCompat {
         });
     }
 
-    @Override
     public void cancel() {
         animator.cancel();
     }
 
-    @Override
     public boolean isRunning() {
         return animator.isRunning();
     }
 
-    @Override
     public void setDuration(int duration) {
         animator.setDuration(duration);
     }
 
-    @Override
     public void start() {
         animator.start();
     }

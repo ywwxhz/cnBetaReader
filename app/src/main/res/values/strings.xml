@@ -4,6 +4,8 @@
     <string name="app_name">cnBeta Plus</string>
     <string name="choise_browser">选择浏览器</string>
     <string name="load_fail">加载失败 ,点击重试。</string>
+    <string name="end">-- The End --</string>
+    <string name="theme">主题</string>
 
     <string name="share_templates">我觉得这篇新闻不错 《%1$s》 (%2$s) 分享自 cnBeta Plus。</string>
 
@@ -11,10 +13,11 @@
     <string name="message_no_comment">暂无评论，快抢沙发吧。</string>
     <string name="message_new_news">新增%d条新闻  *\\(๑• ₃ •๑)*</string>
     <string name="message_flush_success">加载成功  *\\(๑• ₃ •๑)*</string>
-    <string name="message_no_new_news">暂时没有新的新闻  (๑•́ ₃ •̀๑)</string>
-    <string name="message_no_network">无网络或连接超时   ε٩(๑> ₃ &lt;)۶ з  </string>
+    <string name="message_no_new_news">暂时没有新的新闻 (๑•́ ₃ •̀๑) </string>
+    <string name="message_no_network">无网络或连接超时   ( &gt;﹏&lt;。)～</string>
     <string name="message_load_from_cache">无可用网络，加载之前的缓存  ( &gt;﹏&lt;。)～</string>
     <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。快联系联系开发者吧。 </string>
+    <string name="message_no_subscribe" >还没有关注任何新闻主题。\n\n 左滑界面开始关注吧。</string>
 
     <string name="menu_reflush">刷新</string>
     <string name="menu_share">分享</string>
@@ -59,6 +62,10 @@
     <string name="pref_show_detail_image_key">show_detail_image</string>
     <string name="pref_show_detail_image_title">正文显示图片</string>
     <string name="pref_show_detail_image_summary">新闻正文显示图片</string>
+    <string name="pref_reverse_key">reverse_key</string>
+    <string name="pref_reverse_title">优先显示最新评论</string>
+    <string name="pref_reverse_on">优先显示最新评论</string>
+    <string name="pref_reverse_off">优先显示最早评论</string>
 
 
     <string name="button_temporary_save">确定</string>
@@ -69,6 +76,5 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="message_load_success">加载成功</string>
 
 </resources>

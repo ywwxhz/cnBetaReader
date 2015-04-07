@@ -19,7 +19,8 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
     <FrameLayout
         android:id="@+id/content"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/statusView"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

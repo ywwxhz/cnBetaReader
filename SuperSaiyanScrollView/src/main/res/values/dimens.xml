@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+    <dimen name="ssjn__overlay_height">75dp</dimen>
+    
+    <dimen name="ssjn__overlay_width_small">75dp</dimen>
+    <dimen name="ssjn__overlay_text_size_small">26dp</dimen>
+    
+	<dimen name="ssjn__overlay_width_normal">240dp</dimen>
+	<dimen name="ssjn__overlay_text_size_normal">24dp</dimen>
+	
+	<dimen name="ssjn__overlay_width_large">325dp</dimen>
+    <dimen name="ssjn__overlay_text_size_large">24dp</dimen>	
+    
+    <dimen name="ssjn__overlay_width_xlarge">325dp</dimen>
+    <dimen name="ssjn__overlay_text_size_xlarge">15dp</dimen>  
+    
+    <dimen name="ssjn__text_size_list_header">17sp</dimen>
+</resources>

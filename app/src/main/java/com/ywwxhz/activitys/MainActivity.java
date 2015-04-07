@@ -20,6 +20,7 @@ public class MainActivity extends BaseToolBarActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private int current = -1;
     private long lastpass;
+    public boolean changeTheme;
 
 
     @Override
@@ -31,6 +32,7 @@ public class MainActivity extends BaseToolBarActivity
         mNavigationDrawerFragment.setUp(
                R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        changeTheme = false;
     }
 
     @Override
@@ -64,7 +66,9 @@ public class MainActivity extends BaseToolBarActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        this.finish();
-        System.exit(0);
+        if(!changeTheme) {
+            this.finish();
+            System.exit(0);
+        }
     }
 }

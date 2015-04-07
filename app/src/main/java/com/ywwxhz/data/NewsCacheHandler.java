@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,11 +48,13 @@ public class NewsCacheHandler extends Handler {
     private NotificationManager manager;
     private Notification.Builder builder;
     private String stringFormate = "成功 %d 条 失败 %d 条";
+    private Bitmap largeLogo;
 
 
     public NewsCacheHandler(Context context) {
         super(Looper.getMainLooper());
         this.context = new WeakReference<>(context);
+        largeLogo = BitmapFactory.decodeResource(this.context.get().getResources(), R.mipmap.ic_launcher);
         init();
     }
 
@@ -65,7 +69,7 @@ public class NewsCacheHandler extends Handler {
         AtomicReference<String> info = new AtomicReference<>();
         switch (msg.what) {
             case MESSAGE_UPDATE_PROGRESS:
-                info.set("正在缓存 " + len + " 条新闻");
+                info.set("正在缓存第 " + len + " 条新闻");
                 builder.setProgress(size, len, false);
                 builder.setContentText(info.get());
                 manager.notify(0, notificationCompt(builder));
@@ -76,7 +80,7 @@ public class NewsCacheHandler extends Handler {
                 Toast.makeText(context.get(), info.get(), Toast.LENGTH_SHORT).show();
                 manager.notify(0, notificationCompt(new Notification.Builder(context.get())
                         .setContentTitle("离线缓存已完成").setContentText(info.get()).setTicker("离线缓存已完成")
-                        .setSmallIcon(R.mipmap.ic_launcher)));
+                        .setSmallIcon(R.mipmap.ic_logo).setLargeIcon(largeLogo)));
                 break;
             case MESSAGE_STOP:
                 start = false;
@@ -84,7 +88,7 @@ public class NewsCacheHandler extends Handler {
                 Toast.makeText(context.get(), info.get(), Toast.LENGTH_SHORT).show();
                 manager.notify(0, notificationCompt(new Notification.Builder(context.get())
                         .setContentTitle("离线缓存已取消").setContentText(info.get()).setTicker("离线缓存已取消")
-                        .setSmallIcon(R.mipmap.ic_launcher)));
+                        .setSmallIcon(R.mipmap.ic_logo).setLargeIcon(largeLogo)));
                 break;
         }
     }
@@ -96,7 +100,8 @@ public class NewsCacheHandler extends Handler {
             builder.setContentTitle("正在缓存新闻中");
             builder.setContentText("请稍候");
             builder.setTicker("正在离线缓存新闻");
-            builder.setSmallIcon(R.mipmap.ic_launcher);
+            builder.setSmallIcon(R.mipmap.ic_logo);
+            builder.setLargeIcon(largeLogo);
             builder.setOngoing(true);
             manager.notify(0, notificationCompt(builder));
             thread = new CacheThread("Cache Thread");

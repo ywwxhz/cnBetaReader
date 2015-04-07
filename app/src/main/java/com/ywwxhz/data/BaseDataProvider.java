@@ -9,17 +9,20 @@ import android.app.Activity;
  */
 public abstract class BaseDataProvider<T> {
 
+    private Activity mActivity;
+    protected DataProviderCallback<T> callback;
+
     public BaseDataProvider(Activity activity) {
         mActivity = activity;
     }
 
-    private Activity mActivity;
-    protected DataProviderCallback<T> callback;
     public void setCallback(DataProviderCallback<T> callback) {
         this.callback = callback;
     }
-    public abstract void loadData(boolean startup);
     public Activity getActivity() {
         return mActivity;
     }
+    public void setActivity(Activity activity){this.mActivity = activity;}
+
+    public abstract void loadData(boolean startup);
 }

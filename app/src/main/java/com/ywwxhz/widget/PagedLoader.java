@@ -83,15 +83,17 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
     }
 
     public void setLoading(boolean isloading) {
-        isLoading = isloading;
-        if (isloading) {
-            progressBar.spin();
-            progressBar.setVisibility(View.VISIBLE);
-            normalTextView.setVisibility(View.GONE);
-        } else {
-            progressBar.stopSpinning();
-            normalTextView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+        if(enable) {
+            isLoading = isloading;
+            if (isloading) {
+                progressBar.spin();
+                progressBar.setVisibility(View.VISIBLE);
+                normalTextView.setVisibility(View.GONE);
+            } else {
+                progressBar.stopSpinning();
+                normalTextView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
         }
     }
 
