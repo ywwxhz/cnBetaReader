@@ -58,6 +58,7 @@ public class ChoiseThemeFragment extends DialogFragment implements View.OnClickL
             RadioButton button = new RadioButton(getActivity());
             button.setText(themes[i]);
             button.setId(i);
+            button.setTextSize(16);
             themegroup.addView(button);
         }
         themegroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
