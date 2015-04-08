@@ -6,15 +6,14 @@ android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
-    def verName = "1.0.7"
-    String buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
+    final String buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
+    def verName = "1.0.8" + buildDate
 
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
         minSdkVersion 15
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionCode 8
-        versionName verName + buildDate
+        versionName verName
         resConfigs "zh-rCN"
         resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
     }
@@ -49,15 +48,55 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            applicationIdSuffix '.debug'
             signingConfig signingConfigs.release
+        }
+    }
+
+    def versionPropsFile = file('version.properties')
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def vercode = versionProps['VERSION_CODE'].toInteger()
+        def runTasks = gradle.startParameter.taskNames
+        if ('build' in runTasks) {
+            vercode++
+            versionProps['VERSION_CODE'] = vercode.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+        }
+
+        defaultConfig {
+            versionCode vercode
+        }
+
+    }
+
+    applicationVariants.all { variant ->
+        def buildType = variant.buildType
+        def encoding = java.nio.charset.Charset.defaultCharset().toString()
+        if (buildType.applicationIdSuffix) {
+            variant.mergeResources.doLast {
+                def values = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
+                String content = values.getText(encoding)
+                content = content.replaceAll("cnBeta Plus( Dev)?","cnBeta Plus Dev")
+                values.write(content,encoding)
+            }
         }
     }
 
     def runTasks = gradle.startParameter.taskNames
     if ('b' in runTasks || 'build' in runTasks) {
-        android.applicationVariants.all { variant ->
-            def file = variant.outputs[0].outputFile
-            variant.outputs[0].outputFile = new File(file.parent, file.name.replace(".apk", ("-" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk").replace(" ", "-")))
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    def fileName = outputFile.name.replace(".apk"
+                            , "-${defaultConfig.versionName}-${defaultConfig.versionCode}.apk".replaceAll(" ","-"))
+                    output.outputFile = new File(outputFile.parent, fileName)
+                }
+            }
         }
     }
     lintOptions {
