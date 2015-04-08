@@ -28,6 +28,7 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
     private ListView listView;
     private PagedLoader mLoader;
     private SwipeRefreshLayout mSwipeLayout;
+    private TextView headView;
 
     public BaseListProcesser(DataProvider provider) {
         super(provider);
@@ -40,7 +41,7 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark);
-        TextView headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
+        headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
         headView.setText("类型：" + provider.getTypeName());
         listView.addHeaderView(headView, null, false);
         PagedLoader.OnLoadListener loadListener = new PagedLoader.OnLoadListener() {
@@ -126,4 +127,9 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         return provider;
     }
 
+    public void setHeadViewText(String type){
+        if(headView!=null) {
+            headView.setText("类型：" + type);
+        }
+    }
 }

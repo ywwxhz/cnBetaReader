@@ -43,6 +43,13 @@
         <item name="colorPrimaryDark">#7B1FA2</item>
         <item name="colorAccent">#7C4DFF</item>
     </style>
+
+    <style name="Theme.Basic.GREEN">
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorPrimaryDark">#388E3C</item>
+        <item name="colorAccent">#4CAF50</item>
+    </style>
+
     <style name="Theme.Basic.Night" >
         <item name="colorPrimary">#232b38</item>
         <item name="colorPrimaryDark">#191f29</item>
@@ -73,6 +80,9 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
     <style name="Theme.Basic.PURPLE.NoAnim">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="Theme.Basic.GREEN.NoAnim">
         <item name="android:windowIsTranslucent">false</item>
     </style>
     <style name="Theme.Basic.Night.NoAnim">

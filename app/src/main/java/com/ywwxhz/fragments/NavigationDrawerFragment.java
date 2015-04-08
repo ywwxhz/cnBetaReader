@@ -1,12 +1,10 @@
 package com.ywwxhz.fragments;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +21,7 @@ import android.widget.TextView;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.NavigationDrawerManger;
+import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.UIKit;
 
 /**
@@ -79,9 +78,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+        mUserLearnedDrawer = PrefKit.getBoolean(getActivity(),PREF_USER_LEARNED_DRAWER, false);
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
@@ -155,6 +152,12 @@ public class NavigationDrawerFragment extends Fragment {
                 if (!isAdded()) {
                     return;
                 }
+                if (!mUserLearnedDrawer) {
+                    // The user manually opened the drawer; store this flag to prevent auto-showing
+                    // the navigation drawer automatically in the future.
+                    mUserLearnedDrawer = true;
+                    PrefKit.writeBoolean(getActivity(),PREF_USER_LEARNED_DRAWER, true);
+                }
             }
 
             @Override
@@ -167,9 +170,7 @@ public class NavigationDrawerFragment extends Fragment {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+                    PrefKit.writeBoolean(getActivity(), PREF_USER_LEARNED_DRAWER, true);
                 }
             }
         };

@@ -153,24 +153,25 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
             }
             item.setRefContent(sb.toString());
         }
-//        ArrayList<CommentItem> hotcmntlist = commentListObject.getHotlist();
-//        for (CommentItem item : hotcmntlist) {
-//            StringBuilder sb = new StringBuilder();
-//            item.copy(cmntstore.get(item.getTid()));
-//            CommentItem parent = cmntstore.get(item.getPid());
-//            while (parent != null) {
-//                sb.append("//@");
-//                sb.append(parent.getName());
-//                sb.append(": [");
-//                sb.append(parent.getHost_name());
-//                sb.append("] ");
-//                sb.append(parent.getComment());
-//                parent = cmntstore.get(parent.getPid());
-//            }
-//            item.setRefContent(sb.toString());
-//        }
+        ArrayList<CommentItem> hotcmntlist = commentListObject.getHotlist();
+        for (CommentItem item : hotcmntlist) {
+            StringBuilder sb = new StringBuilder();
+            item.copy(cmntstore.get(item.getTid()));
+            CommentItem parent = cmntstore.get(item.getPid());
+            while (parent != null) {
+                sb.append("//@");
+                sb.append(parent.getName());
+                sb.append(": [");
+                sb.append(parent.getHost_name());
+                sb.append("] ");
+                sb.append(parent.getComment());
+                parent = cmntstore.get(parent.getPid());
+            }
+            item.setRefContent(sb.toString());
+        }
         if (cmntlist.size() > 0) { //针对加载缓存和普通访问
             this.getAdapter().setDataSet(cmntlist);
+            this.getAdapter().setHotComment(hotcmntlist);
             if (!isClosed && !fromCache) {
                 this.getAdapter().setEnable(true);
                 this.actionButton.postDelayed(new Runnable() {

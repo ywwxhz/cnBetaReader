@@ -31,6 +31,9 @@ public class ThemeManger {
     }, {
             R.style.Theme_Basic_PURPLE,
             R.style.Theme_Basic_PURPLE_NoAnim
+    }, {
+            R.style.Theme_Basic_GREEN,
+            R.style.Theme_Basic_GREEN_NoAnim
     },{
             R.style.Theme_Basic_Night,
             R.style.Theme_Basic_Night_NoAnim
@@ -73,6 +76,6 @@ public class ThemeManger {
     }
 
     public static boolean isNightTheme(Activity activity){
-        return PrefKit.getInt(activity, "theme", 0)==5;
+        return PrefKit.getInt(activity, "theme", 0)==ThemeRes.length-1;
     }
 }

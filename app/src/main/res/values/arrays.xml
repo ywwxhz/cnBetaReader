@@ -2,10 +2,11 @@
 <resources>
     <string-array name="theme_text">
         <item>蓝色</item>
-        <item>青色</item>
+        <item>蓝绿色</item>
         <item>褐色</item>
         <item>橙色</item>
         <item>紫色</item>
+        <item>绿色</item>
         <item>夜间模式</item>
     </string-array>
 </resources>

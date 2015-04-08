@@ -20,6 +20,7 @@ import com.ywwxhz.lib.kits.Toolkit;
 public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsCommentProvider> {
     private TextView message;
     private FloatingActionButton actionButton;
+    private boolean reverse;
 
     public NewsCommentProcesser(NewsCommentProvider provider, int sid, String sn) {
         super(provider);
@@ -71,6 +72,7 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
         super.onLoadFinish();
         if(getProvider().getAdapter().getCount()!=0){
             getLoader().setFinally();
+            getActivity().invalidateOptionsMenu();
         }
     }
 
@@ -81,7 +83,9 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_comment_list,menu);
+        if(provider.getAdapter().getCount()>0) {
+            inflater.inflate(R.menu.menu_comment_list, menu);
+        }
     }
 
     @Override
@@ -89,6 +93,23 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
         if (item.getItemId()==R.id.menu_reverse){
             CommentListAdapter adapter = getProvider().getAdapter();
             adapter.setReverse(!adapter.isReverse());
+            adapter.notifyDataSetChanged();
+        }else if(item.getItemId() == R.id.menu_hot_comment){
+            CommentListAdapter adapter = getProvider().getAdapter();
+            adapter.setShowHot(!adapter.isShowHot());
+
+            if(adapter.isShowHot()) {
+                setHeadViewText("热门评论");
+                item.setTitle("全部评论");
+                item.setIcon(R.drawable.ic_normal_comment);
+                reverse = adapter.isReverse();
+                adapter.setReverse(true);
+            }else{
+                setHeadViewText("全部评论");
+                adapter.setReverse(reverse);
+                item.setTitle("热门评论");
+                item.setIcon(R.drawable.ic_hot_comment);
+            }
             adapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
