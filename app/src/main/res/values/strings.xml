@@ -41,7 +41,7 @@
     <string name="pref_about_summary">cnBeta 第三方新闻客户端</string>
     <string name="pref_hardware_accelerated_title">WebView硬件加速</string>
     <string name="pref_hardware_accelerated_key">hardwareAccelerated</string>
-    <string name="pref_hardware_accelerated_summary">关闭可能会造成WebView滑动卡顿。</string>
+    <string name="pref_hardware_accelerated_summary">关闭可能会造成WebView滑动卡顿,并且造成html5视频播放无画面。</string>
     <string name="pref_show_list_news_image_key">showListImage</string>
     <string name="pref_show_list_news_image_title">新闻列表显示图片</string>
     <string name="pref_show_list_news_image_summary">开启后会消耗较多的流量，平均消耗200K~600K左右。</string>

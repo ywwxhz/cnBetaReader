@@ -1,32 +1,29 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <uk.co.senab.photoview.PhotoView
-        android:id="@+id/photoView"
+    <com.ywwxhz.widget.FixViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_height="match_parent" />
 
-    <com.pnikosis.materialishprogress.ProgressWheel
-        android:id="@+id/progressWheel"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        app:barColor="#fff0f4e2"
-        app:rimColor="#44000000"
-        app:barWidth="4dp"
-        app:rimWidth="4dp"/>
-
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/action"
+    <TextView
+        android:id="@+id/image_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="20dp"
-        android:alpha="0.8"
-        android:visibility="gone"
-        android:src="@android:drawable/ic_menu_save"
-        app:fab_colorNormal="?attr/colorPrimary"
-        app:fab_colorPressed="?attr/colorPrimaryDark"
-        app:fab_shadow="true"/>
+        android:textColor="@android:color/white"
+        android:layout_gravity="bottom"
+        android:padding="30dp"
+        android:textSize="20sp" />
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        app:expandedRadius="96dp"
+        app:collapsedRadius="24dp"
+        app:centerBottom="48dp"
+        app:centerRight="48dp"
+        app:primaryColor="?colorPrimary"
+        app:primaryDarkColor="?colorPrimaryDark"/>
 </merge>

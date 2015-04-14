@@ -119,4 +119,5 @@ dependencies {
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
     compile project(':SuperSaiyanScrollView')
+    compile project(':FilterMenu')
 }

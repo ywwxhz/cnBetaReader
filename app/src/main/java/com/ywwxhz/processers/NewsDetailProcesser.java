@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import com.ywwxhz.data.impl.NewsDetailProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.fragments.FontSizeFragment;
 import com.ywwxhz.lib.Configure;
+import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.kits.FileCacheKit;
@@ -66,7 +68,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             ".from{font-size: 10pt;padding-top: 4pt;}" +
             "#introduce{clear: both;padding: 13pt 5pt 8pt 5pt;margin-top: 5pt;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
             "#introduce img{padding:0;width:0;height:0}%s" +
-            "#introduce p:before {color:#ccc;content:open-quote;font-size:4em;line-height:.1em;margin-right:.25em;vertical-align:-.4em;}" +
+            "#introduce:before {color: #CCC;content: open-quote;font-size: 4em;line-height: 0.2em;margin-right: .2em;float: left;margin-top: .17em;}" +
             "#introduce p{margin:0;line-height: 16pt}" +
             "#introduce div{margin: 0px !important;}" +
             ".content{padding-top:10pt;}" +
@@ -85,7 +87,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             "<div id=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
             "<div class=\"clear foot\">--- The End ---</div></div>" +
             "<script>" +
-            "var enableImage=%s;var image=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+WKoOi9veWbvueJhwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTc3LjY1NjI1IiB5PSIxNjMuMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij7ngrnlh7vliqDovb3lm77niYc8L3RleHQ+PC9nPjwvc3ZnPg==\";var error=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+mHjeivlQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjE4LjQzNzUiIHk9IjE2My4yIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQiPueCueWHu+mHjeivlTwvdGV4dD48L2c+PC9zdmc+\";var loading=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OuWKoOi9veS4rQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjM4LjgyODEyNSIgeT0iMTYzLjIiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5Yqg6L295LitPC90ZXh0PjwvZz48L3N2Zz4=\";(function(){var d=document.getElementsByTagName(\"a\");for(var g=0;g<d.length;g++){var m=d[g];if(m.getElementsByTagName(\"img\").length>0){m.onclick=function(){return false}}}var j=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var g=0;g<j.length;g++){var h=j[g];h.setAttribute(\"dest-src\",h.src);if(enableImage){loadImage(h)}else{h.removeAttribute(\"src\");h.setAttribute(\"src\",image);h.onclick=function(){loadImage(this)}}}var k=document.getElementsByTagName(\"iframe\");for(var g=0;g<k.length;g++){var f=k[g];f.style.height=f.offsetWidth*3/4+\"px\"}var c=document.getElementsByTagName(\"embed\");for(var g=0;g<c.length;g++){var l=c[g];l.style.height=l.offsetWidth*3/4+\"px\"}var e=document.getElementsByTagName(\"video\");for(var g=0;g<e.length;g++){var b=e[g];b.style.height=b.offsetWidth*3/4+\"px\"}})();function showAllImage(){var b=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var a=0;a<b.length;a++){loadImage(b[a])}}function loadImage(a){var b=new Image();a.setAttribute(\"src\",loading);b.src=a.getAttribute(\"dest-src\");b.onload=function(){a.setAttribute(\"src\",a.getAttribute(\"dest-src\"));a.onclick=function(){openImage(this)}};b.onerror=function(){a.setAttribute(\"src\",error);a.onclick=function(){loadImage(this)}}}function openImage(a){window.Interface.showImage(a.getAttribute(\"dest-src\"));return false}" +
+            "var enableImage=%s;var image=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+WKoOi9veWbvueJhwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTc3LjY1NjI1IiB5PSIxNjMuMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij7ngrnlh7vliqDovb3lm77niYc8L3RleHQ+PC9nPjwvc3ZnPg==\";var error=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OueCueWHu+mHjeivlQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjE4LjQzNzUiIHk9IjE2My4yIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQiPueCueWHu+mHjeivlTwvdGV4dD48L2c+PC9zdmc+\";var loading=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzMDAvYXV0by90ZXh0OuWKoOi9veS4rQpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNS4yLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjM4LjgyODEyNSIgeT0iMTYzLjIiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5Yqg6L295LitPC90ZXh0PjwvZz48L3N2Zz4=\";(function(){var d=document.getElementsByTagName(\"a\");for(var g=0;g<d.length;g++){var m=d[g];if(m.getElementsByTagName(\"img\").length>0){m.onclick=function(){return false}}}var j=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");imageSrcs = [];for(var g=0;g<j.length;g++){var h=j[g];imageSrcs[g]=h.src;h.setAttribute(\"dest-src\",h.src);h.setAttribute(\"pos\",g);if(enableImage){loadImage(h)}else{h.removeAttribute(\"src\");h.setAttribute(\"src\",image);h.onclick=function(){loadImage(this)}}}var k=document.getElementsByTagName(\"iframe\");for(var g=0;g<k.length;g++){var f=k[g];f.style.height=f.offsetWidth*3/4+\"px\"}var c=document.getElementsByTagName(\"embed\");for(var g=0;g<c.length;g++){var l=c[g];l.style.height=l.offsetWidth*3/4+\"px\"}var e=document.getElementsByTagName(\"video\");for(var g=0;g<e.length;g++){var b=e[g];b.style.height=b.offsetWidth*3/4+\"px\"}})();function showAllImage(){var b=document.getElementsByClassName(\"content\")[0].getElementsByTagName(\"img\");for(var a=0;a<b.length;a++){loadImage(b[a])}}function loadImage(a){var b=new Image();a.setAttribute(\"src\",loading);b.src=a.getAttribute(\"dest-src\");b.onload=function(){a.setAttribute(\"src\",a.getAttribute(\"dest-src\"));a.onclick=function(){openImage(this)}};b.onerror=function(){a.setAttribute(\"src\",error);a.onclick=function(){loadImage(this)}}}function openImage(a){window.Interface.showImage(a.getAttribute(\"pos\"),imageSrcs);return false}" +
             "</script></body></html>";
     private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}";
     private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
@@ -238,7 +240,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                     MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class, mNewsItem.getSid());
                     message = "取消收藏成功";
                 }
-                style = Style.INFO;
+                style = CroutonStyle.INFO;
             } catch (DbException e) {
                 message = "操作失败";
                 style = Style.ALERT;
@@ -304,15 +306,22 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         }
 
         @JavascriptInterface
-        public void showImage(final String imageSrc) {
-            myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(mContext, ImageViewActivity.class);
-                    intent.putExtra(ImageViewActivity.IMAGE_URL, imageSrc);
-                    mContext.startActivity(intent);
-                }
-            });
+        public void showImage(String pos, final String[] imageSrcs) {
+            final int posi;
+            try{
+                posi = Integer.parseInt(pos);
+                myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(mContext, ImageViewActivity.class);
+                        intent.putExtra(ImageViewActivity.IMAGE_URLS, imageSrcs);
+                        intent.putExtra(ImageViewActivity.CURRENT_POS,posi);
+                        mContext.startActivity(intent);
+                    }
+                });
+            }catch (Exception e){
+                Log.d(getClass().getName(), "Illegal argument");
+            }
         }
     }
 

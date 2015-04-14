@@ -48,7 +48,9 @@ public abstract class ListDataProvider<DataType,DataAdapter extends BaseAdapter<
 
     public abstract void loadNextData();
 
-    public abstract AdapterView.OnItemClickListener getOnItemClickListener();
+    public AdapterView.OnItemClickListener getOnItemClickListener(){return null;}
+
+    public AdapterView.OnItemLongClickListener getOnItemLongClickListener(){return null;}
 
     public boolean isCached() {
         return hasCached;

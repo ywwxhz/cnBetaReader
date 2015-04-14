@@ -1,10 +1,14 @@
 package com.ywwxhz.data.impl;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -100,8 +104,16 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
     }
 
     @Override
-    public AdapterView.OnItemClickListener getOnItemClickListener() {
-        return null;
+    public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
+        return new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ClipboardManager clipboardManager = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboardManager.setPrimaryClip(ClipData.newPlainText(null, getAdapter().getDataSetItem(position - 1).getComment()));
+                Toast.makeText(getActivity(), "评论已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        };
     }
 
     @Override

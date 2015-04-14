@@ -25,6 +25,7 @@ public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<
     protected int colorPrimaryDark;
     protected int titleColor;
     protected int windowBackground;
+    protected int colorAccent;
 
     public BaseProcesserImpl(DataProvider provider) {
         this.provider = provider;
@@ -36,11 +37,14 @@ public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<
         this.mActivity = activity;
         this.provider.setActivity(activity);
         TypedArray array = activity.obtainStyledAttributes(new int[]{R.attr.colorPrimary,
-                R.attr.colorPrimaryDark,R.attr.titleColor,android.R.attr.windowBackground});
+                R.attr.colorPrimaryDark,R.attr.titleColor,android.R.attr.windowBackground,
+                R.attr.colorAccent
+        });
         colorPrimary = array.getColor(0,activity.getResources().getColor(R.color.toolbarColor));
         colorPrimaryDark = array.getColor(1,activity.getResources().getColor(R.color.statusColor));
         titleColor = array.getColor(2,activity.getResources().getColor(R.color.toolbarColor));
         windowBackground = array.getColor(3, Color.WHITE);
+        colorAccent = array.getColor(4,activity.getResources().getColor(R.color.toolbarColor));
         array.recycle();
     }
 

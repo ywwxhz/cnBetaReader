@@ -1,6 +1,9 @@
 package com.ywwxhz.lib.kits;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Window;
@@ -9,6 +12,7 @@ import android.view.WindowManager;
 import com.google.gson.Gson;
 import com.ywwxhz.cnbetareader.R;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -87,4 +91,14 @@ public class Toolkit {
 
         }
     }
+
+    // 分享照片
+    public static void SharePhoto(String photoUri, Context context) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        File file = new File(photoUri);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        shareIntent.setType("image/jpeg");
+        context.startActivity(Intent.createChooser(shareIntent, "分享图片"));
+    }
+
 }

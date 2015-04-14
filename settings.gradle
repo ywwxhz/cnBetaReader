@@ -1,4 +1,4 @@
 include ':app', ':Crouton', ':FloatingActionButton',
         ':materialish-progress',':PhotoView',':discreteSeekBar',
         ':android-support-v4-preferencefragment',':SwipeBackLayout',
-        ':SuperSaiyanScrollView'
+        ':SuperSaiyanScrollView',':FilterMenu'

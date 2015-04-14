@@ -46,6 +46,7 @@ public class SwipeBackActivityHelper {
 
     public void onPostCreate() {
         mSwipeBackLayout.attachToActivity(mActivity);
+        findViewById(android.R.id.content).setBackgroundColor(Color.TRANSPARENT);
     }
 
     public View findViewById(int id) {

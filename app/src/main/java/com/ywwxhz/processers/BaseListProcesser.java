@@ -40,7 +40,7 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark);
+        mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark,colorAccent);
         headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
         headView.setText("类型：" + provider.getTypeName());
         listView.addHeaderView(headView, null, false);
@@ -54,6 +54,7 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
         this.mLoader.setAdapter(this.provider.getAdapter());
         listView.setOnItemClickListener(provider.getOnItemClickListener());
+        listView.setOnItemLongClickListener(provider.getOnItemLongClickListener());
     }
 
     @Override

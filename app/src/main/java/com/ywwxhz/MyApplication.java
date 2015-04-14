@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
+import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -24,6 +25,12 @@ public class MyApplication extends Application {
     private static MyApplication instance;
 
     private Boolean debug;
+
+    public static FileNameGenerator getFileNameGenerator() {
+        return fileNameGenerator;
+    }
+
+    private static FileNameGenerator fileNameGenerator = new Md5FileNameGenerator();
 
     public DbUtils getDbUtils() {
         return mDbUtils;
@@ -49,7 +56,7 @@ public class MyApplication extends Application {
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheFileNameGenerator(fileNameGenerator)
                 .diskCacheSize(50 * 1024 * 1024) // 50 Mb
                 .tasksProcessingOrder(QueueProcessingType.LIFO);
         if (debug) {
