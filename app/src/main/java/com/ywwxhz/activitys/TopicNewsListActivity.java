@@ -11,6 +11,7 @@ import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.data.impl.NetNewsListDataProvider;
 import com.ywwxhz.entitys.TopicItem;
 import com.ywwxhz.fragments.BaseNewsListFragment;
+import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
@@ -79,7 +80,7 @@ public class TopicNewsListActivity extends ExtendBaseActivity {
                 this.item.setSaved(!this.item.isSaved());
                 MyApplication.getInstance().getDbUtils().saveOrUpdate(this.item);
                 invalidateOptionsMenu();
-                Toolkit.showCrouton(this, "操作成功", Style.INFO);
+                Toolkit.showCrouton(this, "操作成功", CroutonStyle.INFO);
             } catch (DbException e) {
                 Toolkit.showCrouton(this,"操作失败", Style.ALERT);
                 e.printStackTrace();

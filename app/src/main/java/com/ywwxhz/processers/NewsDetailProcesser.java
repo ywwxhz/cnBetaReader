@@ -78,7 +78,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             ".content table, .content td{border: 1px solid #000;border-collapse: collapse;border-spacing: 0;}" +
             ".content table p {text-indent: 0;}" +
             ".content video{display: block;width:100%% !important;height:auto !important}" +
-            ".content img{display: block;max-width: 100%% !important;height: auto !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
+            ".content img{display: block !important;max-width: 100%% !important;height: auto !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
             ".content blockquote {margin: 0; background: url(\"file:///android_asset/left_quote.jpg\") no-repeat scroll 1%% 4pt #F1F1F1; color: #878787;padding: 1pt 2pt 1pt 10pt;}" +
             ".content embed{display: block;width: 100%% !important;}" +
             ".clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +

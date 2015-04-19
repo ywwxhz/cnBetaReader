@@ -3,7 +3,7 @@
 <resources>
 
 
-    <style name="Theme.Basic" parent="Theme.AppCompat.Light">
+    <style name="Theme.Basic" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
@@ -17,9 +17,11 @@
         <item name="android:textColor">@color/textColor</item>
         <item name="colorAccent">#3c69ce</item>
         <item name="cardBackground">@drawable/list_item_background</item>
-        <item name="refBackground">@drawable/ref_background</item>
+        <item name="refBackground">@drawable/ref_background_normal</item>
         <item name="titleColor">?colorPrimary</item>
         <item name="subTitleColor">#5d5b5b</item>
+        <item name="toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
     <style name="Theme.Basic.TEAL">
         <item name="colorPrimary">#009688</item>
@@ -62,7 +64,8 @@
         <item name="cardBackground">@drawable/list_item_background_night</item>
         <item name="titleColor">?android:textColor</item>
         <item name="subTitleColor">#707e94</item>
-        <item name="refBackground">@drawable/ref_background_night</item>
+        <item name="refBackground">@drawable/ref_background_normal_night</item>
+        <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
     </style>
 
     <style name="Theme.Basic.NoAnim">

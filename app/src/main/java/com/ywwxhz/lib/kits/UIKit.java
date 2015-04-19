@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceFragment;
@@ -73,5 +74,15 @@ public class UIKit {
         }else{
             view.setBackgroundDrawable(drawable);
         }
+    }
+
+    public static int getFontHeight(Context context, float fontSize) {
+        // Convert Dp To Px
+        float px = context.getResources().getDisplayMetrics().density * fontSize + 0.5f;
+        // Use Paint to get font height
+        Paint p = new Paint();
+        p.setTextSize(px);
+        Paint.FontMetrics fm = p.getFontMetrics();
+        return (int) Math.ceil(fm.descent - fm.ascent);
     }
 }

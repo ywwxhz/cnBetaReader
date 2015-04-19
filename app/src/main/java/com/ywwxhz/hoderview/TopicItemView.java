@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.TopicItem;
 import com.ywwxhz.widget.textdrawable.TextDrawable;
@@ -17,7 +17,7 @@ import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/4/3 20:50.
  */
-public class TopicItemView extends RelativeLayout {
+public class TopicItemView extends MaterialRippleLayout {
     private ImageView mImage;
     private TextView mTitle;
     private Button mAction;

@@ -48,6 +48,11 @@
             android:title="@string/pref_reverse_title"
             android:summaryOn="@string/pref_reverse_on"
             android:summaryOff="@string/pref_reverse_off" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_show_emoji_key"
+            android:title="@string/pref_show_emoji_title"
+            android:summary="@string/pref_show_emoji_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_advience_categroy">

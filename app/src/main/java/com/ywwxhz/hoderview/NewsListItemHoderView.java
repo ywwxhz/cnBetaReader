@@ -1,14 +1,11 @@
 package com.ywwxhz.hoderview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.Build;
-import android.view.LayoutInflater;
+import android.util.AttributeSet;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.adapters.NewsListAdapter;
@@ -20,7 +17,7 @@ import com.ywwxhz.entitys.NewsItem;
  * com.ywwxhz.hoder
  * Created by 远望の无限(ywwxhz) on 2015/2/2 22:31.
  */
-public class NewsListItemHoderView extends RelativeLayout {
+public class NewsListItemHoderView extends MaterialRippleLayout {
     private TextView news_time;
     private TextView news_title;
     private TextView news_views;
@@ -29,10 +26,21 @@ public class NewsListItemHoderView extends RelativeLayout {
     private ImageView news_image_large;
     private ImageView news_image_small;
 
-    @SuppressLint("NewApi")
-    public NewsListItemHoderView(Context context, LayoutInflater infater) {
+    public NewsListItemHoderView(Context context) {
         super(context);
-        infater.inflate(R.layout.news_list_item, this);
+    }
+
+    public NewsListItemHoderView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public NewsListItemHoderView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         this.news_time = (TextView) findViewById(R.id.news_time);
         this.news_title = (TextView) findViewById(R.id.news_title);
         this.news_views = (TextView) findViewById(R.id.news_views);
@@ -40,13 +48,6 @@ public class NewsListItemHoderView extends RelativeLayout {
         this.news_comment = (TextView) findViewById(R.id.news_comments);
         this.news_image_large = (ImageView) findViewById(R.id.news_image_large);
         this.news_image_small = (ImageView) findViewById(R.id.news_image_small);
-        TypedArray array = context.obtainStyledAttributes(new int[]{R.attr.cardBackground});
-        if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT) {
-            setBackground(array.getDrawable(0));
-        } else {
-            setBackgroundDrawable(array.getDrawable(0));
-        }
-        array.recycle();
     }
 
     public void showNews(NewsItem item, boolean showImage, boolean showLarge, DisplayImageOptions optionsLarge, DisplayImageOptions optionsSmall, NewsListAdapter.AnimateFirstDisplayListener listener) {

@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@android:id/text1"
-          android:paddingTop="12dp"
-          android:paddingLeft="30dp"
-          android:paddingRight="30dp"
-          android:paddingBottom="12dp"
-          android:textSize="18sp"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
+<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-</TextView>
+    <TextView
+        android:id="@android:id/text1"
+        android:paddingTop="12dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="12dp"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </TextView>
+</com.balysv.materialripple.MaterialRippleLayout>

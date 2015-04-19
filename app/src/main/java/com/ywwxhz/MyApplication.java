@@ -9,8 +9,9 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.ywwxhz.lib.MyCrashHandler;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.lib.Emoticons;
+import com.ywwxhz.lib.MyCrashHandler;
 import com.ywwxhz.lib.database.DbUtils;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -45,6 +46,7 @@ public class MyApplication extends Application {
         FileCacheKit.getInstance(this);
         MyCrashHandler.getInstance().init(this);
         initImageLoader(getApplicationContext());
+        Emoticons.init(this);
         mDbUtils = DbUtils.create(this);
     }
 

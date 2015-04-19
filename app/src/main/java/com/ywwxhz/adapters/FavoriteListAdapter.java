@@ -9,10 +9,12 @@ import android.widget.TextView;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.NewsItem;
+import com.ywwxhz.lib.Configure;
 import com.ywwxhz.widget.textdrawable.TextDrawable;
 import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
 
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * cnBetaReader
@@ -53,9 +55,16 @@ public class FavoriteListAdapter extends BaseAdapter<NewsItem> {
         }
 
         void blindData(NewsItem item){
+            Matcher matcher = Configure.FAVOR_NEWS_TITLE.matcher(item.getTitle());
+            String latter;
+            if(matcher.find()){
+                latter = matcher.group(3);
+            }else{
+                latter = String.valueOf(item.getTitle().charAt(0));
+            }
             mTitle.setText(item.getTitle());
             mImage.setImageDrawable(
-                    mDrawableBuilder.build(String.valueOf(item.getTitle().charAt(0)), mColorGenerator.getColor(item.getSid()))
+                    mDrawableBuilder.build(latter, mColorGenerator.getColor(item.getSid()))
             );
         }
 

@@ -1,9 +1,13 @@
 package com.ywwxhz.data.impl;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
@@ -114,6 +118,19 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
                 item.setTitle(commentItem.getNewstitle());
                 intent.putExtra(NewsDetailActivity.NEWS_ITEM_KEY, item);
                 getActivity().startActivity(intent);
+            }
+        };
+    }
+
+    @Override
+    public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
+        return new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ClipboardManager clipboardManager = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboardManager.setPrimaryClip(ClipData.newPlainText(null, getAdapter().getDataSetItem(position - 1).getTitle()));
+                Toast.makeText(getActivity(), "评论已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                return true;
             }
         };
     }

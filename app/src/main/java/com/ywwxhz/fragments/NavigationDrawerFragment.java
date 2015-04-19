@@ -101,11 +101,11 @@ public class NavigationDrawerFragment extends Fragment {
         mListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         mListView.addHeaderView(mHeadView, null, false);
-        mListView.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.drawer_list_item, manger.getTitles()) {
+        mListView.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.drawer_list_item,android.R.id.text1, manger.getTitles()) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                TextView view = (TextView) super.getView(position, convertView, parent);
-                view.setTextColor(textColorStateList);
+                View view = super.getView(position, convertView, parent);
+                ((TextView)view.findViewById(android.R.id.text1)).setTextColor(textColorStateList);
                 return view;
             }
         });

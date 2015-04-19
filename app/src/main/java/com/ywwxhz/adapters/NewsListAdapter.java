@@ -57,7 +57,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     protected View bindViewAndData(LayoutInflater infater, int position, View convertView, ViewGroup parent) {
         NewsListItemHoderView view = (NewsListItemHoderView) convertView;
         if (view == null) {
-            view = new NewsListItemHoderView(context, infater);
+            view = (NewsListItemHoderView) infater.inflate(R.layout.news_list_item,parent,false);
         }
         NewsItem item = getDataSetItem(position);
         view.showNews(item, showImage, showLarge, optionsLarge, optionsSmall, listener);

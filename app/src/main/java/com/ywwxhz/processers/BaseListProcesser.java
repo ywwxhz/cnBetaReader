@@ -3,6 +3,7 @@ package com.ywwxhz.processers;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,14 +37,14 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
 
     @Override
     public void assumeView(View view) {
-        listView = (ListView) view.findViewById(android.R.id.list);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark,colorAccent);
-        headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
-        headView.setText("类型：" + provider.getTypeName());
-        listView.addHeaderView(headView, null, false);
+        this.listView = (ListView) view.findViewById(android.R.id.list);
+        this.mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        this.mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        this.mSwipeLayout.setOnRefreshListener(this);
+        this.mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark,colorAccent);
+        this.headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
+        this.headView.setText("类型：" + provider.getTypeName());
+        this.listView.addHeaderView(headView, null, false);
         PagedLoader.OnLoadListener loadListener = new PagedLoader.OnLoadListener() {
             @Override
             public void onLoading(PagedLoader pagedLoader, boolean isAutoLoad) {
@@ -53,8 +54,16 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         this.mLoader = PagedLoader.from(listView).setFinallyText(R.string.end).setOnLoadListener(loadListener).builder();
         this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
         this.mLoader.setAdapter(this.provider.getAdapter());
-        listView.setOnItemClickListener(provider.getOnItemClickListener());
-        listView.setOnItemLongClickListener(provider.getOnItemLongClickListener());
+        this.listView.setOnItemClickListener(getOnItemClickListener());
+        this.listView.setOnItemLongClickListener(getOnItemLongClickListener());
+    }
+
+    private AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
+        return provider.getOnItemLongClickListener();
+    }
+
+    private AdapterView.OnItemClickListener getOnItemClickListener() {
+        return provider.getOnItemClickListener();
     }
 
     @Override

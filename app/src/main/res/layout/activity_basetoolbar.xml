@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:background="?attr/colorPrimary"
         android:layout_height="?attr/actionBarSize"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:theme="?toolbarTheme"
+        app:popupTheme="?toolbarPopupTheme"/>
     <FrameLayout
         android:id="@+id/content"
         android:layout_below="@id/statusView"
