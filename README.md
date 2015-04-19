@@ -24,24 +24,14 @@ Android SDK v22
 1. clone or download source
 
 
-2. change app/build.gradle signingConfigs to your own configuration
+2. create signing.properties in the root of the project
 
 
 <pre>
-    signingConfigs {
-         release {
-             storeFile file(System.getenv("KEY_STROE_FILE"))
-             storePassword System.getenv("KEY_STROE_PASSWORD")
-             keyAlias System.getenv("KEY_ALIAS_RELEASE")
-             keyPassword System.getenv("KEY_PASSWORD")
-         }
-         debug {
-             storeFile file(System.getenv("KEY_STROE_FILE"))
-             storePassword System.getenv("KEY_STROE_PASSWORD")
-             keyAlias System.getenv("KEY_ALIAS_DEBUG")
-             keyPassword System.getenv("KEY_PASSWORD")
-         }
-     }
+    KEY_STROE_FILE= your key store file
+    KEY_STROE_PASSWORD= your key store password
+    KEY_ALIAS= your key store alias
+    KEY_PASSWORD= your key password
 </pre>
 
 
