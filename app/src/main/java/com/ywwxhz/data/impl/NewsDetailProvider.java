@@ -1,8 +1,11 @@
 package com.ywwxhz.data.impl;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.data.BaseDataProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.lib.Configure;
@@ -13,6 +16,7 @@ import com.ywwxhz.lib.kits.Toolkit;
 import org.apache.http.Header;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.regex.Matcher;
@@ -62,6 +66,10 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
     }
 
     public static boolean handleResponceString(NewsItem item,String resp){
+        return handleResponceString(item, resp,false);
+    }
+
+    public static boolean handleResponceString(NewsItem item,String resp,boolean cacheImage){
         Document doc = Jsoup.parse(resp);
         Elements newsHeadlines = doc.select(".body");
         item.setFrom(newsHeadlines.select(".where").html());
@@ -69,7 +77,17 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         Elements introduce = newsHeadlines.select(".introduction");
         introduce.select("div").remove();
         item.setHometext(introduce.html());
-        item.setContent(newsHeadlines.select(".content").html());
+        Elements content = newsHeadlines.select(".content");
+        if(cacheImage){
+            Elements images = content.select("img");
+            for(Element image:images){
+                Bitmap img = ImageLoader.getInstance().loadImageSync(image.attr("src"), MyApplication.getDefaultDisplayOption());
+                if(img!=null) {
+                    img.recycle();
+                }
+            }
+        }
+        item.setContent(content.html());
         Matcher snMatcher = Configure.SN_PATTERN.matcher(resp);
         if (snMatcher.find())
             item.setSN(snMatcher.group(1));

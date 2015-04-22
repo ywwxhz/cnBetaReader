@@ -37,7 +37,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
         showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
-        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
+        showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true);
         optionsLarge = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -68,7 +68,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     public void notifyDataSetChanged(boolean changeConfig) {
         if(changeConfig){
             showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
-            showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), false);
+            showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true);
         }
         super.notifyDataSetChanged();
     }

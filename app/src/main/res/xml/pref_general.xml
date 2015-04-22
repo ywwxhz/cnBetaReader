@@ -21,7 +21,7 @@
 
     <PreferenceCategory android:title="流量">
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/pref_show_list_news_image_key"
             android:title="@string/pref_show_list_news_image_title"
             android:summary="@string/pref_show_list_news_image_summary" />
@@ -36,6 +36,11 @@
             android:key="@string/pref_show_detail_image_key"
             android:title="@string/pref_show_detail_image_title"
             android:summary="@string/pref_show_detail_image_summary" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_offline_image_key"
+            android:title="@string/pref_offline_image_title"
+            android:summary="@string/pref_offline_image_summary" />
         <Preference
             android:key="@string/pref_clean_cache_key"
             android:title="@string/pref_clean_cache_title" />

@@ -79,5 +79,8 @@
     <string name="pref_show_emoji_key">emoji</string>
     <string name="pref_show_emoji_title">评论显示表情</string>
     <string name="pref_show_emoji_summary">评论是否显示表情</string>
+    <string name="pref_offline_image_key">pref_offline_image</string>
+    <string name="pref_offline_image_title">离线缓存新闻图片</string>
+    <string name="pref_offline_image_summary">离线缓存时是否缓存图片。开启该功能时离线缓存速度将会变慢。</string>
 
 </resources>

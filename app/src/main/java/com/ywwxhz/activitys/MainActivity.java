@@ -19,7 +19,7 @@ public class MainActivity extends BaseToolBarActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private int current = -1;
-    private long lastpass;
+    private long lastpress;
     public boolean changeTheme;
 
 
@@ -47,10 +47,10 @@ public class MainActivity extends BaseToolBarActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){
-            if(System.currentTimeMillis()-lastpass< 1000) {
+            if(System.currentTimeMillis()- lastpress < 1000) {
                 this.finish();
             }else {
-                lastpass = System.currentTimeMillis();
+                lastpress = System.currentTimeMillis();
                 Toast.makeText(this, "再按一次返回退出程序", Toast.LENGTH_SHORT).show();
                 return true;
             }

@@ -7,7 +7,8 @@
     app:mrl_rippleOverlay="true"
     android:background="?cardBackground">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,7 +22,6 @@
 
 
         <RelativeLayout
-            android:layout_below="@id/news_image_large"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
@@ -98,6 +98,6 @@
                     android:textSize="13sp" />
             </LinearLayout>
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </com.ywwxhz.hoderview.NewsListItemHoderView>

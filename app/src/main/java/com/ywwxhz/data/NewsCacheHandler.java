@@ -13,12 +13,15 @@ import android.os.Message;
 import android.widget.Toast;
 
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.impl.NewsDetailProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.LogKits;
 import com.ywwxhz.lib.kits.NetKit;
+import com.ywwxhz.lib.kits.PrefKit;
 
 import org.apache.http.Header;
 
@@ -146,8 +149,10 @@ public class NewsCacheHandler extends Handler {
     }
 
     private class CacheThread extends Thread {
+        private boolean cacheImage;
         public CacheThread(String s) {
             super(s);
+            cacheImage = PrefKit.getBoolean(context.get(),R.string.pref_offline_image_key,false);
         }
 
         @Override
@@ -167,6 +172,12 @@ public class NewsCacheHandler extends Handler {
                     }
                 });
                 if (FileCacheKit.getInstance().getAsObject(item.getSid() + "", NewsItem.class) == null) {
+                    if(PrefKit.getBoolean(context.get(),R.string.pref_show_list_news_image_key,true)) {
+                        Bitmap img = ImageLoader.getInstance().loadImageSync(item.getThumb(), MyApplication.getDefaultDisplayOption());
+                        if (img != null) {
+                            img.recycle();
+                        }
+                    }
                     NetKit.getInstance().getNewsBySidSync(item.getSid() + "", new TextHttpResponseHandler() {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -177,7 +188,7 @@ public class NewsCacheHandler extends Handler {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, String responseString) {
                             successCount++;
-                            NewsDetailProvider.handleResponceString(item, responseString);
+                            NewsDetailProvider.handleResponceString(item, responseString,cacheImage);
                         }
 
                         @Override
