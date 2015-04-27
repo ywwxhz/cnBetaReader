@@ -73,6 +73,11 @@
             android:summary="@string/pref_swipeback_summary" />
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="@string/pref_flash_to_html5_key"
+            android:summary="@string/pref_flash_to_html5_summary"
+            android:title="@string/pref_flash_to_html5_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_hardware_accelerated_key"
             android:summary="@string/pref_hardware_accelerated_summary"
             android:title="@string/pref_hardware_accelerated_title" />

@@ -8,7 +8,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:text="主题"
+        android:text="@string/theme"
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"

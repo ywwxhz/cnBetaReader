@@ -54,10 +54,14 @@ public class ChoiseThemeFragment extends DialogFragment implements View.OnClickL
         this.themegroup = (RadioGroup) view.findViewById(R.id.theme_group);
         String[] themes = getActivity().getResources().getStringArray(R.array.theme_text);
         int currentTheme = ThemeManger.getCurrentTheme(getActivity());
+        int padding10 = UIKit.dip2px(getActivity(), 10);
+        int padding5 = UIKit.dip2px(getActivity(), 5);
         for (int i=0;i<themes.length;i++) {
             RadioButton button = new RadioButton(getActivity());
             button.setText(themes[i]);
             button.setId(i);
+            button.setPadding(padding10, padding5,padding10, padding5);
+            button.setCompoundDrawablePadding(padding10);
             button.setTextSize(16);
             themegroup.addView(button);
         }

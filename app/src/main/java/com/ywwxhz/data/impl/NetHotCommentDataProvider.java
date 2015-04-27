@@ -140,11 +140,8 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
         ArrayList<HotCommentItem> items = FileCacheKit.getInstance().getAsObject(getTypeKey().hashCode() + "", "list", new TypeToken<ArrayList<HotCommentItem>>() {
         });
         if (items != null) {
-            hasCached = true;
             getAdapter().setDataSet(items);
             getAdapter().notifyDataSetChanged();
-        } else {
-            this.hasCached = false;
         }
         this.current = 1;
     }

@@ -2,6 +2,7 @@ package com.ywwxhz.activitys;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,6 +60,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
     private List<ImageItem> imageItems;
     private int screenHeight;
     private int screenWidth;
+    private Canvas canvas = new Canvas();
 
     public void onCreate(Bundle savedInstanceState) {
         ThemeManger.onActivityCreateSetTheme(this);
@@ -264,6 +266,13 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
                             photoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         } else {
                             photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        }
+
+                        if(height> canvas.getMaximumBitmapHeight()||width>canvas.getMaximumBitmapWidth()){
+                            photoView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+                            Toast.makeText(ImageViewActivity.this,"图片过大，使用软件渲染。",Toast.LENGTH_SHORT).show();
+                        }else{
+                            photoView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
                         }
                         showStatus = SHOWSUCCESS;
                     }

@@ -5,7 +5,7 @@
     <string name="choise_browser">选择浏览器</string>
     <string name="load_fail">加载失败 ,点击重试。</string>
     <string name="end">-- The End --</string>
-    <string name="theme">主题</string>
+    <string name="theme">主题配色</string>
 
     <string name="share_templates">我觉得这篇新闻不错 《%1$s》 (%2$s) 分享自 cnBeta Plus。</string>
 
@@ -82,5 +82,8 @@
     <string name="pref_offline_image_key">pref_offline_image</string>
     <string name="pref_offline_image_title">离线缓存新闻图片</string>
     <string name="pref_offline_image_summary">离线缓存时是否缓存图片。开启该功能时离线缓存速度将会变慢。</string>
+    <string name="pref_flash_to_html5_key">flash_to_html5_key</string>
+    <string name="pref_flash_to_html5_summary">将资讯详情中的Flash播放器转换为Html5播放器。目前已支持视频源为优酷、土豆、新浪和QQ的视频。\nPS:目前需要手动点击Flash Video才能进行转换。暂时无法屏蔽视频源中内嵌的广告。</string>
+    <string name="pref_flash_to_html5_title">Flash to Html5</string>
 
 </resources>

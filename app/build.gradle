@@ -1,19 +1,20 @@
+import java.nio.charset.Charset
+
 apply plugin: 'com.android.application'
 
-project.archivesBaseName = "cnBeta"
+project.archivesBaseName = "cnBeta_Plus"
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion Integer.parseInt(project.ANDROID_COMPILE_SDK_VERSION)
+    buildToolsVersion project.ANDROID_BUILD_TOOL_VERSION
 
-    final String buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
-    def verName = "1.0.8" + buildDate
+    def buildDate
+    def verName
 
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
         minSdkVersion 15
-        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionName verName
+        targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
         resConfigs "zh-rCN"
         resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
     }
@@ -86,22 +87,26 @@ android {
 
         versionProps.load(new FileInputStream(versionPropsFile))
         def vercode = versionProps['VERSION_CODE'].toInteger()
+        verName = versionProps['VERSION_NAME']
         def runTasks = gradle.startParameter.taskNames
         if ('build' in runTasks) {
             vercode++
             versionProps['VERSION_CODE'] = vercode.toString()
-            versionProps.store(versionPropsFile.newWriter(), null)
         }
+        versionProps['BUILD_TIME'] = new Date().format("yyyyMMddHHmmss")
+        buildDate = " Build " + versionProps['BUILD_TIME']
+        versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
             versionCode vercode
+            versionName verName + buildDate
         }
 
     }
 
     applicationVariants.all { variant ->
         def buildType = variant.buildType
-        def encoding = java.nio.charset.Charset.defaultCharset().toString()
+        def encoding = Charset.defaultCharset().toString()
         if (buildType.applicationIdSuffix) {
             variant.mergeResources.doLast {
                 def values = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
@@ -141,7 +146,7 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile files('libs/jsoup-1.8.1.jar')
     compile files('libs/universal-image-loader-1.9.3-with-sources.jar')
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:'+project.ANDROID_SUPPORT_VERSION
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
     compile project(':SuperSaiyanScrollView')
