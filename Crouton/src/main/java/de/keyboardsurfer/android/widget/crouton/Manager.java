@@ -136,6 +136,8 @@ final class Manager extends Handler {
         // If the activity is null we poll the Crouton off the queue.
         if (null == currentCrouton.getActivity()) {
             croutonQueue.poll();
+        }else if(currentCrouton.getActivity().isFinishing()){
+            croutonQueue.poll();
         }
 
         if (!currentCrouton.isShowing()) {

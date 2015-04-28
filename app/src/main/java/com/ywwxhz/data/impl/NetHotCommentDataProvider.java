@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
+import com.ywwxhz.activitys.ExtNewsDetailActivity;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.HotCommentAdapter;
 import com.ywwxhz.cnbetareader.R;
@@ -18,11 +19,13 @@ import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.entitys.HotCommentItem;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.entitys.ResponseObject;
+import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
+import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
 import java.util.ArrayList;
@@ -111,12 +114,17 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+                Intent intent;
+                if(PrefKit.getBoolean(getActivity(), R.string.pref_new_detail_key, true)) {
+                    intent = new Intent(getActivity(), ExtNewsDetailActivity.class);
+                }else{
+                    intent = new Intent(getActivity(), NewsDetailActivity.class);
+                }
                 NewsItem item = new NewsItem();
                 HotCommentItem commentItem = getAdapter().getDataSetItem(i - 1);
                 item.setSid(commentItem.getSid());
                 item.setTitle(commentItem.getNewstitle());
-                intent.putExtra(NewsDetailActivity.NEWS_ITEM_KEY, item);
+                intent.putExtra(NewsDetailFragment.NEWS_ITEM_KEY, item);
                 getActivity().startActivity(intent);
             }
         };

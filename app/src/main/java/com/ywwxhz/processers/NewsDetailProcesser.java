@@ -33,13 +33,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
-import com.ywwxhz.activitys.NewsCommentActivity;
-import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.DataProviderCallback;
 import com.ywwxhz.data.impl.NewsDetailProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.fragments.FontSizeFragment;
+import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.ThemeManger;
@@ -75,6 +74,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private VideoWebChromeClient client = new VideoWebChromeClient();
     private boolean showImage;
     private boolean convertFlashToHtml5;
+
+    public void setCallBack(NewsDetailFragment.NewsDetailCallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    private NewsDetailFragment.NewsDetailCallBack callBack;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<style>body{word-break: break-all;font-size: 11pt;}" +
@@ -135,18 +140,21 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             }
         }, 200);
         mProgressBar.setVisibility(View.GONE);
+        if(callBack!=null){
+            callBack.onNewsLoadFinish(mNewsItem,true);
+        }
     }
 
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
 
-    private void initView() {
-        this.loadFail = mActivity.findViewById(R.id.message);
-        this.mWebView = (WebView) mActivity.findViewById(R.id.webview);
+    private void initView(View view) {
+        this.loadFail = view.findViewById(R.id.message);
+        this.mWebView = (WebView) view.findViewById(R.id.webview);
         if (ThemeManger.isNightTheme(getActivity())) {
             this.mWebView.setBackgroundColor(windowBackground);
         }
-        this.mProgressBar = (ProgressWheel) mActivity.findViewById(R.id.loading);
-        this.mActionButtom = (FloatingActionButton) mActivity.findViewById(R.id.action);
+        this.mProgressBar = (ProgressWheel) view.findViewById(R.id.loading);
+        this.mActionButtom = (FloatingActionButton) view.findViewById(R.id.action);
         this.mActionButtom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,11 +199,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     public void commentAction() {
-        Intent intent = new Intent(mActivity, NewsCommentActivity.class);
-        intent.putExtra(NewsCommentActivity.SN_KEY, mNewsItem.getSN());
-        intent.putExtra(NewsCommentActivity.SID_KEY, mNewsItem.getSid());
-        intent.putExtra(NewsCommentActivity.TITLE_KEY, mNewsItem.getTitle());
-        mActivity.startActivity(intent);
+        if(callBack!=null){
+            callBack.CommentAction(mNewsItem.getSid(),mNewsItem.getSN(),mNewsItem.getTitle());
+        }
     }
 
     public void shareAction() {
@@ -239,6 +245,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("NewsDetailProcesser.onKeyDown");
         if (keyCode == KeyEvent.KEYCODE_BACK && client.myCallback != null) {
             client.onHideCustomView();
             return true;
@@ -308,6 +315,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     public void onLoadFailure() {
         if (!hascontent) {
             loadFail.setVisibility(View.VISIBLE);
+            if(callBack!=null){
+                callBack.onNewsLoadFinish(mNewsItem,false);
+            }
         } else {
             blindData(mNewsItem);
             mWebView.setVisibility(View.VISIBLE);
@@ -387,11 +397,13 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     public void assumeView(View view) {
         this.hascontent = false;
         this.myHandler = new Handler();
-        initView();
+        initView(view);
         showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
         convertFlashToHtml5 = PrefKit.getBoolean(mActivity,R.string.pref_flash_to_html5_key,true);
-        mNewsItem = (NewsItem) mActivity.getIntent().getSerializableExtra(NewsDetailActivity.NEWS_ITEM_KEY);
-        mActivity.setTitle("详情：" + mNewsItem.getTitle());
+    }
+
+    public void setNewsItem(NewsItem newsItem) {
+        this.mNewsItem = newsItem;
     }
 
     @Override
@@ -425,7 +437,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         private int requiredOrientation;
 
         @Override
-        public void onShowCustomView(View view, CustomViewCallback callback) {
+        public void onShowCustomView(View view, CustomViewCallback customViewCallback) {
             if (myCallback != null) {
                 myCallback.onCustomViewHidden();
                 myCallback = null;
@@ -436,15 +448,15 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             mActivity.getSupportActionBar().hide();
             ViewGroup parent = (ViewGroup) mWebView.getParent();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) parent.getLayoutParams();
-            params.topMargin = 0;
-            parent.setLayoutParams(params);
             mWebView.setVisibility(View.GONE);
+            if(callBack!=null){
+                callBack.onShowVideo(true);
+            }
             mActionButtom.setVisibility(View.GONE);
             parent.addView(view);
             view.setBackgroundColor(Color.BLACK);
             myView = view;
-            myCallback = callback;
+            myCallback = customViewCallback;
         }
 
         @Override
@@ -460,13 +472,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 mActivity.setRequestedOrientation(requiredOrientation);
                 mActivity.getSupportActionBar().show();
                 ViewGroup parent = (ViewGroup) mWebView.getParent();
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) parent.getLayoutParams();
-                params.topMargin = mActivity.getSupportActionBar().getHeight();
-                parent.setLayoutParams(params);
                 parent.removeView(myView);
                 mWebView.setVisibility(View.VISIBLE);
                 mActionButtom.setVisibility(View.VISIBLE);
-
+                if(callBack!=null){
+                    callBack.onShowVideo(false);
+                }
                 myView = null;
             }
         }
@@ -503,7 +514,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_detail, menu);
         if (!showImage) {
             menu.add(0, 0, 0, "显示全部图片");
         }

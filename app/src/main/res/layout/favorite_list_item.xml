@@ -5,6 +5,7 @@
     android:background="?cardBackground"
     android:padding="10dp"
     app:mrl_rippleOverlay="true"
+    app:mrl_rippleInAdapter="true"
     android:layout_height="wrap_content">
 
     <LinearLayout

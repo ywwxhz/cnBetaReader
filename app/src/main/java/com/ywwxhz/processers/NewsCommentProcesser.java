@@ -22,8 +22,11 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
     private FloatingActionButton actionButton;
     private boolean reverse;
 
-    public NewsCommentProcesser(NewsCommentProvider provider, int sid, String sn) {
+    public NewsCommentProcesser(NewsCommentProvider provider) {
         super(provider);
+    }
+
+    public void setParams(int sid, String sn){
         provider.setSid(sid);
         provider.setSn(sn);
     }
@@ -31,8 +34,8 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
     @Override
     public void assumeView(View view) {
         super.assumeView(view);
-        this.message = (TextView) mActivity.findViewById(R.id.message);
-        this.actionButton = (FloatingActionButton) mActivity.findViewById(R.id.action);
+        this.message = (TextView) view.findViewById(R.id.message);
+        this.actionButton = (FloatingActionButton) view.findViewById(R.id.action);
         this.message.setClickable(true);
         this.actionButton.attachToListView(getListView());
         this.actionButton.setImageResource(R.mipmap.ic_edit);

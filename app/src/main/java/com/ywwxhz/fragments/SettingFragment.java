@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.format.Formatter;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.activitys.MainActivity;
 import com.ywwxhz.cnbetareader.BuildConfig;
 import com.ywwxhz.cnbetareader.R;
@@ -74,6 +75,7 @@ public class SettingFragment extends PreferenceFragment {
                         if (getActivity() instanceof MainActivity) {
                             ((MainActivity) getActivity()).changeTheme = true;
                         }
+                        ImageLoader.getInstance().clearMemoryCache();
                         ThemeManger.changeToTheme(getActivity(), which);
                     }
                 }).show(getActivity().getFragmentManager(),"theme");

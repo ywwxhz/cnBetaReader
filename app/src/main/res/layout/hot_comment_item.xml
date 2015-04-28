@@ -6,6 +6,7 @@
     android:background="?cardBackground"
     android:padding="10dp"
     app:mrl_rippleOverlay="true"
+    app:mrl_rippleInAdapter="true"
     tools:ignore="ContentDescription"
     android:layout_height="wrap_content">
 

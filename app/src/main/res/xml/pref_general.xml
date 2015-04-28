@@ -78,6 +78,11 @@
             android:title="@string/pref_flash_to_html5_title" />
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="@string/pref_new_detail_key"
+            android:summary="@string/pref_new_detail_summary"
+            android:title="@string/pref_new_detail_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_hardware_accelerated_key"
             android:summary="@string/pref_hardware_accelerated_summary"
             android:title="@string/pref_hardware_accelerated_title" />

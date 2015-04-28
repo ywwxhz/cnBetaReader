@@ -85,5 +85,8 @@
     <string name="pref_flash_to_html5_key">flash_to_html5_key</string>
     <string name="pref_flash_to_html5_summary">将资讯详情中的Flash播放器转换为Html5播放器。目前已支持视频源为优酷、土豆、新浪和QQ的视频。\nPS:目前需要手动点击Flash Video才能进行转换。暂时无法屏蔽视频源中内嵌的广告。</string>
     <string name="pref_flash_to_html5_title">Flash to Html5</string>
+    <string name="pref_new_detail_key">new detail design</string>
+    <string name="pref_new_detail_summary">新版新闻详情界面支持左滑切换到评论页面。</string>
+    <string name="pref_new_detail_title">使用新版新闻详情界面</string>
 
 </resources>

@@ -53,7 +53,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MaterialRippleLayout extends FrameLayout {
 
-    private static final int DEFAULT_DURATION = 350;
+    private static final int DEFAULT_DURATION = 300;
     private static final int DEFAULT_FADE_DURATION = 75;
     private static final float DEFAULT_DIAMETER_DP = 35;
     private static final float DEFAULT_ALPHA = 0.1f;

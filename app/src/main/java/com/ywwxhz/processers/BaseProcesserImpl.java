@@ -26,6 +26,11 @@ public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<
     protected int titleColor;
     protected int windowBackground;
     protected int colorAccent;
+    protected onOptionMenuSelect menuCallBack;
+
+    public interface onOptionMenuSelect{
+        boolean onMenuSelect(MenuItem item);
+    }
 
     public BaseProcesserImpl(DataProvider provider) {
         this.provider = provider;
@@ -81,10 +86,14 @@ public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
+        return menuCallBack != null && menuCallBack.onMenuSelect(item);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    }
+
+    public void setMenuCallBack(onOptionMenuSelect menuCallBack) {
+        this.menuCallBack = menuCallBack;
     }
 }

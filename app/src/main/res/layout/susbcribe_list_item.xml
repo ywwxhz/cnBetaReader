@@ -8,6 +8,7 @@
     android:clickable="false"
     android:gravity="center_vertical"
     app:mrl_rippleOverlay="true"
+    app:mrl_rippleInAdapter="true"
     android:padding="15dp">
 
     <RelativeLayout

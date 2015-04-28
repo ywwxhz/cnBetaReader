@@ -17,6 +17,9 @@
             android:name="com.ywwxhz.activitys.NewsDetailActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
         <activity
+            android:name="com.ywwxhz.activitys.ExtNewsDetailActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
+        <activity
             android:name="com.ywwxhz.activitys.NewsCommentActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
         <activity

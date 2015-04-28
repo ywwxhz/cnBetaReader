@@ -1,6 +1,7 @@
 package com.ywwxhz.lib;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -71,11 +72,11 @@ public class ThemeManger {
         }
     }
 
-    public static int getCurrentTheme(Activity activity) {
-        return PrefKit.getInt(activity, "theme", 0);
+    public static int getCurrentTheme(Context context) {
+        return PrefKit.getInt(context, "theme", 0);
     }
 
-    public static boolean isNightTheme(Activity activity){
-        return PrefKit.getInt(activity, "theme", 0)==ThemeRes.length-1;
+    public static boolean isNightTheme(Context context){
+        return PrefKit.getInt(context, "theme", 0)==ThemeRes.length-1;
     }
 }

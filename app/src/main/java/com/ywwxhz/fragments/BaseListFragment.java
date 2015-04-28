@@ -15,6 +15,7 @@ import com.ywwxhz.adapters.BaseAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.processers.BaseListProcesser;
+import com.ywwxhz.processers.BaseProcesserImpl;
 
 /**
  * cnBetaReader
@@ -24,7 +25,8 @@ import com.ywwxhz.processers.BaseListProcesser;
 public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<DataType>,Provider extends ListDataProvider<DataType,Adapter>,Processer extends BaseListProcesser<DataType,Provider>>
         extends Fragment {
 
-    private Processer processer;
+    protected Processer processer;
+    private BaseProcesserImpl.onOptionMenuSelect menuCallBack;
 
     protected abstract Provider getProvider();
 
@@ -40,6 +42,7 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
         if(processer==null) {
             processer = createProcesser(getProvider());
         }
+        processer.setMenuCallBack(menuCallBack);
         processer.setActivity((ActionBarActivity) activity);
     }
 
@@ -52,7 +55,6 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         processer.loadData(true);
     }
 
@@ -71,7 +73,7 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return processer.onOptionsItemSelected(item)|| super.onOptionsItemSelected(item);
+        return processer.onOptionsItemSelected(item);
     }
 
     public boolean hasMenu(){
@@ -82,5 +84,10 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
     public void onDestroy() {
         processer.onDestroy();
         super.onDestroy();
+    }
+
+    public BaseListFragment setMenuCallBack(BaseProcesserImpl.onOptionMenuSelect menuCallBack){
+        this.menuCallBack= menuCallBack;
+        return this;
     }
 }

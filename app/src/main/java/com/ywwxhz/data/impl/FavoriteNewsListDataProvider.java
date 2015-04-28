@@ -6,11 +6,15 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.ywwxhz.MyApplication;
+import com.ywwxhz.activitys.ExtNewsDetailActivity;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.FavoriteListAdapter;
+import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.NewsItem;
+import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.database.sqlite.Selector;
+import com.ywwxhz.lib.kits.PrefKit;
 
 import java.util.ArrayList;
 
@@ -82,8 +86,13 @@ public class FavoriteNewsListDataProvider extends BaseNewsListDataProvider<Favor
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra(NewsDetailActivity.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
+                Intent intent;
+                if(PrefKit.getBoolean(getActivity(), R.string.pref_new_detail_key,true)) {
+                    intent = new Intent(getActivity(), ExtNewsDetailActivity.class);
+                }else{
+                    intent = new Intent(getActivity(), NewsDetailActivity.class);
+                }
+                intent.putExtra(NewsDetailFragment.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
                 getActivity().startActivity(intent);
             }
         };
