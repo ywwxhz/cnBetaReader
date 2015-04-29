@@ -3,9 +3,7 @@ package com.ywwxhz.entitys;
 import com.ywwxhz.lib.database.annotation.Id;
 import com.ywwxhz.lib.database.annotation.NoAutoIncrement;
 
-import java.io.Serializable;
-
-public class NewsItem implements Serializable {
+public class NewsItem {
 
     @Id
     @NoAutoIncrement
@@ -21,6 +19,14 @@ public class NewsItem implements Serializable {
     private String comments;
     private String counter;
     private String inputtime;
+
+    public NewsItem() {
+    }
+
+    public NewsItem(int sid, String title) {
+        this.sid = sid;
+        this.title = title;
+    }
 
     public int getSid() {
         return sid;

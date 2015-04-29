@@ -61,7 +61,7 @@ public class NewsCommentFragment extends BaseListFragment<CommentItem,CommentLis
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         if(getUserVisibleHint()&&!hasinit){
-            loadData();
+            loadData(true);
         }
     }
 
@@ -69,13 +69,13 @@ public class NewsCommentFragment extends BaseListFragment<CommentItem,CommentLis
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser&&!hasinit){
-            loadData();
+            loadData(false);
         }
     }
 
-    private void loadData(){
+    private void loadData(boolean startup){
         processer.setParams(sid,sn);
-        processer.loadData(true);
+        processer.loadData(startup);
         hasinit = true;
     }
 

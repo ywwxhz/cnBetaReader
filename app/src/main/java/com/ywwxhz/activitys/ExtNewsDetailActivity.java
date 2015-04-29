@@ -30,45 +30,48 @@ public class ExtNewsDetailActivity extends ExtendBaseActivity implements NewsDet
     private ViewPager pager;
     private FragmentAdapter adapter;
     private boolean showVideo;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!getIntent().getExtras().containsKey(NewsDetailFragment.NEWS_ITEM_KEY)) {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null&&bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY)&&bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
+            setContentView(R.layout.pager_layout);
+            title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
+            setTitle("详情：" + title);
+            fragments.add(NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY),title));
+            pager = (ViewPager) findViewById(R.id.pager);
+            adapter = new FragmentAdapter(getSupportFragmentManager());
+            pager.setAdapter(adapter);
+            pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (position == 0) {
+                        setTitle("详情：" + title);
+                        setSwipeBackEnable(PrefKit.getBoolean(ExtNewsDetailActivity.this, R.string.pref_swipeback_key, true));
+                    } else {
+                        setTitle("评论：" + title);
+                        setSwipeBackEnable(false);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+        }else{
             Toast.makeText(this, "缺少必要参数", Toast.LENGTH_SHORT).show();
             finish();
-            return;
         }
-        setContentView(R.layout.pager_layout);
-        final NewsItem item = (NewsItem) getIntent().getSerializableExtra(NewsDetailFragment.NEWS_ITEM_KEY);
-        setTitle("详情：" + item.getTitle());
-        fragments.add(NewsDetailFragment.getInstance(item));
-        pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new FragmentAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    setTitle("详情：" + item.getTitle());
-                    setSwipeBackEnable(PrefKit.getBoolean(ExtNewsDetailActivity.this, R.string.pref_swipeback_key, true));
-                } else {
-                    setTitle("评论：" + item.getTitle());
-                    setSwipeBackEnable(false);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override

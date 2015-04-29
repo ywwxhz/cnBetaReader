@@ -24,9 +24,11 @@ import com.ywwxhz.processers.NewsDetailProcesser;
  * Created by 远望の无限(ywwxhz) on 2015/4/27 15:30.
  */
 public class NewsDetailFragment extends Fragment {
-    public static final String NEWS_ITEM_KEY = "key_news_item";
+    public static final String NEWS_SID_KEY = "key_news_sid";
+    public static final String NEWS_TITLE_KEY = "key_news_title";
     private NewsDetailProcesser processer;
-    private NewsItem item;
+    private int sid;
+    private String title;
 
     public interface NewsDetailCallBack{
         void onNewsLoadFinish(NewsItem item,boolean success);
@@ -34,10 +36,11 @@ public class NewsDetailFragment extends Fragment {
         void onShowVideo(boolean showVideo);
     }
 
-    public static NewsDetailFragment getInstance(NewsItem item){
-        Bundle args = new Bundle();
-        args.putSerializable(NEWS_ITEM_KEY, item);
+    public static NewsDetailFragment getInstance(int sid,String title){
         NewsDetailFragment f = new NewsDetailFragment();
+        Bundle args = new Bundle();
+        args.putInt(NEWS_SID_KEY,sid);
+        args.putString(NEWS_TITLE_KEY,title);
         f.setArguments(args);
         return f;
     }
@@ -46,8 +49,9 @@ public class NewsDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
-        if(args!=null&&args.containsKey(NEWS_ITEM_KEY)){
-            item = (NewsItem) args.getSerializable(NEWS_ITEM_KEY);
+        if(args!=null&&args.containsKey(NEWS_SID_KEY)&&args.containsKey(NEWS_TITLE_KEY)){
+            sid = args.getInt(NEWS_SID_KEY);
+            title = args.getString(NEWS_TITLE_KEY);
         }
     }
 
@@ -67,7 +71,7 @@ public class NewsDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_detail,container,false);
         processer.assumeView(view);
-        processer.setNewsItem(item);
+        processer.setNewsItem(sid,title);
         return view;
     }
 

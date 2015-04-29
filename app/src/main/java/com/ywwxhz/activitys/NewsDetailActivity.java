@@ -22,10 +22,11 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getExtras().containsKey(NewsDetailFragment.NEWS_ITEM_KEY)) {
-            NewsItem item = (NewsItem) getIntent().getSerializableExtra(NewsDetailFragment.NEWS_ITEM_KEY);
-            setTitle("详情：" + item.getTitle());
-            fragment = NewsDetailFragment.getInstance(item);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null&&bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY)&&bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
+            String title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
+            setTitle("详情：" + title);
+            fragment = NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY),title);
             getSupportFragmentManager().beginTransaction().replace(R.id.content,fragment).commit();
         } else {
             Toast.makeText(this, "缺少必要参数", Toast.LENGTH_SHORT).show();

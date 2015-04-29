@@ -74,11 +74,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private VideoWebChromeClient client = new VideoWebChromeClient();
     private boolean showImage;
     private boolean convertFlashToHtml5;
-
-    public void setCallBack(NewsDetailFragment.NewsDetailCallBack callBack) {
-        this.callBack = callBack;
-    }
-
+    private boolean fromDB = false;
     private NewsDetailFragment.NewsDetailCallBack callBack;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
@@ -99,10 +95,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             ".content video{display: block; max-width:100%%; margin: auto;border: 0;background-color: #000;}" +
             ".content embed{display: block; max-width: 100%%;}" +
             ".content img{display: block !important;max-width: 100%% !important;height: auto !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
-            //".content blockquote {margin: 0; background: url(\"file:///android_asset/left_quote.jpg\") no-repeat scroll 1%% 4pt #F1F1F1; color: #878787;padding: 1pt 2pt 1pt 10pt;}" +
             ".content blockquote{background-color:#F1F1F1;color: #444;padding: 13pt 5pt 8pt 5pt;margin: 0;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
             ".content blockquote:before {color: #CCC;content: open-quote;font-size: 4em;line-height: .01em;margin-left: .1em;vertical-align: -.4em;}" +
-            ".content blockquote p{}"+
+            ".content blockquote p{}" +
             ".clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
             "</style></head>" +
             "<body><div><div id=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
@@ -120,33 +115,34 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         super(provider);
     }
 
-    private void blindData(NewsItem mNews) {
-        String colorString = Integer.toHexString(titleColor);
-        String add;
-        if (ThemeManger.isNightTheme(getActivity())) {
-            add = night;
-        } else {
-            add = light;
-        }
-        String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()), add, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                , mNews.getHometext(), mNews.getContent(), showImage,convertFlashToHtml5);
-        mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
-        mWebView.setVisibility(View.VISIBLE);
-        mActionButtom.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mActionButtom.setVisibility(View.VISIBLE);
-                mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
-            }
-        }, 200);
-        mProgressBar.setVisibility(View.GONE);
-        if(callBack!=null){
-            callBack.onNewsLoadFinish(mNewsItem,true);
-        }
+    @Override
+    public void onResume() {
+        mWebView.onResume();
+        mWebView.resumeTimers();
+    }
+
+    @Override
+    public void onPause() {
+        mWebView.onPause();
+        mWebView.pauseTimers();
+    }
+
+    @Override
+    public void onDestroy() {
+        mWebView.stopLoading();
+        mWebView.destroy();
+    }
+
+    @Override
+    public void assumeView(View view) {
+        this.hascontent = false;
+        this.myHandler = new Handler();
+        initView(view);
+        showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
+        convertFlashToHtml5 = PrefKit.getBoolean(mActivity, R.string.pref_flash_to_html5_key, true);
     }
 
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
-
     private void initView(View view) {
         this.loadFail = view.findViewById(R.id.message);
         this.mWebView = (WebView) view.findViewById(R.id.webview);
@@ -194,84 +190,36 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         });
     }
 
+    public void setNewsItem(int sid, String title) {
+        try {
+            mNewsItem = MyApplication.getInstance().getDbUtils().findById(NewsItem.class, sid);
+            if (mNewsItem == null) {
+                fromDB = false;
+                this.mNewsItem = new NewsItem(sid, title);
+            } else {
+                fromDB = true;
+            }
+        } catch (DbException e) {
+            fromDB = false;
+            this.mNewsItem = new NewsItem(sid, title);
+        }
+
+    }
+
+    @Override
+    public void loadData(boolean startup) {
+        NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
+        if (mNews == null) {
+            makeRequest();
+        } else {
+            hascontent = true;
+            mNewsItem = mNews;
+            blindData(mNews);
+        }
+    }
+
     public void makeRequest() {
         provider.loadNewsAsync(mNewsItem.getSid() + "");
-    }
-
-    public void commentAction() {
-        if(callBack!=null){
-            callBack.CommentAction(mNewsItem.getSid(),mNewsItem.getSN(),mNewsItem.getTitle());
-        }
-    }
-
-    public void shareAction() {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_templates
-                , mNewsItem.getTitle(), Configure.buildArticleUrl(mNewsItem.getSid() + "")));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.menu_share)));
-    }
-
-    public void viewInBrowser() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri content_url = Uri.parse(Configure.buildArticleUrl(mNewsItem.getSid() + ""));
-        intent.setData(content_url);
-        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.choise_browser)));
-    }
-
-    public void handleFontSize() {
-        FontSizeFragment fragment = FontSizeFragment.getInstance(settings.getTextZoom());
-        fragment.show(mActivity.getFragmentManager(), "Font Size");
-        fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                if (fromUser) {
-                    settings.setTextZoom(value);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        System.out.println("NewsDetailProcesser.onKeyDown");
-        if (keyCode == KeyEvent.KEYCODE_BACK && client.myCallback != null) {
-            client.onHideCustomView();
-            return true;
-        }
-        return false;
-    }
-
-    public void doBookmark() {
-        if (hascontent) {
-            String message;
-            Style style;
-            try {
-                if (MyApplication.getInstance().getDbUtils().findById(NewsItem.class, mNewsItem.getSid()) == null) {
-                    MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
-                    message = "收藏成功";
-                } else {
-                    MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class, mNewsItem.getSid());
-                    message = "取消收藏成功";
-                }
-                style = CroutonStyle.INFO;
-            } catch (DbException e) {
-                message = "操作失败";
-                style = Style.ALERT;
-            }
-            Toolkit.showCrouton(mActivity, message, style);
-        }
     }
 
     @Override
@@ -315,8 +263,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     public void onLoadFailure() {
         if (!hascontent) {
             loadFail.setVisibility(View.VISIBLE);
-            if(callBack!=null){
-                callBack.onNewsLoadFinish(mNewsItem,false);
+            if (callBack != null) {
+                callBack.onNewsLoadFinish(mNewsItem, false);
             }
         } else {
             blindData(mNewsItem);
@@ -326,163 +274,41 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         Toolkit.showCrouton(mActivity, R.string.message_no_network, Style.ALERT);
     }
 
-    private class JavaScriptInterface {
-        Context mContext;
-
-        JavaScriptInterface(Context c) {
-            mContext = c;
-        }
-
-        @JavascriptInterface
-        public void showImage(String pos, final String[] imageSrcs) {
-            final int posi;
-            try{
-                posi = Integer.parseInt(pos);
-                myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(mContext, ImageViewActivity.class);
-                        intent.putExtra(ImageViewActivity.IMAGE_URLS, imageSrcs);
-                        intent.putExtra(ImageViewActivity.CURRENT_POS,posi);
-                        mContext.startActivity(intent);
-                    }
-                });
-            }catch (Exception e){
-                Log.d(getClass().getName(), "Illegal argument");
-            }
-        }
-
-        @JavascriptInterface
-        public void loadSohuVideo(final String hoder_id, final String requestUrl) {
-                myHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        NetKit.getInstance().getClient().get(requestUrl,new JsonHttpResponseHandler(){
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                try {
-                                    mWebView.loadUrl("javascript:VideoCallBack(\""+hoder_id+"\",\""+response.getJSONObject("data").getString("url_high_mp4")+"\",\""+response.getJSONObject("data").getString("hor_big_pic")+"\")");
-                                }catch (Exception e){
-                                    Toolkit.showCrouton(mActivity,"搜狐视频加载失败",Style.ALERT);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                Toolkit.showCrouton(mActivity,"搜狐视频加载失败",Style.ALERT);
-                            }
-                        });
-                    }
-                });
-        }
-        @JavascriptInterface
-        public void showMessage(final String message,final String type) {
-            myHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toolkit.showCrouton(mActivity,message,CroutonStyle.getStyle(type));
-                }
-            });
-        }
-
-    }
-
-    @Override
-    public void onDestroy() {
-        mWebView.stopLoading();
-        mWebView.destroy();
-    }
-
-    @Override
-    public void assumeView(View view) {
-        this.hascontent = false;
-        this.myHandler = new Handler();
-        initView(view);
-        showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
-        convertFlashToHtml5 = PrefKit.getBoolean(mActivity,R.string.pref_flash_to_html5_key,true);
-    }
-
-    public void setNewsItem(NewsItem newsItem) {
-        this.mNewsItem = newsItem;
-    }
-
-    @Override
-    public void loadData(boolean startup) {
-        NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
-        if (mNews == null) {
-            makeRequest();
+    private void blindData(NewsItem mNews) {
+        String colorString = Integer.toHexString(titleColor);
+        String add;
+        if (ThemeManger.isNightTheme(getActivity())) {
+            add = night;
         } else {
-            hascontent = true;
-            mNewsItem = mNews;
-            blindData(mNews);
+            add = light;
         }
-    }
-
-    @Override
-    public void onResume() {
-        mWebView.onResume();
-        mWebView.resumeTimers();
-    }
-
-    @Override
-    public void onPause() {
-        mWebView.onPause();
-        mWebView.pauseTimers();
-    }
-
-    private class VideoWebChromeClient extends WebChromeClient {
-        private View myView = null;
-        CustomViewCallback myCallback = null;
-        private int orientation;
-        private int requiredOrientation;
-
-        @Override
-        public void onShowCustomView(View view, CustomViewCallback customViewCallback) {
-            if (myCallback != null) {
-                myCallback.onCustomViewHidden();
-                myCallback = null;
-                return;
-            }
-            requiredOrientation = mActivity.getRequestedOrientation();
-            orientation = mActivity.getResources().getConfiguration().orientation;
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            mActivity.getSupportActionBar().hide();
-            ViewGroup parent = (ViewGroup) mWebView.getParent();
-            mWebView.setVisibility(View.GONE);
-            if(callBack!=null){
-                callBack.onShowVideo(true);
-            }
-            mActionButtom.setVisibility(View.GONE);
-            parent.addView(view);
-            view.setBackgroundColor(Color.BLACK);
-            myView = view;
-            myCallback = customViewCallback;
-        }
-
-        @Override
-        public void onHideCustomView() {
-
-            if (myView != null) {
-
-                if (myCallback != null) {
-                    myCallback.onCustomViewHidden();
-                    myCallback = null;
-                }
-                mActivity.setRequestedOrientation(orientation);
-                mActivity.setRequestedOrientation(requiredOrientation);
-                mActivity.getSupportActionBar().show();
-                ViewGroup parent = (ViewGroup) mWebView.getParent();
-                parent.removeView(myView);
-                mWebView.setVisibility(View.VISIBLE);
+        String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()), add, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
+                , mNews.getHometext(), mNews.getContent(), showImage, convertFlashToHtml5);
+        mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
+        mWebView.setVisibility(View.VISIBLE);
+        mActionButtom.postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 mActionButtom.setVisibility(View.VISIBLE);
-                if(callBack!=null){
-                    callBack.onShowVideo(false);
-                }
-                myView = null;
+                mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
             }
+        }, 200);
+        mProgressBar.setVisibility(View.GONE);
+        if (callBack != null) {
+            callBack.onNewsLoadFinish(mNewsItem, true);
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_detail, menu);
+        if (!showImage) {
+            menu.add(0, 0, 0, "显示全部图片");
+        }
+        if (fromDB) {
+            menu.findItem(R.id.menu_book_mark).setTitle("取消收藏");
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -503,21 +329,13 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 handleFontSize();
                 break;
             case R.id.menu_book_mark:
-                doBookmark();
+                doBookmark(item);
                 break;
             case 0:
                 showAllImage();
                 break;
         }
         return false;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_detail, menu);
-        if (!showImage) {
-            menu.add(0, 0, 0, "显示全部图片");
-        }
     }
 
     private void showAllImage() {
@@ -528,7 +346,150 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         mWebView.loadUrl("javascript:setNight(true)");
     }
 
-    class MyWebViewClient extends WebViewClient{
+    public void setCallBack(NewsDetailFragment.NewsDetailCallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    public void commentAction() {
+        if (callBack != null) {
+            callBack.CommentAction(mNewsItem.getSid(), mNewsItem.getSN(), mNewsItem.getTitle());
+        }
+    }
+
+    public void shareAction() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_templates
+                , mNewsItem.getTitle(), Configure.buildArticleUrl(mNewsItem.getSid() + "")));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.menu_share)));
+    }
+
+    public void viewInBrowser() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri content_url = Uri.parse(Configure.buildArticleUrl(mNewsItem.getSid() + ""));
+        intent.setData(content_url);
+        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.choise_browser)));
+    }
+
+    public void handleFontSize() {
+        FontSizeFragment fragment = FontSizeFragment.getInstance(settings.getTextZoom());
+        fragment.show(mActivity.getFragmentManager(), "Font Size");
+        fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                if (fromUser) {
+                    settings.setTextZoom(value);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+    }
+
+    public void doBookmark(MenuItem item) {
+        if (hascontent) {
+            String message;
+            Style style;
+            try {
+                if (MyApplication.getInstance().getDbUtils().findById(NewsItem.class, mNewsItem.getSid()) == null) {
+                    MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
+                    message = "收藏成功";
+                    item.setTitle("取消收藏");
+                } else {
+                    MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class, mNewsItem.getSid());
+                    message = "取消收藏成功";
+                    item.setTitle("收藏");
+                }
+                style = CroutonStyle.INFO;
+            } catch (DbException e) {
+                message = "操作失败";
+                style = Style.ALERT;
+            }
+            Toolkit.showCrouton(mActivity, message, style);
+        }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && client.myCallback != null) {
+            client.onHideCustomView();
+            return true;
+        }
+        return false;
+    }
+
+    private class JavaScriptInterface {
+        Context mContext;
+
+        JavaScriptInterface(Context c) {
+            mContext = c;
+        }
+
+        @JavascriptInterface
+        public void showImage(String pos, final String[] imageSrcs) {
+            final int posi;
+            try {
+                posi = Integer.parseInt(pos);
+                myHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(mContext, ImageViewActivity.class);
+                        intent.putExtra(ImageViewActivity.IMAGE_URLS, imageSrcs);
+                        intent.putExtra(ImageViewActivity.CURRENT_POS, posi);
+                        mContext.startActivity(intent);
+                    }
+                });
+            } catch (Exception e) {
+                Log.d(getClass().getName(), "Illegal argument");
+            }
+        }
+
+        @JavascriptInterface
+        public void loadSohuVideo(final String hoder_id, final String requestUrl) {
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    NetKit.getInstance().getClient().get(requestUrl, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                mWebView.loadUrl("javascript:VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
+                            } catch (Exception e) {
+                                Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
+                        }
+                    });
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void showMessage(final String message, final String type) {
+            myHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toolkit.showCrouton(mActivity, message, CroutonStyle.getStyle(type));
+                }
+            });
+        }
+
+    }
+
+    class MyWebViewClient extends WebViewClient {
         private static final String TAG = "WebView ImageLoader";
         private boolean finish = false;
 
@@ -559,10 +520,10 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             System.out.println("MyWebViewClient.shouldInterceptRequest(view,url) url = [" + url + "]");
             String prefix = MimeTypeMap.getFileExtensionFromUrl(url);
-            if(!TextUtils.isEmpty(prefix)) {
+            if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
-                if(mimeType!=null&&mimeType.startsWith("image")) {
-                    if(finish||showImage) {
+                if (mimeType != null && mimeType.startsWith("image")) {
+                    if (finish || showImage) {
                         File image = ImageLoader.getInstance().getDiskCache().get(url);
                         if (image != null) {
                             System.out.println("load Image From disk cache");
@@ -573,18 +534,72 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                         } else {
                             System.out.println("load Image From net");
                         }
-                    }else{
+                    } else {
                         System.out.println("Load Image Hoder");
                         try {
                             return new WebResourceResponse("image/svg+xml", "UTF-8", mActivity.getAssets().open("image.svg"));
                         } catch (IOException ignored) {
                         }
                     }
-                }else{
+                } else {
                     System.out.println("load other resourse");
                 }
             }
-            return super.shouldInterceptRequest(view,url);
+            return super.shouldInterceptRequest(view, url);
         }
     }
+
+    class VideoWebChromeClient extends WebChromeClient {
+        private View myView = null;
+        CustomViewCallback myCallback = null;
+        private int orientation;
+        private int requiredOrientation;
+
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback customViewCallback) {
+            if (myCallback != null) {
+                myCallback.onCustomViewHidden();
+                myCallback = null;
+                return;
+            }
+            requiredOrientation = mActivity.getRequestedOrientation();
+            orientation = mActivity.getResources().getConfiguration().orientation;
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            mActivity.getSupportActionBar().hide();
+            ViewGroup parent = (ViewGroup) mWebView.getParent();
+            mWebView.setVisibility(View.GONE);
+            if (callBack != null) {
+                callBack.onShowVideo(true);
+            }
+            mActionButtom.setVisibility(View.GONE);
+            parent.addView(view);
+            view.setBackgroundColor(Color.BLACK);
+            myView = view;
+            myCallback = customViewCallback;
+        }
+
+        @Override
+        public void onHideCustomView() {
+
+            if (myView != null) {
+
+                if (myCallback != null) {
+                    myCallback.onCustomViewHidden();
+                    myCallback = null;
+                }
+                mActivity.setRequestedOrientation(orientation);
+                mActivity.setRequestedOrientation(requiredOrientation);
+                mActivity.getSupportActionBar().show();
+                ViewGroup parent = (ViewGroup) mWebView.getParent();
+                parent.removeView(myView);
+                mWebView.setVisibility(View.VISIBLE);
+                mActionButtom.setVisibility(View.VISIBLE);
+                if (callBack != null) {
+                    callBack.onShowVideo(false);
+                }
+                myView = null;
+            }
+        }
+    }
+
 }

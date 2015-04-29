@@ -17,7 +17,6 @@ import com.ywwxhz.adapters.HotCommentAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.entitys.HotCommentItem;
-import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.Configure;
@@ -120,11 +119,9 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
                 }else{
                     intent = new Intent(getActivity(), NewsDetailActivity.class);
                 }
-                NewsItem item = new NewsItem();
                 HotCommentItem commentItem = getAdapter().getDataSetItem(i - 1);
-                item.setSid(commentItem.getSid());
-                item.setTitle(commentItem.getNewstitle());
-                intent.putExtra(NewsDetailFragment.NEWS_ITEM_KEY, item);
+                intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, commentItem.getSid());
+                intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,commentItem.getNewstitle());
                 getActivity().startActivity(intent);
             }
         };

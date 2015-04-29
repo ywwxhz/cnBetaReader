@@ -140,7 +140,9 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
                 }else{
                     intent = new Intent(getActivity(), NewsDetailActivity.class);
                 }
-                intent.putExtra(NewsDetailFragment.NEWS_ITEM_KEY, getAdapter().getDataSetItem(i - 1));
+                NewsItem item = getAdapter().getDataSetItem(i - 1);
+                intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, item.getSid());
+                intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,item.getTitle());
                 getActivity().startActivity(intent);
             }
         };

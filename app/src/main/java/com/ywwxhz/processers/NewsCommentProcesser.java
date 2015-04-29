@@ -62,7 +62,7 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
                 getSwipeLayout().setRefreshing(true);
                 makeRequest();
             }
-        }, 400);
+        }, startup?400:0);
     }
 
     private void makeRequest() {
