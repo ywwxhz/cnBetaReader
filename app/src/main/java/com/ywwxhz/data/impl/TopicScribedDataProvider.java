@@ -14,6 +14,7 @@ import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.database.sqlite.Selector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * cnBetaReader
@@ -46,36 +47,45 @@ public class TopicScribedDataProvider extends ListDataProvider<TopicItem,TopicLi
     @Override
     public void loadNewData() {
         int old = current;
+        List<TopicItem> items;
         try {
             current = 0;
-            getAdapter().setDataSet(MyApplication.getInstance().getDbUtils().<TopicItem>findAll(
-                            Selector.from(TopicItem.class).where("saved", "=", true).limit(getPageSize())
-                                    .offset(current * getPageSize()).orderBy("latter", false))
-            );
+            items = MyApplication.getInstance().getDbUtils().findAll(
+                    Selector.from(TopicItem.class).where("saved", "=", true).limit(getPageSize())
+                            .offset(current * getPageSize()).orderBy("latter", false));
+            if(items == null){
+                items = new ArrayList<>(0);
+            }
+            getAdapter().setDataSet(items);
         } catch (DbException e) {
             current = old;
+            items = new ArrayList<>();
             e.printStackTrace();
         }
         if(callback!=null){
-            callback.onLoadFinish();
+            callback.onLoadFinish(items.size());
         }
     }
 
     @Override
     public void loadNextData() {
+        List<TopicItem> items;
         try {
             current++;
-            getAdapter().getDataSet()
-                    .addAll(MyApplication.getInstance().getDbUtils().<TopicItem>findAll(
-                                    Selector.from(TopicItem.class).where("saved", "=", true).limit(getPageSize())
-                                            .offset(current * getPageSize()).orderBy("latter",false))
-                    );
+            items =MyApplication.getInstance().getDbUtils().findAll(
+                    Selector.from(TopicItem.class).where("saved", "=", true).limit(getPageSize())
+                            .offset(current * getPageSize()).orderBy("latter",false));
+            if(items == null){
+                items = new ArrayList<>(0);
+            }
+            getAdapter().getDataSet().addAll(items);
         } catch (DbException e) {
             current--;
+            items = new ArrayList<>();
             e.printStackTrace();
         }
         if(callback!=null){
-            callback.onLoadFinish();
+            callback.onLoadFinish(items.size());
         }
     }
 

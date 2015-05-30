@@ -13,6 +13,7 @@
         <item name="actionModeBackground">?colorPrimary</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:preferenceCategoryStyle">@style/Preference.Category</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="colorAccent">#3c69ce</item>

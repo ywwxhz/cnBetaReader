@@ -78,35 +78,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private NewsDetailFragment.NewsDetailCallBack callBack;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<style>body{word-break: break-all;font-size: 11pt;}" +
-            "#title{font-size: 18pt;color: #%s;}" +
-            ".from{font-size: 10pt;padding-top: 4pt;}" +
-            "#introduce{clear: both;padding: 13pt 5pt 8pt 5pt;margin-top: 5pt;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
-            "#introduce img{padding:0;width:0;height:0}%s" +
-            "#introduce:before {color: #CCC;content: open-quote;font-size: 4em;line-height: 0.2em;margin-right: .2em;float: left;margin-top: .17em;}" +
-            "#introduce p{margin:0;line-height: 16pt}" +
-            "#introduce div{margin: 0px !important;}" +
-            ".content{padding-top:10pt;}" +
-            ".content p {text-indent: 2em;line-height: 16pt;}" +
-            "ol, ul, li {list-style: none;margin: 0;padding: 0;vertical-align: baseline;}" +
-            ".content table, .content td{border: 1px solid #000;border-collapse: collapse;border-spacing: 0;}" +
-            ".content table p {text-indent: 0;} .content object{display: block;max-width: 100%% !important;height: auto !important;}" +
-            ".content iframe{display: block;max-width: 100%% ;margin: auto;border: 0;}" +
-            ".content video{display: block; max-width:100%%; margin: auto;border: 0;background-color: #000;}" +
-            ".content embed{display: block; max-width: 100%%;}" +
-            ".content img{display: block !important;max-width: 100%% !important;height: auto !important;margin: 0 auto}a{text-decoration: none;color:#2f7cad;}" +
-            ".content blockquote{background-color:#F1F1F1;color: #444;padding: 13pt 5pt 8pt 5pt;margin: 0;quotes: \"\\201C\"\"\\201D\"\"\\2018\"\"\\2019\";}" +
-            ".content blockquote:before {color: #CCC;content: open-quote;font-size: 4em;line-height: .01em;margin-left: .1em;vertical-align: -.4em;}" +
-            ".content blockquote p{}" +
-            ".clear{clear: both;}.foot{text-align: center;padding-top:10pt;padding-bottom: 20pt;}" +
-            "</style></head>" +
-            "<body><div><div id=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div>" +
-            "<div id=\"introduce\">%s<div style=\"clear: both\"></div></div><div class=\"content\">%s</div>" +
-            "<div class=\"clear foot\">--- The End ---</div></div>" +
-            "<script>" +
-            "var enableImage=%s;var enableFlashToHtml5=%s;var image=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiB2aWV3Qm94PSIwIDAgNjAwIDM3NSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTc3LjY1NjI1IiB5PSIyMDAuNyIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij7ngrnlh7vliqDovb3lm77niYc8L3RleHQ+PC9nPjwvc3ZnPg==\";var error=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiB2aWV3Qm94PSIwIDAgNjAwIDM3NSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjE4LjQzNzUiIHk9IjIwMC43IiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQiPueCueWHu+mHjeivlTwvdGV4dD48L2c+PC9zdmc+\";var loading=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiB2aWV3Qm94PSIwIDAgNjAwIDM3NSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMjM4LjgyODEyNSIgeT0iMjAwLjciIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5Yqg6L295LitPC90ZXh0PjwvZz48L3N2Zz4=\";var flash=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiB2aWV3Qm94PSIwIDAgNjAwIDM3NSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTg3Ljc1IiB5PSIyMDAuNyIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij5GbGFzaCBWaWRlbzwvdGV4dD48L2c+PC9zdmc+\";var video_img=\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjM3NSIgdmlld0JveD0iMCAwIDYwMCAzNzUiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzYwMHgzNzUvYXV0by90ZXh0OlZpZGVvCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi41LjIuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcy8+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSIzNzUiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIyNDUuNTQ2ODc1IiB5PSIyMDAuNyIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZTozMHB0Ij5WaWRlbzwvdGV4dD48L2c+PC9zdmc+\";var no_support=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiB2aWV3Qm94PSIwIDAgNjAwIDM3NSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTM2Ljg3NSIgeT0iMjAwLjciIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5bCa5pyq5pSv5oyB6K+l6KeG6aKR5rqQPC90ZXh0PjwvZz48L3N2Zz4=\";(function(){var b=document.querySelectorAll(\".content a>img\");for(var j=0;j<b.length;j++){var k=b[j];var n=k.parentNode;var e=n.parentNode;e.replaceChild(k,n)}imgs=document.querySelectorAll(\".content img\");imageSrcs=[];for(var j=0;j<imgs.length;j++){var k=imgs[j];imageSrcs[j]=k.src;k.setAttribute(\"dest-src\",k.src);k.setAttribute(\"pos\",j);if(enableImage){loadImage(k)}else{k.removeAttribute(\"src\");k.setAttribute(\"src\",image);k.onclick=function(){loadImage(this)}}}var l=document.querySelectorAll(\"iframe\");for(var j=0;j<l.length;j++){var g=l[j];fixWidthAndHight(g,d)}var f=document.querySelectorAll(\"video\");for(var j=0;j<f.length;j++){var d=f[j];fixWidthAndHight(d,d);d.poster=video_img}var c=document.querySelectorAll(\"embed\");for(var j=0;j<c.length;j++){var m=c[j];if(m.type==\"application/x-shockwave-flash\"){var h=new Image();h.setAttribute(\"src\",flash);h.setAttribute(\"id\",\"video_\"+j);h.setAttribute(\"video-src\",m.src);h.setAttribute(\"video-params\",m.flashvars); if(enableFlashToHtml5)h.onclick=function(){o(this)};m.parentNode.replaceChild(h,m)}else{m.height=m.offsetWidth*10/16}}function o(u){u.setAttribute(\"src\",loading);var i=u.getAttribute(\"video-src\");var q=i.match(/.*sohu.*id=(\\d+).*/);if(q){var p=\"http://api.tv.sohu.com/v4/video/info/\"+q[1]+\".json?site=2&api_key=9854b2afa779e1a6bff1962447a09dbd\";window.Interface.loadSohuVideo(u.id,p);return}var s=i.match(/.*tudou.*\\/v\\/(\\S+)?\\/&.*/);if(s){var r=document.createElement(\"iframe\");r.src=\"http://www.tudou.com/programs/view/html5embed.action?code=\"+s[1];fixWidthAndHight(r,u);u.parentNode.replaceChild(r,u);return}var t=i.match(/.*youku.*\\/sid\\/(\\S+)?\\/v.*/);if(t){var r=document.createElement(\"iframe\");r.src=\"http://player.youku.com/embed/\"+t[1];fixWidthAndHight(r,u);u.parentNode.replaceChild(r,u);return}var a=i.match(/.*qq.*vid=(\\S+)?&?/);if(a){var r=document.createElement(\"iframe\");r.src=\"http://v.qq.com/iframe/player.html?vid=\"+a[1];+\"&amp;width=\"+u.offsetWidth+\"&amp;height=\"+u.offsetWidth*10/16+\"&amp;auto=0\";fixWidthAndHight(r,u);u.parentNode.replaceChild(r,u);return}u.setAttribute(\"src\",no_support);window.Interface.showMessage(\"尚未支持 \"+getUrlDomain(i)+\" 视频源\",\"info\")}})();function VideoCallBack(c,b,e){var d=document.getElementById(c);if(d){var a=document.createElement(\"video\");a.src=b;a.poster=e;fixWidthAndHight(a,d);a.controls=\"controls\";d.parentNode.replaceChild(a,d)}else{console.log(\"Illagel viewid\")}}function fixWidthAndHight(b,a){b.width=a.offsetWidth+\"\";b.height=a.offsetWidth*10/16+\"\"}function showAllImage(){for(var a=0;a<imgs.length;a++){loadImage(imgs[a])}}function loadImage(a){var b=new Image();a.setAttribute(\"src\",loading);b.src=a.getAttribute(\"dest-src\");b.onload=function(){a.setAttribute(\"src\",a.getAttribute(\"dest-src\"));a.onclick=function(){openImage(this)}};b.onerror=function(){a.setAttribute(\"src\",error);a.onclick=function(){loadImage(this)}}}function openImage(a){console.log(a.getAttribute(\"pos\"));window.Interface.showImage(a.getAttribute(\"pos\"),imageSrcs);return false}function setNight(a){if(a){document.body.style.backgroundColor=\"#202733\";document.body.style.color=\"#9bafcb\";document.getElementById(\"introduce\").style.backgroundColor=\"#262f3d\";document.getElementById(\"introduce\").style.color=\"#616d80\"}else{document.body.style.backgroundColor=\"#FFF\";document.body.style.color=\"#000\";document.getElementById(\"introduce\").style.backgroundColor=\"#F1F1F1\";document.getElementById(\"introduce\").style.color=\"#444\"}};function getUrlDomain(url){var tmp = url.split('/');if(tmp!=null && tmp[0].indexOf('http')!=-1){return tmp[2];}else{return \"unknow\";}}" +
-            "</script></body></html>";
-    private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}";
+            "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style></head>" +
+            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div class=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
+            "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};" +
+            "</script><script src=\"file:///android_asset/loder.js\"></script></body></html>";
+    private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
     private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
     private Handler myHandler;
     private WebSettings settings;
@@ -197,6 +173,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 fromDB = false;
                 this.mNewsItem = new NewsItem(sid, title);
             } else {
+                mNewsItem.setTitle(title);
                 fromDB = true;
             }
         } catch (DbException e) {
@@ -208,11 +185,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
     @Override
     public void loadData(boolean startup) {
+        String title = mNewsItem.getTitle();
+        boolean canLoadCache = !title.contains("直播")||title.contains("已完结");
         NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
-        if (mNews == null) {
+        if (mNews == null||!canLoadCache) {
             makeRequest();
         } else {
             hascontent = true;
+            mNews.setTitle(title);
             mNewsItem = mNews;
             blindData(mNews);
         }
@@ -255,7 +235,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     @Override
-    public void onLoadFinish() {
+    public void onLoadFinish(int size) {
 
     }
 
@@ -282,9 +262,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         } else {
             add = light;
         }
-        String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()), add, mNews.getTitle(), mNews.getFrom(), mNews.getInputtime()
-                , mNews.getHometext(), mNews.getContent(), showImage, convertFlashToHtml5);
-        mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
+        String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
+                add,mNewsItem.getTitle(),mNewsItem.getFrom(),mNewsItem.getInputtime(),mNewsItem.getHometext(),mNewsItem.getContent(), showImage, convertFlashToHtml5);
+        mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
         mActionButtom.postDelayed(new Runnable() {
             @Override
@@ -296,6 +276,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         mProgressBar.setVisibility(View.GONE);
         if (callBack != null) {
             callBack.onNewsLoadFinish(mNewsItem, true);
+        }
+        if(fromDB){
+            try {
+                MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
+            } catch (DbException ignored) {
+            }
         }
     }
 
@@ -339,11 +325,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     private void showAllImage() {
-        mWebView.loadUrl("javascript:showAllImage()");
+        mWebView.loadUrl("javascript:Loader.showAllImage()");
     }
 
     private void nightMode() {
-        mWebView.loadUrl("javascript:setNight(true)");
+        mWebView.loadUrl("javascript:Loader.setNight(true)");
     }
 
     public void setCallBack(NewsDetailFragment.NewsDetailCallBack callBack) {
@@ -405,10 +391,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                     MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
                     message = "收藏成功";
                     item.setTitle("取消收藏");
+                    fromDB = true;
                 } else {
                     MyApplication.getInstance().getDbUtils().deleteById(NewsItem.class, mNewsItem.getSid());
                     message = "取消收藏成功";
                     item.setTitle("收藏");
+                    fromDB = false;
                 }
                 style = CroutonStyle.INFO;
             } catch (DbException e) {
@@ -462,7 +450,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
-                                mWebView.loadUrl("javascript:VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
+                                mWebView.loadUrl("javascript:Loader.VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
                             } catch (Exception e) {
                                 Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
                             }
@@ -566,14 +554,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             orientation = mActivity.getResources().getConfiguration().orientation;
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             mActivity.getSupportActionBar().hide();
-            ViewGroup parent = (ViewGroup) mWebView.getParent();
-            mWebView.setVisibility(View.GONE);
-            if (callBack != null) {
-                callBack.onShowVideo(true);
-            }
-            mActionButtom.setVisibility(View.GONE);
-            parent.addView(view);
             view.setBackgroundColor(Color.BLACK);
+            onShowHtmlVideoView(view);
             myView = view;
             myCallback = customViewCallback;
         }
@@ -590,16 +572,35 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 mActivity.setRequestedOrientation(orientation);
                 mActivity.setRequestedOrientation(requiredOrientation);
                 mActivity.getSupportActionBar().show();
-                ViewGroup parent = (ViewGroup) mWebView.getParent();
-                parent.removeView(myView);
-                mWebView.setVisibility(View.VISIBLE);
-                mActionButtom.setVisibility(View.VISIBLE);
-                if (callBack != null) {
-                    callBack.onShowVideo(false);
-                }
+                onHideHtmlVideoView(myView);
                 myView = null;
             }
         }
+    }
+
+    private void onShowHtmlVideoView(View html5VideoView){
+
+        if (callBack != null) {
+            callBack.onVideoFullScreen(true);
+            callBack.onShowHtmlVideoView(html5VideoView);
+        }else{
+            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
+            parent.addView(html5VideoView);
+        }
+        mWebView.setVisibility(View.GONE);
+        mActionButtom.setVisibility(View.GONE);
+    }
+
+    private void onHideHtmlVideoView(View html5VideoView){
+        if (callBack != null) {
+            callBack.onVideoFullScreen(false);
+            callBack.onHideHtmlVideoView(html5VideoView);
+        }else{
+            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
+            parent.removeView(html5VideoView);
+        }
+        mWebView.setVisibility(View.VISIBLE);
+        mActionButtom.setVisibility(View.VISIBLE);
     }
 
 }

@@ -29,6 +29,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:visibility="gone"
+        app:barColor="?titleColor"
         app:barWidth="2dp"
         app:rimWidth="2dp" />
 

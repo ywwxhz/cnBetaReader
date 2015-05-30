@@ -104,9 +104,9 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
     }
 
     @Override
-    public void onLoadFinish() {
+    public void onLoadFinish(int size) {
         provider.getAdapter().notifyDataSetChanged();
-        if (provider.getAdapter().getCount() < provider.getPageSize()) {
+        if (provider.getAdapter().getCount()<provider.getPageSize()||size==0) {
             mLoader.setFinally();
         } else {
             mLoader.setLoading(false);

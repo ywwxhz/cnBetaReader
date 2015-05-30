@@ -45,8 +45,8 @@ public class SubscribedProcesser extends BaseListProcesser<TopicItem,TopicScribe
     }
 
     @Override
-    public void onLoadFinish() {
-        super.onLoadFinish();
+    public void onLoadFinish(int size) {
+        super.onLoadFinish(size);
         if (getProvider().getAdapter().getCount() > 0) {
             message.setVisibility(View.GONE);
         } else {

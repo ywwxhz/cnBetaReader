@@ -92,10 +92,9 @@ android {
         if ('build' in runTasks) {
             vercode++
             versionProps['VERSION_CODE'] = vercode.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
         }
-        versionProps['BUILD_TIME'] = new Date().format("yyyyMMddHHmmss")
-        buildDate = " Build " + versionProps['BUILD_TIME']
-        versionProps.store(versionPropsFile.newWriter(), null)
+        buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
 
         defaultConfig {
             versionCode vercode
@@ -140,7 +139,9 @@ dependencies {
     compile files('libs/gson-2.2.4.jar')
     compile project(':FloatingActionButton')
     compile project(':materialish-progress')
-    compile project(':PhotoView')
+    //compile project(':PhotoView')
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.0.12'
+    compile project(':SubSamplingScaleImageView')
     compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.loopj.android:android-async-http:1.4.6'

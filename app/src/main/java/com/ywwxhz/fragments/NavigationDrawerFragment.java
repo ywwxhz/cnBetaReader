@@ -206,6 +206,14 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    public void openDrawer() {
+        mDrawerLayout.openDrawer(mFragmentContainerView);
+    }
+
+    public void closeDrawer(){
+        mDrawerLayout.closeDrawer(mFragmentContainerView);
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -249,6 +257,10 @@ public class NavigationDrawerFragment extends Fragment {
 
     private ActionBar getActionBar() {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
+    }
+
+    public void onBackPassed() {
+        selectItem(1);
     }
 
     /**

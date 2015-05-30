@@ -33,7 +33,9 @@ public class NewsDetailFragment extends Fragment {
     public interface NewsDetailCallBack{
         void onNewsLoadFinish(NewsItem item,boolean success);
         void CommentAction(int sid,String sn,String title);
-        void onShowVideo(boolean showVideo);
+        void onVideoFullScreen(boolean isFullScreen);
+        void onShowHtmlVideoView(View html5VideoView);
+        void onHideHtmlVideoView(View html5VideoView);
     }
 
     public static NewsDetailFragment getInstance(int sid,String title){
@@ -89,7 +91,7 @@ public class NewsDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return processer.onOptionsItemSelected(item)||super.onOptionsItemSelected(item);
+        return processer.onOptionsItemSelected(item);
     }
 
     @Override

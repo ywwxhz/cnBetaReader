@@ -47,7 +47,14 @@ public class MainActivity extends BaseToolBarActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){
-            if(System.currentTimeMillis()- lastpress < 1000) {
+            if(mNavigationDrawerFragment.isDrawerOpen()){
+                mNavigationDrawerFragment.closeDrawer();
+                return true;
+            }else if(current != 0){
+                mNavigationDrawerFragment.onBackPassed();
+                return true;
+            }
+            if(System.currentTimeMillis() - lastpress < 1000) {
                 this.finish();
             }else {
                 lastpress = System.currentTimeMillis();

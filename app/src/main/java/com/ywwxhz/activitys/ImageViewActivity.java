@@ -2,21 +2,23 @@ package com.ywwxhz.activitys;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,26 +28,30 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.FileKit;
-import com.ywwxhz.lib.kits.NetKit;
+import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
+import com.ywwxhz.lib.kits.UIKit;
 import com.ywwxhz.widget.FixViewPager;
 import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import uk.co.senab.photoview.PhotoView;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 
 /**
  * cnBetaReader
- * <p/>
+ * <p>
  * Created by 远望の无限(ywwxhz) on 14-4-15 17:51.
  */
 public class ImageViewActivity extends FragmentActivity implements ViewPager.OnPageChangeListener {
@@ -60,13 +66,16 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
     private List<ImageItem> imageItems;
     private int screenHeight;
     private int screenWidth;
-    private Canvas canvas = new Canvas();
+    private boolean debug;
+    private boolean preload_image;
 
     public void onCreate(Bundle savedInstanceState) {
         ThemeManger.onActivityCreateSetTheme(this);
         getWindow().setBackgroundDrawableResource(R.color.gray_80);
         super.onCreate(savedInstanceState);
         if (getIntent().getExtras().containsKey(IMAGE_URLS) && getIntent().getExtras().containsKey(CURRENT_POS)) {
+            debug = MyApplication.getInstance().getDebug();
+            preload_image = PrefKit.getBoolean(this,R.string.pref_preload_image_key,true);
             screenHeight = getResources().getDisplayMetrics().heightPixels;
             screenWidth = getResources().getDisplayMetrics().widthPixels;
             this.imageSrcs = getIntent().getStringArrayExtra(IMAGE_URLS);
@@ -92,15 +101,37 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
         this.pager = (FixViewPager) findViewById(R.id.pager);
         attachMenu(filtermenu);
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true)
-                .imageScaleType(ImageScaleType.NONE_SAFE)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .considerExifParams(true).build();
         views = new ArrayList<>(imageSrcs.length);
         imageItems = new ArrayList<>(imageSrcs.length);
+        int width = UIKit.dip2px(this, 4);
+        int progressWidth = UIKit.dip2px(this, 80);
         for (String imageSrc : imageSrcs) {
-            View view = LayoutInflater.from(this).inflate(R.layout.image_item, pager, false);
-            PhotoView pv = (PhotoView) view.findViewById(R.id.photoView);
-            ProgressWheel progress = (ProgressWheel) view.findViewById(R.id.progressWheel);
-            imageItems.add(new ImageItem(imageSrc, pv, progress, options));
+            FrameLayout view = new FrameLayout(this);
+            //View view = LayoutInflater.from(this).inflate(R.layout.image_item, pager, false);
+            View imageView;
+            FrameLayout.LayoutParams pvparams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            if (!imageSrc.endsWith(".gif")) {
+                imageView = new SubsamplingScaleImageView(this);
+                ((SubsamplingScaleImageView)imageView).setDebug(debug);
+                ((SubsamplingScaleImageView)imageView).setMinimumDpi(50);
+            } else {
+                imageView = new GifImageView(this);
+            }
+            imageView.setLayoutParams(pvparams);
+            view.addView(imageView);
+            ProgressWheel progress = new ProgressWheel(this);
+            progress.setRimWidth(width);
+            progress.setBarWidth(width);
+            progress.setBarColor(Color.parseColor("#fff0f4e2"));
+            progress.setRimColor(Color.parseColor("#44000000"));
+            FrameLayout.LayoutParams pgparams = new FrameLayout.LayoutParams(progressWidth, progressWidth);
+            pgparams.gravity = Gravity.CENTER;
+            progress.setLayoutParams(pgparams);
+            progress.spin();
+            view.addView(progress);
+            imageItems.add(new ImageItem(imageSrc, imageView, progress, options));
             views.add(view);
         }
         PagerAdapter mPagerAdapter = new PagerAdapter() {
@@ -205,7 +236,6 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
 
     @Override
     protected void onDestroy() {
-        NetKit.getInstance().getClient().cancelAllRequests(true);
         Crouton.clearCroutonsForActivity(this);
         super.onDestroy();
     }
@@ -231,14 +261,14 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
         public final int SHOWSUCCESS = 3;
         public final int SHOWFAILURE = 4;
         private String imageSrc;
-        private PhotoView photoView;
+        private View imageview;
         private ProgressWheel progress;
         private DisplayImageOptions options;
         private int showStatus = NOTSHOW;
 
-        public ImageItem(String imageSrc, PhotoView photoView, ProgressWheel progress, DisplayImageOptions options) {
+        public ImageItem(String imageSrc, View imageview, ProgressWheel progress, DisplayImageOptions options) {
             this.imageSrc = imageSrc;
-            this.photoView = photoView;
+            this.imageview = imageview;
             this.progress = progress;
             this.options = options;
             this.showStatus = NOTSHOW;
@@ -246,7 +276,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
 
         public void displayImage() {
             if (showStatus == NOTSHOW || showStatus == SHOWFAILURE) {
-                ImageLoader.getInstance().displayImage(imageSrc, photoView, options, new SimpleImageLoadingListener() {
+                ImageLoader.getInstance().loadImage(imageSrc, null, options, new SimpleImageLoadingListener() {
 
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
@@ -260,21 +290,25 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         progress.setVisibility(View.GONE);
-                        int width = loadedImage.getWidth();
-                        int height = loadedImage.getHeight();
-                        if (height > 2 * width) {
-                            photoView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        File imageFile = ImageLoader.getInstance().getDiskCache().get(imageUri);
+                        if (imageFile != null) {
+                            if (imageview instanceof SubsamplingScaleImageView) {
+                                if (loadedImage.getWidth() * 1.5 < loadedImage.getHeight()) {
+                                    ((SubsamplingScaleImageView) imageview).setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+                                }
+                                ((SubsamplingScaleImageView) imageview).setImage(ImageSource.uri(Uri.fromFile(imageFile)));
+                            } else {
+                                try {
+                                    GifDrawable g = new GifDrawable(imageFile);
+                                    ((GifImageView)imageview).setImageDrawable(g);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            showStatus = SHOWSUCCESS;
                         } else {
-                            photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            showStatus = SHOWFAILURE;
                         }
-
-                        if(height> canvas.getMaximumBitmapHeight()||width>canvas.getMaximumBitmapWidth()){
-                            photoView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-                            Toast.makeText(ImageViewActivity.this,"图片过大，使用软件渲染。",Toast.LENGTH_SHORT).show();
-                        }else{
-                            photoView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-                        }
-                        showStatus = SHOWSUCCESS;
                     }
 
                     @Override
@@ -293,12 +327,14 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
     }
 
     private void loadAndShowPos(int pos) {
-        if (pos > 1) {
-            imageItems.get(pos - 1).displayImage();
-        }
         imageItems.get(pos).displayImage();
-        if (pos < imageItems.size() - 2) {
-            imageItems.get(pos + 1).displayImage();
+        if(preload_image) {
+            if (pos > 1) {
+                imageItems.get(pos - 1).displayImage();
+            }
+            if (pos < imageItems.size() - 2) {
+                imageItems.get(pos + 1).displayImage();
+            }
         }
         imagenum.setText(String.format(Locale.CHINA, imageNumFormate, pos + 1, imageSrcs.length));
     }

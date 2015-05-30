@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.ResponseHandlerInterface;
-import com.ywwxhz.activitys.ExtNewsDetailActivity;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.cnbetareader.R;
@@ -20,7 +19,6 @@ import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
-import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
 import java.util.ArrayList;
@@ -100,7 +98,7 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         @Override
         public void onFinish() {
             if(callback!=null){
-                callback.onLoadFinish();
+                callback.onLoadFinish(40);
             }
         }
     };
@@ -134,12 +132,7 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent;
-                if(PrefKit.getBoolean(getActivity(), R.string.pref_new_detail_key, true)) {
-                    intent = new Intent(getActivity(), ExtNewsDetailActivity.class);
-                }else{
-                    intent = new Intent(getActivity(), NewsDetailActivity.class);
-                }
+                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 NewsItem item = getAdapter().getDataSetItem(i - 1);
                 intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, item.getSid());
                 intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,item.getTitle());

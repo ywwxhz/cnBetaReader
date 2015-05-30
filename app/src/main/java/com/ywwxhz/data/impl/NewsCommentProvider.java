@@ -70,7 +70,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
 
         @Override
         public void onFinish() {
-            if(callback!=null)callback.onLoadFinish();
+            if(callback!=null)callback.onLoadFinish(1);
         }
     };
 

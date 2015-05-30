@@ -6,17 +6,15 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.ywwxhz.MyApplication;
-import com.ywwxhz.activitys.ExtNewsDetailActivity;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.FavoriteListAdapter;
-import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.database.sqlite.Selector;
-import com.ywwxhz.lib.kits.PrefKit;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * cnBetaReader
@@ -49,35 +47,40 @@ public class FavoriteNewsListDataProvider extends BaseNewsListDataProvider<Favor
 
     @Override
     public void loadNewData() {
+        List<NewsItem> items;
         int old = current;
         try {
             current = 0;
-            getAdapter().setDataSet(MyApplication.getInstance().getDbUtils().<NewsItem>findAll(
-                            Selector.from(NewsItem.class).limit(getPageSize()).offset(current * getPageSize()).orderBy("sid",true))
-            );
+            items = MyApplication.getInstance().getDbUtils().findAll(
+                    Selector.from(NewsItem.class).limit(getPageSize()).offset(0).orderBy("sid", true));
+            if(items == null){
+                items = new ArrayList<>(0);
+            }
+            getAdapter().setDataSet(items);
         } catch (DbException e) {
             current = old;
-            e.printStackTrace();
+            items = new ArrayList<>();
         }
         if(callback!=null){
-            callback.onLoadFinish();
+            callback.onLoadFinish(items.size());
         }
     }
 
     @Override
     public void loadNextData() {
+        List<NewsItem> items;
         try {
             current++;
-            getAdapter().getDataSet()
-                    .addAll(MyApplication.getInstance().getDbUtils().<NewsItem>findAll(
-                                    Selector.from(NewsItem.class).limit(getPageSize()).offset(current * getPageSize()).orderBy("sid",true))
-                    );
+            items =MyApplication.getInstance().getDbUtils().<NewsItem>findAll(
+                    Selector.from(NewsItem.class).limit(getPageSize()).offset(current * getPageSize()).orderBy("sid",true));
+            getAdapter().getDataSet().addAll(items);
         } catch (DbException e) {
             current--;
+            items = new ArrayList<>();
             e.printStackTrace();
         }
         if(callback!=null){
-            callback.onLoadFinish();
+            callback.onLoadFinish(items.size());
         }
     }
 
@@ -86,12 +89,7 @@ public class FavoriteNewsListDataProvider extends BaseNewsListDataProvider<Favor
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent;
-                if(PrefKit.getBoolean(getActivity(), R.string.pref_new_detail_key,true)) {
-                    intent = new Intent(getActivity(), ExtNewsDetailActivity.class);
-                }else{
-                    intent = new Intent(getActivity(), NewsDetailActivity.class);
-                }
+                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 NewsItem item = getAdapter().getDataSetItem(i - 1);
                 intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, item.getSid());
                 intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,item.getTitle());

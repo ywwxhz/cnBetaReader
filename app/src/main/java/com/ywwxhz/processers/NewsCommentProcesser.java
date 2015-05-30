@@ -71,8 +71,8 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
     }
 
     @Override
-    public void onLoadFinish() {
-        super.onLoadFinish();
+    public void onLoadFinish(int size) {
+        super.onLoadFinish(size);
         if(getProvider().getAdapter().getCount()!=0){
             getLoader().setFinally();
             getActivity().invalidateOptionsMenu();
@@ -97,6 +97,7 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
             CommentListAdapter adapter = getProvider().getAdapter();
             adapter.setReverse(!adapter.isReverse());
             adapter.notifyDataSetChanged();
+            return true;
         }else if(item.getItemId() == R.id.menu_hot_comment){
             CommentListAdapter adapter = getProvider().getAdapter();
             adapter.setShowHot(!adapter.isShowHot());
@@ -114,6 +115,7 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
                 item.setIcon(R.drawable.ic_hot_comment);
             }
             adapter.notifyDataSetChanged();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

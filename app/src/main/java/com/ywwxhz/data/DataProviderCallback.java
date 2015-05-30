@@ -8,6 +8,6 @@ package com.ywwxhz.data;
 public interface DataProviderCallback<T> {
     void onLoadStart();
     void onLoadSuccess(T object);
-    void onLoadFinish();
+    void onLoadFinish(int size);
     void onLoadFailure();
 }

@@ -38,10 +38,12 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     private boolean showImage;
     private DisplayImageOptions optionsLarge;
     private DisplayImageOptions optionsSmall;
+    private NightBitmapProcessor bitmapProcessor;
     private AnimateFirstDisplayListener listener = new AnimateFirstDisplayListener();
 
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
+        bitmapProcessor = new NightBitmapProcessor();
         showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
         showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true);
         optionsLarge = new DisplayImageOptions.Builder()
@@ -49,23 +51,16 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
                 .cacheOnDisk(true)
                 .showImageOnLoading(R.drawable.imagehoder)
                 .showImageOnFail(R.drawable.imagehoder_error)
-                .postProcessor(new NightBitmapProcessor())
+                .preProcessor(bitmapProcessor)
                 .displayer(new SimpleBitmapDisplayer()).build();
         optionsSmall = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .showImageOnLoading(R.drawable.imagehoder_sm)
                 .showImageOnFail(R.drawable.imagehoder_error_sm)
-                .postProcessor(new NightBitmapProcessor())
+                .preProcessor(bitmapProcessor)
                 .displayer(new SimpleBitmapDisplayer()).build();
-        if(ThemeManger.isNightTheme(context)){
-            ((NightBitmapProcessor)optionsLarge.getPostProcessor()).setEnable(true);
-            ((NightBitmapProcessor)optionsSmall.getPostProcessor()).setEnable(true);
-        }else{
-            ((NightBitmapProcessor)optionsLarge.getPostProcessor()).setEnable(false);
-            ((NightBitmapProcessor)optionsSmall.getPostProcessor()).setEnable(false);
-        }
-
+        bitmapProcessor.setEnable(ThemeManger.isNightTheme(context));
     }
 
     @Override
@@ -84,13 +79,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
         if(changeConfig){
             showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
             showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true);
-            if(ThemeManger.isNightTheme(context)){
-                ((NightBitmapProcessor)optionsLarge.getPostProcessor()).setEnable(true);
-                ((NightBitmapProcessor)optionsSmall.getPostProcessor()).setEnable(true);
-            }else{
-                ((NightBitmapProcessor)optionsLarge.getPostProcessor()).setEnable(false);
-                ((NightBitmapProcessor)optionsSmall.getPostProcessor()).setEnable(false);
-            }
+            bitmapProcessor.setEnable(ThemeManger.isNightTheme(context));
         }
         super.notifyDataSetChanged();
     }

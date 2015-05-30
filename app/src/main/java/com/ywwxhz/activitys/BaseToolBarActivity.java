@@ -87,8 +87,8 @@ public abstract class BaseToolBarActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        Crouton.clearCroutonsForActivity(this);
         super.onDestroy();
+        Crouton.clearCroutonsForActivity(this);
     }
 
     protected int getBasicContentLayout() {
