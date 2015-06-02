@@ -6,11 +6,17 @@ This is the third-party of cnbeta reader client for Android 4.0+
 
  - Screenshots
 
-    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215315.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215358.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215406.png" alt="screenshot" title="screenshot" height="500" />
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-164433.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-164447.png" alt="screenshot" title="screenshot" height="500" />
 
-    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215440.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215452.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215341.png" alt="screenshot" title="screenshot" height="500" />
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-164656.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-164708.png" alt="screenshot" title="screenshot" height="500" />
 
-    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215509.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215547.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-03-26-215528.png" alt="screenshot" title="screenshot" height="500" />
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-165338.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-165357.png" alt="screenshot" title="screenshot" height="500" />
+
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-165413.png" alt="screenshot" title="screenshot" height="500" /><img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-165421.png" alt="screenshot" title="screenshot" height="500" />
+
+    <img src="https://git.oschina.net/ywwxhz/cnBeta-reader/raw/master/screenshots/device-2015-06-02-165448.png" alt="screenshot" title="screenshot" height="500" />
+
+
 
 ## Pre-requisites
 
