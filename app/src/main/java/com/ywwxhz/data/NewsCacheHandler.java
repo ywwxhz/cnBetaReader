@@ -188,7 +188,7 @@ public class NewsCacheHandler extends Handler {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, String responseString) {
                             successCount++;
-                            NewsDetailProvider.handleResponceString(item, responseString,cacheImage);
+                            NewsDetailProvider.handleResponceString(item, responseString,true,cacheImage);
                         }
 
                         @Override

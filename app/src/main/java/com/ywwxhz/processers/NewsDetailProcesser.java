@@ -86,6 +86,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
     private Handler myHandler;
     private WebSettings settings;
+    private boolean shouldLoadCache;
 
     public NewsDetailProcesser(NewsDetailProvider provider) {
         super(provider);
@@ -186,9 +187,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     @Override
     public void loadData(boolean startup) {
         String title = mNewsItem.getTitle();
-        boolean canLoadCache = !title.contains("直播")||title.contains("已完结");
+        shouldLoadCache = !title.contains("直播")||title.contains("已完结");
         NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
-        if (mNews == null||!canLoadCache) {
+        if (mNews == null||!shouldLoadCache) {
             makeRequest();
         } else {
             hascontent = true;
@@ -215,7 +216,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             new AsyncTask<String, String, Boolean>() {
                 @Override
                 protected Boolean doInBackground(String... strings) {
-                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem, strings[0]);
+                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem, strings[0],shouldLoadCache);
                     return hascontent;
                 }
 

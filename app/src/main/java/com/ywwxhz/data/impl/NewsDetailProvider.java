@@ -65,11 +65,11 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         NetKit.getInstance().getNewsBySid(sid,handler);
     }
 
-    public static boolean handleResponceString(NewsItem item,String resp){
-        return handleResponceString(item, resp,false);
+    public static boolean handleResponceString(NewsItem item,String resp,boolean shouldCache){
+        return handleResponceString(item, resp,shouldCache,false);
     }
 
-    public static boolean handleResponceString(NewsItem item,String resp,boolean cacheImage){
+    public static boolean handleResponceString(NewsItem item,String resp,boolean shouldCache,boolean cacheImage){
         Document doc = Jsoup.parse(resp);
         Elements newsHeadlines = doc.select(".body");
         item.setFrom(newsHeadlines.select(".where").html());
@@ -92,7 +92,9 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         if (snMatcher.find())
             item.setSN(snMatcher.group(1));
         if(item.getContent()!=null&&item.getContent().length()>0){
-            FileCacheKit.getInstance().put(item.getSid() + "", Toolkit.getGson().toJson(item));
+            if(shouldCache) {
+                FileCacheKit.getInstance().put(item.getSid() + "", Toolkit.getGson().toJson(item));
+            }
             return true;
         }else{
             return false;
