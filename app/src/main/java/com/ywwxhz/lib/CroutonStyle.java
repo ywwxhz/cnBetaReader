@@ -13,11 +13,11 @@ public class CroutonStyle {
     public static Style INFO;
     public static Style CONFIRM;
     public static void buildStyleInfo(int color){
-        INFO = new Style.Builder(Style.INFO).setBackgroundColorValue(color&0xD0FFFFFF).build();
+        INFO = new Style.Builder(Style.INFO).setBackgroundColorValue(color&0xA0FFFFFF).build();
         styleMap.put("info",INFO);
     }
     public static void buildStyleConfirm(int color){
-        CONFIRM = new Style.Builder(Style.CONFIRM).setBackgroundColorValue(color&0xD0FFFFFF).build();
+        CONFIRM = new Style.Builder(Style.CONFIRM).setBackgroundColorValue(color&0xA0FFFFFF).build();
         styleMap.put("info",CONFIRM);
     }
     private static HashMap<String,Style> styleMap = new HashMap<>(3);
