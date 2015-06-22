@@ -3,6 +3,7 @@ package com.ywwxhz.activitys;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -51,7 +52,7 @@ import pl.droidsonroids.gif.GifImageView;
 
 /**
  * cnBetaReader
- * <p>
+ * <p/>
  * Created by 远望の无限(ywwxhz) on 14-4-15 17:51.
  */
 public class ImageViewActivity extends FragmentActivity implements ViewPager.OnPageChangeListener {
@@ -75,7 +76,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
         super.onCreate(savedInstanceState);
         if (getIntent().getExtras().containsKey(IMAGE_URLS) && getIntent().getExtras().containsKey(CURRENT_POS)) {
             debug = MyApplication.getInstance().getDebug();
-            preload_image = PrefKit.getBoolean(this,R.string.pref_preload_image_key,true);
+            preload_image = PrefKit.getBoolean(this, R.string.pref_preload_image_key, true);
             screenHeight = getResources().getDisplayMetrics().heightPixels;
             screenWidth = getResources().getDisplayMetrics().widthPixels;
             this.imageSrcs = getIntent().getStringArrayExtra(IMAGE_URLS);
@@ -114,8 +115,8 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
             FrameLayout.LayoutParams pvparams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             if (!imageSrc.endsWith(".gif")) {
                 imageView = new SubsamplingScaleImageView(this);
-                ((SubsamplingScaleImageView)imageView).setDebug(debug);
-                ((SubsamplingScaleImageView)imageView).setMinimumDpi(50);
+                ((SubsamplingScaleImageView) imageView).setDebug(debug);
+                ((SubsamplingScaleImageView) imageView).setMinimumDpi(50);
             } else {
                 imageView = new GifImageView(this);
             }
@@ -186,7 +187,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
                                 Toast.makeText(ImageViewActivity.this, "图片还未下载完成", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            imageItems.get(pager.getCurrentItem()).displayImage();
+                            imageItems.get(pager.getCurrentItem()).displayImage(true);
                         }
                     }
 
@@ -274,7 +275,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
             this.showStatus = NOTSHOW;
         }
 
-        public void displayImage() {
+        public void displayImage(boolean current) {
             if (showStatus == NOTSHOW || showStatus == SHOWFAILURE) {
                 ImageLoader.getInstance().loadImage(imageSrc, null, options, new SimpleImageLoadingListener() {
 
@@ -300,7 +301,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
                             } else {
                                 try {
                                     GifDrawable g = new GifDrawable(imageFile);
-                                    ((GifImageView)imageview).setImageDrawable(g);
+                                    ((GifImageView) imageview).setImageDrawable(g);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -322,18 +323,29 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
                         progress.setProgress((float) current / total);
                     }
                 });
+            } else if (showStatus == SHOWSUCCESS) {
+                if (imageview instanceof GifImageView) {
+                    Drawable drawable = ((GifImageView) imageview).getDrawable();
+                    if (drawable instanceof GifDrawable) {
+                        if (current) {
+                            ((GifDrawable) drawable).start();
+                        } else {
+                            ((GifDrawable) drawable).stop();
+                        }
+                    }
+                }
             }
         }
     }
 
     private void loadAndShowPos(int pos) {
-        imageItems.get(pos).displayImage();
-        if(preload_image) {
-            if (pos > 1) {
-                imageItems.get(pos - 1).displayImage();
+        imageItems.get(pos).displayImage(true);
+        if (preload_image) {
+            if (pos > 0) {
+                imageItems.get(pos - 1).displayImage(false);
             }
-            if (pos < imageItems.size() - 2) {
-                imageItems.get(pos + 1).displayImage();
+            if (pos < imageItems.size() - 1) {
+                imageItems.get(pos + 1).displayImage(false);
             }
         }
         imagenum.setText(String.format(Locale.CHINA, imageNumFormate, pos + 1, imageSrcs.length));
