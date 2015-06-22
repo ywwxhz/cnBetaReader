@@ -36,7 +36,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/4/4 20:44.
  */
-public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentListAdapter>{
+public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentListAdapter> {
     private int sid;
     private String sn;
     private String token;
@@ -55,6 +55,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
         protected Activity getActivity() {
             return NewsCommentProvider.this.getActivity();
         }
+
         @Override
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             if (!callOnFailure(false, false)) {
@@ -70,7 +71,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
 
         @Override
         public void onFinish() {
-            if(callback!=null)callback.onLoadFinish(1);
+            if (callback != null) callback.onLoadFinish(1);
         }
     };
 
@@ -80,7 +81,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
 
     @Override
     protected CommentListAdapter newAdapter() {
-        return new CommentListAdapter(getActivity(),new ArrayList<CommentItem>(20));
+        return new CommentListAdapter(getActivity(), new ArrayList<CommentItem>(20));
     }
 
     @Override
@@ -108,7 +109,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
         return new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ClipboardManager clipboardManager = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(ClipData.newPlainText(null, getAdapter().getDataSetItem(position - 1).getComment()));
                 Toast.makeText(getActivity(), "评论已复制到剪贴板", Toast.LENGTH_SHORT).show();
                 return true;
@@ -159,9 +160,12 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
                 sb.append(parent.getName());
                 sb.append(": [");
                 sb.append(parent.getHost_name());
-                sb.append("] ");
+                sb.append("] <br/>");
                 sb.append(parent.getComment());
                 parent = cmntstore.get(parent.getPid());
+                if (parent != null) {
+                    sb.append("<br/>");
+                }
             }
             item.setRefContent(sb.toString());
         }
@@ -175,9 +179,12 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
                 sb.append(parent.getName());
                 sb.append(": [");
                 sb.append(parent.getHost_name());
-                sb.append("] ");
+                sb.append("] <br/>");
                 sb.append(parent.getComment());
                 parent = cmntstore.get(parent.getPid());
+                if (parent != null) {
+                    sb.append("<br/>");
+                }
             }
             item.setRefContent(sb.toString());
         }
@@ -195,7 +202,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem,CommentLis
                 }, 200);
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
                 Toolkit.showCrouton(getActivity(), R.string.message_flush_success, CroutonStyle.INFO);
-            }else{
+            } else {
                 this.getAdapter().setEnable(false);
             }
         } else if (commentListObject.getOpen() == 0) { //针对关平的新闻评论
