@@ -17,8 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.AbsListView;
 import android.widget.ImageButton;
 
@@ -47,7 +48,8 @@ public class FloatingActionButton extends ImageButton {
 
     private boolean mMarginsSet;
 
-    private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
+    private final Interpolator mShowInterpolator = new AnticipateInterpolator ();
+    private final Interpolator mHideInterpolator = new OvershootInterpolator ();
 
     public FloatingActionButton(Context context) {
         this(context, null);
@@ -306,13 +308,17 @@ public class FloatingActionButton extends ImageButton {
                     return;
                 }
             }
-            int translationY = visible ? 0 : height + getMarginBottom();
+            //int translationY = visible ? 0 : height + getMarginBottom();
+            long scale = visible?1:0;
             if (animate) {
-                this.animate().setInterpolator(mInterpolator)
+                this.animate().setInterpolator(visible?mHideInterpolator:mShowInterpolator)
                     .setDuration(TRANSLATE_DURATION_MILLIS)
-                    .translationY(translationY);
+                    .scaleX(scale).scaleY(scale);
+                    //.translationY(translationY);
             } else {
-                this.setTranslationY(translationY);
+                //this.setTranslationY(translationY);
+                this.setScaleX(scale);
+                this.setScaleY(scale);
             }
 
             // On pre-Honeycomb a translated view is still clickable, so we need to disable clicks manually
@@ -388,7 +394,7 @@ public class FloatingActionButton extends ImageButton {
 
         @Override
         void onScrollIdle() {
-            show();
+            //show();
         }
 
         @Override
