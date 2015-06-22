@@ -611,12 +611,12 @@ public class MaterialRippleLayout extends FrameLayout {
      */
     private void enableClipPathSupportIfNecessary() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (rippleRoundedCorners != 0) {
-                layerType = getLayerType();
+//            if (rippleRoundedCorners != 0||getBackground()!=null) {
+//                layerType = getLayerType();
                 setLayerType(LAYER_TYPE_SOFTWARE, null);
-            } else {
-                setLayerType(layerType, null);
-            }
+//            } else {
+//                setLayerType(layerType, null);
+//            }
         }
     }
 
