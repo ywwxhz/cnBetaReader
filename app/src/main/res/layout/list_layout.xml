@@ -22,10 +22,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:divider="@null"
-            android:dividerHeight="2dp"
+            android:dividerHeight="3dp"
             android:clipToPadding="false"
             android:listSelector="@android:color/transparent"
-            android:padding="5dp"
+            android:padding="6dp"
             android:scrollbarStyle="outsideOverlay"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 

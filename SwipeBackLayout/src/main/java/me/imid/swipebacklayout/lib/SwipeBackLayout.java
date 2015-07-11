@@ -305,7 +305,7 @@ public class SwipeBackLayout extends FrameLayout {
      * Set a drawable used for edge shadow.
      *
      * @param shadow    Drawable to use
-     * @param edgeFlags Combination of edge flags describing the edge to set
+     * @param edgeFlag Combination of edge flags describing the edge to set
      * @see #EDGE_LEFT
      * @see #EDGE_RIGHT
      * @see #EDGE_BOTTOM
@@ -325,7 +325,7 @@ public class SwipeBackLayout extends FrameLayout {
      * Set a drawable used for edge shadow.
      *
      * @param resId     Resource of drawable to use
-     * @param edgeFlags Combination of edge flags describing the edge to set
+     * @param edgeFlag Combination of edge flags describing the edge to set
      * @see #EDGE_LEFT
      * @see #EDGE_RIGHT
      * @see #EDGE_BOTTOM
@@ -452,21 +452,30 @@ public class SwipeBackLayout extends FrameLayout {
     }
 
     public void attachToActivity(Activity activity) {
+        attachToActivity(activity,true,0);
+    }
+
+    public void attachToActivity(Activity activity,boolean shouldUseThemeBackground,int backgroundRes) {
         mActivity = activity;
-        TypedArray a = activity.getTheme().obtainStyledAttributes(new int[]{
-                android.R.attr.windowBackground
-        });
-        int background = a.getResourceId(0, 0);
-        a.recycle();
 
         ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
         ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
-        decorChild.setBackgroundResource(background);
+        if(shouldUseThemeBackground) {
+            TypedArray a = activity.getTheme().obtainStyledAttributes(new int[]{
+                    android.R.attr.windowBackground
+            });
+            int background = a.getResourceId(0, 0);
+            a.recycle();
+            decorChild.setBackgroundResource(background);
+        }else{
+            decorChild.setBackgroundResource(backgroundRes);
+        }
         decor.removeView(decorChild);
         addView(decorChild);
         setContentView(decorChild);
         decor.addView(this);
     }
+
 
     @Override
     @SuppressLint("NewApi")

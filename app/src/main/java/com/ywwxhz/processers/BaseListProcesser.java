@@ -90,6 +90,9 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
 
     @Override
     public void onRefresh() {
+        if(mLoader.getAdapter().getCount()>0) {
+            mLoader.setEnable(true);
+        }
         provider.loadNewData();
     }
 

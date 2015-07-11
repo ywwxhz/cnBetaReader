@@ -28,6 +28,7 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
     private OnScrollListener mOnScrollListener;
     private boolean enable;
     private boolean isLoading;
+    private boolean isFinally = false;
     private Mode mode = Mode.AUTO_LOAD;
 
     private PagedLoader() {
@@ -67,18 +68,7 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
         return new Builder(listView);
     }
 
-    private void setLoading(boolean isloading, boolean isfinall) {
-        setLoading(isloading);
-        if (isfinall) {
-            normalTextView.setVisibility(View.GONE);
-            finallyTextView.setVisibility(View.VISIBLE);
-        } else {
-            normalTextView.setVisibility(View.VISIBLE);
-            finallyTextView.setVisibility(View.GONE);
-        }
-    }
-
-    public boolean getLoading() {
+    public boolean isLoading() {
         return isLoading;
     }
 
@@ -109,26 +99,16 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
         return normalTextView.getText();
     }
 
+    public CharSequence getFinallyText() {
+        return finallyTextView.getText();
+    }
+
     public void setNormalText(CharSequence title) {
         normalTextView.setText(title);
     }
 
     public void setNormalText(int res) {
         normalTextView.setText(res);
-    }
-
-    public void setFinally() {
-        setFinally(true);
-    }
-
-    public void setFinally(boolean finall) {
-        if (finall) {
-            setLoading(false, true);
-            enable = false;
-        } else {
-            setLoading(false, false);
-            enable = true;
-        }
     }
 
     public void setFinallyText(CharSequence text) {
@@ -139,11 +119,13 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
         finallyTextView.setText(res);
     }
 
-    private void setDisplay(boolean show) {
-        if (show) {
-            moreView.setVisibility(View.VISIBLE);
-        } else {
-            moreView.setVisibility(View.GONE);
+    public void setFinally() {
+        if(enable) {
+            isFinally = true;
+            setLoading(false);
+            normalTextView.setVisibility(View.GONE);
+            finallyTextView.setVisibility(View.VISIBLE);
+            enable = false;
         }
     }
 
@@ -155,7 +137,7 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
     }
 
     public void onInvalidated() {
-       onChanged();
+        onChanged();
     }
 
     public ListAdapter getAdapter() {
@@ -166,7 +148,7 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
         if(this.adapter == null && adapter == null){
             throw  new IllegalArgumentException("adapter not to be null");
         }
-        if(this.adapter!=null) {
+        if(this.adapter != null) {
             this.adapter.unregisterDataSetObserver(this);
         }
         this.adapter = adapter;
@@ -183,7 +165,9 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
             if (mOnLoadListener == null) {
                 setEnable(false);
             } else {
-                setEnable(true);
+                if(!isFinally) {
+                    setEnable(true);
+                }
             }
         }
     }
@@ -194,7 +178,20 @@ public class PagedLoader extends DataSetObserver implements OnScrollListener, On
 
     public void setEnable(boolean enable) {
         this.enable = enable;
-        setDisplay(enable);
+        if (enable&&isFinally) {
+            normalTextView.setVisibility(View.VISIBLE);
+            finallyTextView.setVisibility(View.GONE);
+            isFinally = false;
+        }
+        setupFootView();
+    }
+
+    private void setupFootView(){
+        if (enable) {
+            moreView.setVisibility(View.VISIBLE);
+        } else {
+            moreView.setVisibility(View.GONE);
+        }
     }
 
     private PagedLoader getPageLoader() {

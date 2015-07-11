@@ -26,6 +26,7 @@ public class MyApplication extends Application {
     private static MyApplication instance;
 
     private Boolean debug;
+    private boolean listImageShowStatusChange;
 
     public DbUtils getDbUtils() {
         return mDbUtils;
@@ -82,7 +83,19 @@ public class MyApplication extends Application {
         }
     }
 
+    public File getInternalCacheDir() {
+        return super.getCacheDir();
+    }
+
     public static DisplayImageOptions getDefaultDisplayOption() {
         return options;
+    }
+
+    public boolean isListImageShowStatusChange() {
+        return listImageShowStatusChange;
+    }
+
+    public void setListImageShowStatusChange(boolean listImageShowStatusChange) {
+        this.listImageShowStatusChange = listImageShowStatusChange;
     }
 }

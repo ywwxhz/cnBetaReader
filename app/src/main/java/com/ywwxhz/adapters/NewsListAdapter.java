@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
@@ -21,6 +22,7 @@ import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.hoderview.NewsListItemHoderView;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.PrefKit;
+import com.ywwxhz.lib.kits.UIKit;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -59,7 +61,7 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
                 .showImageOnLoading(R.drawable.imagehoder_sm)
                 .showImageOnFail(R.drawable.imagehoder_error_sm)
                 .preProcessor(bitmapProcessor)
-                .displayer(new SimpleBitmapDisplayer()).build();
+                .displayer(new RoundedBitmapDisplayer(UIKit.dip2px(context,10))).build();
         bitmapProcessor.setEnable(ThemeManger.isNightTheme(context));
     }
 

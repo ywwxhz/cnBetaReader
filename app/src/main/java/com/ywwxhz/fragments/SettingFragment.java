@@ -7,6 +7,7 @@ import android.support.v4.preference.PreferenceFragment;
 import android.text.format.Formatter;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.MainActivity;
 import com.ywwxhz.cnbetareader.BuildConfig;
 import com.ywwxhz.cnbetareader.R;
@@ -25,7 +26,6 @@ import java.io.File;
 public class SettingFragment extends PreferenceFragment {
 
     private Preference preference;
-    private Preference theme;
     private boolean running = false;
 
     @Override
@@ -44,19 +44,23 @@ public class SettingFragment extends PreferenceFragment {
                     new AsyncTask<Object, Object, Object>() {
                         @Override
                         protected Object doInBackground(Object[] params) {
-                            FileKit.deleteDir(getActivity().getCacheDir());
+                            FileKit.deleteDir(MyApplication.getInstance().getInternalCacheDir());
                             try {
-                                FileKit.deleteDir(getActivity().getExternalCacheDir());
+                                FileKit.deleteDir(MyApplication.getInstance().getExternalCacheDir());
                             } catch (Exception ignored) {
                             }
-                            FileKit.deleteDir(new File(getActivity().getCacheDir().getAbsolutePath() + "/../app_webview"));
+                            FileKit.deleteDir(new File(MyApplication.getInstance().getInternalCacheDir().getAbsolutePath() + "/../app_webview"));
                             return null;
                         }
 
                         @Override
                         protected void onPostExecute(Object o) {
                             Toolkit.showCrouton(getActivity(), "缓存清理完成", CroutonStyle.INFO);
-                            preference.setSummary(getFileSize());
+                            try {
+                                preference.setSummary(getFileSize());
+                            }catch (Exception ignored){
+
+                            }
                             running = false;
                         }
                     }.execute();
@@ -64,7 +68,7 @@ public class SettingFragment extends PreferenceFragment {
                 return false;
             }
         });
-        theme = findPreference("theme");
+        Preference theme = findPreference("theme");
         theme.setSummary(getResources().getStringArray(R.array.theme_text)[ThemeManger.getCurrentTheme(getActivity())]);
         theme.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -78,20 +82,27 @@ public class SettingFragment extends PreferenceFragment {
                         ImageLoader.getInstance().clearMemoryCache();
                         ThemeManger.changeToTheme(getActivity(), which);
                     }
-                }).show(getActivity().getFragmentManager(),"theme");
+                }).show(getActivity().getFragmentManager(), "theme");
                 return false;
             }
         });
+        findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceChangeListener(listener);
+        findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceChangeListener(listener);
     }
+
+    Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            MyApplication.getInstance().setListImageShowStatusChange(true);
+            return true;
+        }
+    };
 
     private String getFileSize() {
         long size = 0;
-        size += FileKit.getFolderSize(getActivity().getCacheDir());
-        try {
-            size += FileKit.getFolderSize(getActivity().getExternalCacheDir());
-        } catch (Exception ignored) {
-        }
-        size += FileKit.getFolderSize(new File(getActivity().getCacheDir().getAbsolutePath() + "/../app_webview"));
+        size += FileKit.getFolderSize(MyApplication.getInstance().getInternalCacheDir());
+        size += FileKit.getFolderSize(MyApplication.getInstance().getExternalCacheDir());
+        size += FileKit.getFolderSize(new File(MyApplication.getInstance().getInternalCacheDir().getAbsolutePath() + "/../app_webview"));
         return Formatter.formatFileSize(getActivity(), size);
     }
 

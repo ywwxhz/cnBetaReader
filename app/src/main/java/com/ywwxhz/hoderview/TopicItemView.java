@@ -42,6 +42,7 @@ public class TopicItemView extends MaterialRippleLayout {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         mImage = (ImageView) findViewById(R.id.image);
         mTitle = (TextView) findViewById(R.id.title);
         mAction = (Button) findViewById(R.id.action);

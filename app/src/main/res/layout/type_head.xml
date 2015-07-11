@@ -3,5 +3,5 @@
     style="@style/SubText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="2.5dp"
-    android:textSize="14.5sp" />
+    android:padding="3dp"
+    android:textSize="14sp" />

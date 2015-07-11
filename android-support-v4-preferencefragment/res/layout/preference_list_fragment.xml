@@ -33,6 +33,7 @@
         android:paddingRight="@dimen/preference_fragment_padding_side"
         android:scrollbarStyle="@integer/preference_fragment_scrollbarStyle"
         android:clipToPadding="false"
+        android:divider="@null"
         android:drawSelectorOnTop="false"
         android:cacheColorHint="@android:color/transparent"
         android:scrollbarAlwaysDrawVerticalTrack="true" />

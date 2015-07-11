@@ -6,6 +6,8 @@ body {
 .title {
 	font-size:18pt;
 	color:#1473af;
+	padding-top:5pt;
+	padding-bottom:5pt;
 }
 
 .from {
@@ -48,11 +50,11 @@ body {
 	margin:0 !important;
 }
 
-.content {
+#content {
 	padding-top:10pt;
 }
 
-.content p {
+#content p {
 	text-indent:2em;
 	line-height:16pt;
 }
@@ -64,36 +66,36 @@ ol,ul,li {
 	padding:0;
 }
 
-.content table,.content td {
+#content table,#content td {
 	border:1px solid #000;
 	border-collapse:collapse;
 	border-spacing:0;
 }
 
-.content table p {
+#content table p {
 	text-indent:0;
 }
 
-.content iframe {
+#content iframe {
 	display:block;
 	max-width:100%;
 	border:0;
 	margin:auto;
 }
 
-.content embed {
+#content embed {
 	display:block;
 	max-width:100%;
 }
 
-.content video {
+#content video {
 	display:block;
 	max-width:100%;
 	height:auto;
 	margin:auto;
 }
 
-.content img {
+#content img {
 	display:block;
 	max-width:100% !important;
 	height:auto !important;
@@ -105,7 +107,7 @@ a {
 	color:#2f7cad;
 }
 
-.content blockquote {
+#content blockquote {
 	background-color:#F1F1F1;
 	color:#444;
 	quotes:"\201C""\201D""\2018""\2019";
@@ -113,7 +115,7 @@ a {
 	padding:13pt 5pt 8pt;
 }
 
-.content blockquote:before {
+#content blockquote:before {
 	color:#CCC;
 	content:open-quote;
 	font-size:4em;

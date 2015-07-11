@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 import java.util.Observable;
@@ -134,6 +135,7 @@ public class TranslucentStatusHelper implements Translucentable, Observer {
             tintManager = new SystemBarTintManager(activity, actionBarSizeAttr, statusView);
             tintManager.setStatusBarTintEnabled(true);
             fixTranslucent(tintManager, option);
+            //fixLollipop(activity, proxy);
         }
         return tintManager;
     }
@@ -210,26 +212,44 @@ public class TranslucentStatusHelper implements Translucentable, Observer {
 
     @TargetApi(19)
     public static void setTranslucentStatus(Activity activity, TranslucentProxy proxy) {
+        Window window = activity.getWindow();
         switch (proxy) {
-            case NEVG_BAR:
-                // 透明导航栏
-                activity.getWindow().addFlags(
-                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                break;
             case STATUS_BAR:
                 // 透明状态栏
-                activity.getWindow()
-                        .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 break;
             case BOTH:
                 // 透明状态栏
-                activity.getWindow()
-                        .addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 // 透明导航栏
-                activity.getWindow().addFlags(
+                window.addFlags(
                         WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 break;
 
+        }
+    }
+
+    private static void fixLollipop(Activity activity, TranslucentProxy proxy) {
+        Window window = activity.getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            int flag = 0;
+            switch (proxy) {
+                case STATUS_BAR:
+                    flag = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                    break;
+                case BOTH:
+                    flag = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                    window.setNavigationBarColor(Color.TRANSPARENT);
+                    break;
+            }
+            window.getDecorView().setSystemUiVisibility(flag);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
 
@@ -378,8 +398,7 @@ public class TranslucentStatusHelper implements Translucentable, Observer {
 
     public enum TranslucentProxy {
         STATUS_BAR,//透明状态栏
-        NEVG_BAR,//透明导航栏
-        BOTH//都透明
+        BOTH//透明状态栏和导航栏
     }
 
     /**

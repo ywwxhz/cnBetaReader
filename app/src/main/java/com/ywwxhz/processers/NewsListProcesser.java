@@ -4,6 +4,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.adapters.BaseAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.ListDataProvider;
@@ -50,6 +51,8 @@ public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem,? 
     @Override
     public void onResume() {
         super.onResume();
-        provider.getAdapter().notifyDataSetChanged(true);
+        if(MyApplication.getInstance().isListImageShowStatusChange()) {
+            provider.getAdapter().notifyDataSetChanged(true);
+        }
     }
 }

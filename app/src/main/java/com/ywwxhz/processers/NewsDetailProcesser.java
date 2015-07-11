@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -79,7 +80,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style></head>" +
-            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div class=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
+            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
             "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};" +
             "</script><script src=\"file:///android_asset/loder.js\"></script></body></html>";
     private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
@@ -604,4 +605,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         mActionButtom.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mWebView.loadUrl("javascript:Loader.updateWidth()");
+    }
 }
