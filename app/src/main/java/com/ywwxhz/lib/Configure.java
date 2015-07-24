@@ -17,6 +17,7 @@ public class Configure {
     public static final String COMMENT_URL = BASE_URL + "/cmt";
     public static final String COMMENT_VIEW = BASE_URL + "/comment";
     public static final String SECOND_VIEW = BASE_URL + "/captcha.htm";
+    public static final Pattern ARTICLE_PATTERN = Pattern.compile("http://www\\.cnbeta\\.com/articles/(\\d+)\\.htm");
     public static final Pattern FAVOR_NEWS_TITLE = Pattern.compile("^(\\[|《|”)?((.)?)");
     public static final Pattern STANDRA_PATTERN = Pattern.compile("cnBeta\\.COM_中文业界资讯站");
     public static final Pattern SN_PATTERN = Pattern.compile("SN:\"(.{5})\"");

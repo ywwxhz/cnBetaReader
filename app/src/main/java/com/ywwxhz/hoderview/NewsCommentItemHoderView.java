@@ -12,6 +12,7 @@ import com.balysv.materialripple.MaterialRippleLayout;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.lib.SpannableStringUtils;
+import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.widget.ExtendPopMenu;
 import com.ywwxhz.widget.textdrawable.TextDrawable;
@@ -62,6 +63,13 @@ public class NewsCommentItemHoderView extends MaterialRippleLayout implements Vi
         this.comment_from = (TextView) findViewById(R.id.comment_from);
         this.popMenu = new ExtendPopMenu(getContext(), comment_more);
         showEmoji = PrefKit.getBoolean(getContext(), R.string.pref_show_emoji_key, true);
+        if (!PrefKit.getBoolean(getContext(), R.string.pref_enable_ripple_key, true)){
+            if(ThemeManger.isNightTheme(getContext())){
+                this.comment_ref.setBackgroundResource(R.drawable.ref_background_night);
+            }else{
+                this.comment_ref.setBackgroundResource(R.drawable.ref_background);
+            }
+        }
     }
 
     public void showComment(CommentItem item, String token, BaseAdapter adapter, boolean enable, TextDrawable.IBuilder drawableBuilder, ColorGenerator colorGenerator) {

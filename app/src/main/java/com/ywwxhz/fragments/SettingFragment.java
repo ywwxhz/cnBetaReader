@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.format.Formatter;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.MainActivity;
@@ -88,6 +89,13 @@ public class SettingFragment extends PreferenceFragment {
         });
         findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceChangeListener(listener);
         findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceChangeListener(listener);
+        findPreference(getString(R.string.pref_enable_ripple_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                MaterialRippleLayout.setEnableRipple((Boolean) newValue);
+                return true;
+            }
+        });
     }
 
     Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {

@@ -1,31 +1,79 @@
 {
-    "state": "success",
-    "message": "",
-    "result": {
-        "list": [
-            {
-                "sid": "342477", //文章id
-                "topic": "39",//话题id
-                "aid": "ugmbbc",//编辑
-                "title": "《刺客信条: 大革命》新预告 Arno穿越来到二战时期",
-                "hometext": "<p>离《刺客信条：大革命》正式发布还有不到两周的时间，育碧近日公布了一段神秘的游戏预告，视频展示了游戏中的某个故事章节，而社会背景居然不是法国大革命时期，而是第二次世界大战。</p>",
-                "comments": "5",//评论数
-                "counter": "930",//浏览数
-                "good": "0",//推荐数
-                "bad": "0",
-                "score": "0",//事件分
-                "ratings": "0",
-                "score_story": "0",//质量分
-                "ratings_story": "0",
-                "inputtime": "2014-11-02 20:56:23",
-                "thumb": "http://static.cnbetacdn.com/thumb/mini/article/2014/1102/358d8bbb2dfd148.jpg_100x100.jpg",
-                "url_show": "/articles/342477.htm",
-                "rate_sum": 0//几次打分
-            }
-        ],
-        "pager": "",
-        "auto": 1,
-        "type": "all",
-        "page": 1
-    }
+  "state": "success",
+  "message": "",
+  "result": {
+    "list": [
+      {
+        "sid": "414157",
+        "catid": "7",
+        "topic": "448",
+        "aid": "KungfuDogg",
+        "user_id": "0",
+        "title": "新型转基因水稻有助于减少温室气体排放",
+        "style": "",
+        "keywords": "",
+        "hometext": "<p>水稻是重要的粮食作物，超过一半的世界人口以大米为食，但水稻种植过程中也伴随着大量的温室气体甲烷的排放，对全球变暖的影响不可忽视。<strong>而一项最新研究表明，通过转基因技术，水稻种植过程中的甲烷排放量有望大大降低。</strong></p>",
+        "listorder": "0",
+        "comments": "2",
+        "counter": "95",
+        "mview": "20",
+        "collectnum": "0",
+        "good": "0",
+        "bad": "0",
+        "score": "0",
+        "ratings": "0",
+        "score_story": "0",
+        "ratings_story": "0",
+        "pollid": "0",
+        "queueid": "0",
+        "ifcom": "1",
+        "ishome": "1",
+        "elite": "0",
+        "status": "1",
+        "inputtime": "2015-07-24 15:59:15",
+        "updatetime": "1437724828",
+        "thumb": "http://static.cnbetacdn.com/thumb/mini/article/2015/0724/1c0d702d4c426be.jpg_100x100.jpg",
+        "source": "科学公园",
+        "url_show": "/articles/414157.htm",
+        "rate_sum": 0
+      }, {
+        "sid": "413885",//文章id
+        "catid": "7",
+        "topic": "448",//话题id
+        "aid": "maomao",//编辑
+        "user_id": "0",
+        "title": "<span style=\"color:#c00000;\">NASA宣布发现“第2个地球”开普勒-452b</span>",
+        "style": "#c00000|||",
+        "keywords": "",
+        "hometext": "<p><strong>今天凌晨北京时间0点，NASA宣布天文学家已经发现最像地球的系外行星开普勒-452b，其距离地球1400光年。开普勒-452b围绕其恒星开普勒-452公转，距离主星位置适合液态水的存在。</strong>NASA天文学家考德威尔道格拉斯在发布会上表示：“这是我们发现的首颗围绕类似太阳的恒星公转，并且处于宜居带当中的系外行星。</p>",
+        "listorder": "50",
+        "comments": "190",//评论数
+        "counter": "26361",//浏览数
+        "mview": "4701",
+        "collectnum": "0",
+        "good": "45",//推荐数
+        "bad": "0",
+        "score": "185",//事件分
+        "ratings": "43",
+        "score_story": "165",//质量分
+        "ratings_story": "40",
+        "pollid": "0",
+        "queueid": "0",
+        "ifcom": "1",
+        "ishome": "1",
+        "elite": "0",
+        "status": "1",
+        "inputtime": "2015-07-24 00:49:09",
+        "updatetime": "1437695436",
+        "thumb": "http://static.cnbetacdn.com/thumb/mini/article/2015/0724/3f71b05a9287fcd.jpg_100x100.jpg",
+        "source": "cnBeta.COM@http://www.cnbeta.com/",//稿源
+        "url_show": "/articles/413885.htm",
+        "rate_sum": 83//几次打分
+      }
+    ],
+    "pager": "",
+    "auto": 1,
+    "type": "all",
+    "page": "1"
+  }
 }

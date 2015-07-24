@@ -65,6 +65,7 @@ public class MaterialRippleLayout extends FrameLayout {
 
     private static final int FADE_EXTRA_DELAY = 50;
     private static final long HOVER_DURATION = 2500;
+    private static boolean enableRipple = true;
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Rect bounds = new Rect();
@@ -170,11 +171,17 @@ public class MaterialRippleLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if(!enableRipple) {
+            return super.onInterceptTouchEvent(event);
+        }
         return !findClickableViewInChild(childView, (int) event.getX(), (int) event.getY());
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(!enableRipple) {
+            return super.onTouchEvent(event);
+        }
         boolean superOnTouchEvent = super.onTouchEvent(event);
 
         if (!isEnabled() || !childView.isEnabled()) return superOnTouchEvent;
@@ -459,6 +466,10 @@ public class MaterialRippleLayout extends FrameLayout {
      */
     @Override
     public void draw(Canvas canvas) {
+        if(!enableRipple) {
+            super.draw(canvas);
+            return;
+        }
         final boolean positionChanged = adapterPositionChanged();
         Path paddingPath = new Path();
         Rect padding = new Rect();
@@ -792,5 +803,9 @@ public class MaterialRippleLayout extends FrameLayout {
 
             return layout;
         }
+    }
+
+    public static void setEnableRipple(boolean enableRipple) {
+        MaterialRippleLayout.enableRipple = enableRipple;
     }
 }

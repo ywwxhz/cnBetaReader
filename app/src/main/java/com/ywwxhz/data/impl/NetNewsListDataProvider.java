@@ -58,6 +58,7 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
                     item.setCounter("0");
                     item.setComments("0");
                 }
+                item.setTitle(item.getTitle().replaceAll("<.*?>", ""));
                 StringBuilder sb = new StringBuilder(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
                 if (sb.length() > 140) {
                     item.setSummary(sb.replace(140, sb.length(), "...").toString());

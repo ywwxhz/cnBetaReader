@@ -1,6 +1,5 @@
 package com.ywwxhz.activitys;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,20 +33,17 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     private FixViewPager pager;
     private FragmentAdapter adapter;
     private String title;
-    private boolean isNewDesignMode;
     private ViewGroup contentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        isNewDesignMode = PrefKit.getBoolean(this, R.string.pref_new_detail_key, true);
         if (bundle != null && bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY) && bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
             title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
             setTitle("详情：" + title);
             contentView = (ViewGroup) findViewById(R.id.content);
             fragments.add(NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY), title));
-            if (isNewDesignMode) {
                 setContentView(R.layout.pager_layout);
                 pager = (FixViewPager) findViewById(R.id.pager);
                 adapter = new FragmentAdapter(getSupportFragmentManager());
@@ -75,9 +71,6 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
                     }
                 });
-            } else {
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, fragments.get(0)).commit();
-            }
         } else {
             Toast.makeText(this, "缺少必要参数", Toast.LENGTH_SHORT).show();
             finish();
@@ -86,7 +79,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (isNewDesignMode && keyCode == KeyEvent.KEYCODE_BACK && pager.getCurrentItem() != 0) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && pager.getCurrentItem() != 0) {
             pager.setCurrentItem(0);
             return true;
         }
@@ -101,7 +94,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
     @Override
     public void onNewsLoadFinish(NewsItem item, boolean success) {
-        if (isNewDesignMode && success && fragments.size() == 1) {
+        if (success && fragments.size() == 1) {
             fragments.add(NewsCommentFragment.getInstance(item.getSid(), item.getSN())
                     .setMenuCallBack(new BaseProcesserImpl.onOptionMenuSelect() {
                         @Override
@@ -119,15 +112,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
     @Override
     public void CommentAction(int sid, String sn, String title) {
-        if (isNewDesignMode) {
-            pager.setCurrentItem(1, true);
-        } else {
-            Intent intent = new Intent(this, NewsCommentActivity.class);
-            intent.putExtra(NewsCommentFragment.SN_KEY, sn);
-            intent.putExtra(NewsCommentFragment.SID_KEY, sid);
-            intent.putExtra(NewsCommentActivity.TITLE_KEY, title);
-            startActivity(intent);
-        }
+        pager.setCurrentItem(1, true);
     }
 
     @Override
@@ -143,17 +128,13 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     public void onShowHtmlVideoView(View html5VideoView) {
         contentView.addView(html5VideoView);
         html5VideoView.bringToFront();
-        if(isNewDesignMode){
-            pager.setVisibility(View.INVISIBLE);
-        }
+        pager.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onHideHtmlVideoView(View html5VideoView) {
         contentView.removeView(html5VideoView);
-        if(isNewDesignMode){
-            pager.setVisibility(View.VISIBLE);
-        }
+        pager.setVisibility(View.VISIBLE);
     }
 
 
