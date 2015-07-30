@@ -3,7 +3,7 @@ package com.ywwxhz.processers;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +19,7 @@ import com.ywwxhz.data.DataProviderCallback;
  */
 public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<E>> implements BaseProcesser<E,DataProvider>, DataProviderCallback<E> {
 
-    protected ActionBarActivity mActivity;
+    protected AppCompatActivity mActivity;
     protected DataProvider provider;
     protected int colorPrimary;
     protected int colorPrimaryDark;
@@ -38,7 +38,7 @@ public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<
     }
 
     @Override
-    public void setActivity(ActionBarActivity activity) {
+    public void setActivity(AppCompatActivity activity) {
         this.mActivity = activity;
         this.provider.setActivity(activity);
         TypedArray array = activity.obtainStyledAttributes(new int[]{R.attr.colorPrimary,
@@ -54,7 +54,7 @@ public abstract class BaseProcesserImpl<E,DataProvider extends BaseDataProvider<
     }
 
     @Override
-    public ActionBarActivity getActivity() {
+    public AppCompatActivity getActivity() {
         return mActivity;
     }
 

@@ -2,10 +2,11 @@
 
 <resources>
 
+    <style name="Theme.Base" parent="Theme.AppCompat.Light.DarkActionBar"/>
 
-    <style name="Theme.Basic" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Basic" parent="Theme.Base">
         <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/toolbarColor</item>
         <item name="colorPrimaryDark">@color/statusColor</item>

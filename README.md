@@ -28,7 +28,7 @@ Android SDK v22
 
 Android Build Tool 22.0.1
 
-Android Support v22.0.0
+Android Support v22.2.1
 
 
 

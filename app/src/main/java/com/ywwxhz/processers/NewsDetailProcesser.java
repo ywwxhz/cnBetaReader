@@ -2,6 +2,7 @@ package com.ywwxhz.processers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -11,9 +12,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,11 +37,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
+import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.DataProviderCallback;
 import com.ywwxhz.data.impl.NewsDetailProvider;
 import com.ywwxhz.entitys.NewsItem;
-import com.ywwxhz.fragments.FontSizeFragment;
 import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
@@ -58,6 +61,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.regex.Matcher;
 
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -96,13 +100,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     @Override
     public void onResume() {
         mWebView.onResume();
-        mWebView.resumeTimers();
     }
 
     @Override
     public void onPause() {
         mWebView.onPause();
-        mWebView.pauseTimers();
     }
 
     @Override
@@ -362,9 +364,26 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     public void handleFontSize() {
-        FontSizeFragment fragment = FontSizeFragment.getInstance(settings.getTextZoom());
-        fragment.show(mActivity.getFragmentManager(), "Font Size");
-        fragment.setSeekBarListener(new DiscreteSeekBar.OnProgressChangeListener() {
+        final DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) LayoutInflater.from(mActivity).inflate(R.layout.fragment_font_size,null);
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case AlertDialog.BUTTON_POSITIVE:
+                        PrefKit.writeInt(getActivity(), "font_size", discreteSeekBar.getProgress());
+                        break;
+                    case AlertDialog.BUTTON_NEUTRAL:
+                        break;
+                    case AlertDialog.BUTTON_NEGATIVE :
+                        settings.setTextZoom(100);
+                        PrefKit.delete(getActivity(), "font_size");
+                        break;
+                }
+                dialog.dismiss();
+            }
+        };
+        discreteSeekBar.setProgress(settings.getTextZoom());
+        discreteSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 if (fromUser) {
@@ -382,6 +401,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
             }
         });
+        new AlertDialog.Builder(mActivity).setTitle("字体大小")
+                .setView(discreteSeekBar)
+                .setPositiveButton("保存",listener)
+                .setNegativeButton("默认",listener)
+                .setNeutralButton("取消",listener).create().show();
     }
 
     public void doBookmark(MenuItem item) {
@@ -491,10 +515,18 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse(url));
+            Intent intent;
+            Matcher sidMatcher = Configure.ARTICLE_PATTERN.matcher(url);
+            if (sidMatcher.find()){
+                intent = new Intent(mActivity,NewsDetailActivity.class);
+                intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, Integer.parseInt(sidMatcher.group(0)));
+                intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,"");
+            }else {
+                intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(url));
+            }
             mActivity.startActivity(intent);
             return true;
         }

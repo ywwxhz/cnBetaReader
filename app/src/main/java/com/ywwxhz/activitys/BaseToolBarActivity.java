@@ -1,9 +1,8 @@
 package com.ywwxhz.activitys;
 
-import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,14 @@ import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
-public abstract class BaseToolBarActivity extends ActionBarActivity {
-    protected TranslucentStatusHelper.Option option;
+public abstract class BaseToolBarActivity extends AppCompatActivity {
     protected TranslucentStatusHelper helper;
     protected FrameLayout content;
+    protected Toolbar toolbar;
     protected int colorPrimary;
     protected int colorPrimaryDark;
+    protected int colorAccent;
 
 
     @Override
@@ -30,23 +29,22 @@ public abstract class BaseToolBarActivity extends ActionBarActivity {
         ThemeManger.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         super.setContentView(getBasicContentLayout());
+        TypedArray array = obtainStyledAttributes(new int[]{R.attr.colorPrimary,R.attr.colorPrimaryDark,R.attr.colorAccent});
+        colorPrimary = array.getColor(0, 0xFF1473AF);
+        colorPrimaryDark = array.getColor(1, 0xFF11659A);
+        colorAccent = array.getColor(2, 0xFF3C69CE);
+        CroutonStyle.buildStyleInfo(colorPrimaryDark);
+        CroutonStyle.buildStyleConfirm(colorAccent);
+        array.recycle();
         helper = TranslucentStatusHelper.from(this)
                 .setStatusView(findViewById(R.id.statusView))
                 .setActionBarSizeAttr(R.attr.actionBarSize)
-                .setTranslucentProxy(TranslucentStatusHelper.TranslucentProxy.STATUS_BAR)
-                .builder();
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        content = (FrameLayout) findViewById(R.id.content);
-        TypedArray array = obtainStyledAttributes(new int[]{R.attr.colorPrimary,R.attr.colorPrimaryDark,R.attr.colorAccent});
-        colorPrimary = array.getColor(0, getResources().getColor(R.color.toolbarColor));
-        colorPrimaryDark = array.getColor(1, getResources().getColor(R.color.statusColor));
-        CroutonStyle.buildStyleInfo(colorPrimaryDark);
-        CroutonStyle.buildStyleConfirm(array.getColor(2, Style.holoGreenLight));
-        array.recycle();
-        option = new TranslucentStatusHelper.Option()
                 .setStatusColor(colorPrimaryDark)
-                .setInsertProxy(TranslucentStatusHelper.InsertProxy.NONE);
-        helper.setOption(option);
+                .setTranslucentProxy(TranslucentStatusHelper.TranslucentProxy.AUTO)
+                .builder();
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        content = (FrameLayout) findViewById(R.id.content);
     }
 
     @Override
@@ -77,12 +75,6 @@ public abstract class BaseToolBarActivity extends ActionBarActivity {
 
     public void setContentViewsSuper(View view, ViewGroup.LayoutParams params) {
         super.setContentView(view, params);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        helper.notifyConfigureChanged();
     }
 
     @Override

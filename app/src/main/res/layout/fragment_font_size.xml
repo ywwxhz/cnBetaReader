@@ -1,57 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:padding="10dp"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:text="调节字体大小"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:padding="5dp"
-        android:layout_height="wrap_content"/>
-
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/seek_font_size"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dsb_max="150"
-        app:dsb_min="50"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:dsb_indicatorFormatter="%d%%"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:gravity="right"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/buttom_temporary_save"
-            style="@style/ButtonBarButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_temporary_save"/>
-
-        <Button
-            android:id="@+id/buttom_restore_default"
-            style="@style/ButtonBarButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?colorPrimaryDark"
-            android:text="@string/button_restore_default"/>
-
-        <Button
-            android:id="@+id/buttom_permanent_save"
-            style="@style/ButtonBarButton"
-            android:layout_width="wrap_content"
-            android:textColor="?colorPrimary"
-            android:text="@string/buttom_permanent_save"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-</LinearLayout>
+<org.adw.library.widgets.discreteseekbar.DiscreteSeekBar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/seek_font_size"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    app:dsb_indicatorFormatter="%d%%"
+    app:dsb_max="150"
+    app:dsb_min="50" />

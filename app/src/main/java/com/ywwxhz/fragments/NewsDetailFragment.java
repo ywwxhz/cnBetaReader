@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,7 +63,7 @@ public class NewsDetailFragment extends Fragment {
         if(processer==null) {
             processer = new NewsDetailProcesser(new NewsDetailProvider(activity));
         }
-        processer.setActivity((ActionBarActivity) activity);
+        processer.setActivity((AppCompatActivity) activity);
         if(activity instanceof NewsDetailCallBack){
             processer.setCallBack((NewsDetailCallBack) activity);
         }

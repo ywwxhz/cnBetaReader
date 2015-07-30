@@ -72,6 +72,7 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
     public static boolean handleResponceString(NewsItem item,String resp,boolean shouldCache,boolean cacheImage){
         Document doc = Jsoup.parse(resp);
         Elements newsHeadlines = doc.select(".body");
+        item.setTitle(newsHeadlines.select("#news_title").html().replaceAll("<.*?>", ""));
         item.setFrom(newsHeadlines.select(".where").html());
         item.setInputtime(newsHeadlines.select(".date").html());
         Elements introduce = newsHeadlines.select(".introduction");

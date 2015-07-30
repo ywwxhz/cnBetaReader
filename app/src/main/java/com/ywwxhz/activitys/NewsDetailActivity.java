@@ -48,7 +48,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
                 pager = (FixViewPager) findViewById(R.id.pager);
                 adapter = new FragmentAdapter(getSupportFragmentManager());
                 pager.setAdapter(adapter);
-                pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

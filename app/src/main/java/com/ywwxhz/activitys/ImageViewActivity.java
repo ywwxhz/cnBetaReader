@@ -85,9 +85,7 @@ public class ImageViewActivity extends FragmentActivity implements ViewPager.OnP
                 this.finish();
                 return;
             }
-            TranslucentStatusHelper.from(this)
-                    .setTranslucentProxy(TranslucentStatusHelper.TranslucentProxy.STATUS_BAR)
-                    .builder();
+            TranslucentStatusHelper.TranslucentStatusBar(this);
             setContentView(R.layout.activity_imageview);
             initView();
             loadAndShowPos(pos);

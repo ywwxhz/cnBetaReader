@@ -1,9 +1,12 @@
 package com.ywwxhz.fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.format.Formatter;
 
 import com.balysv.materialripple.MaterialRippleLayout;
@@ -28,6 +31,8 @@ public class SettingFragment extends PreferenceFragment {
 
     private Preference preference;
     private boolean running = false;
+    private Context context;
+    private int themeid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +41,32 @@ public class SettingFragment extends PreferenceFragment {
         findPreference(getString(R.string.pref_version_key)).setSummary(getVersionName());
         preference = findPreference(getString(R.string.pref_clean_cache_key));
         preference.setSummary(getFileSize());
-        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(final Preference preference) {
+        preference.setOnPreferenceClickListener(onPreferenceClickListener);
+        Preference theme = findPreference("theme");
+        theme.setSummary(getResources().getStringArray(R.array.theme_text)[ThemeManger.getCurrentTheme(getActivity())]);
+        theme.setOnPreferenceClickListener(onPreferenceClickListener);
+        findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
+        findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
+        findPreference(getString(R.string.pref_enable_ripple_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
+    }
+
+    Preference.OnPreferenceChangeListener onPreferenceChangeListener
+            = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            if (preference.getKey().equals(getString(R.string.pref_enable_ripple_key))) {
+                MaterialRippleLayout.setEnableRipple((Boolean) newValue);
+            } else {
+                MyApplication.getInstance().setListImageShowStatusChange(true);
+            }
+            return true;
+        }
+    };
+
+    Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            if(preference.getKey().equals(getString(R.string.pref_clean_cache_key))){
                 if (!running) {
                     running = true;
                     Toolkit.showCrouton(getActivity(), "正在清理缓存中。请稍候。。", CroutonStyle.CONFIRM);
@@ -56,10 +84,10 @@ public class SettingFragment extends PreferenceFragment {
 
                         @Override
                         protected void onPostExecute(Object o) {
-                            Toolkit.showCrouton(getActivity(), "缓存清理完成", CroutonStyle.INFO);
                             try {
-                                preference.setSummary(getFileSize());
-                            }catch (Exception ignored){
+                                SettingFragment.this.preference.setSummary(getFileSize());
+                                Toolkit.showCrouton(getActivity(), "缓存清理完成", CroutonStyle.INFO);
+                            } catch (Exception ignored) {
 
                             }
                             running = false;
@@ -67,42 +95,26 @@ public class SettingFragment extends PreferenceFragment {
                     }.execute();
                 }
                 return false;
+            }else{
+                new AlertDialog.Builder(getActivity()).setTitle(R.string.theme)
+                        .setSingleChoiceItems(R.array.theme_text, ThemeManger.getCurrentTheme(getActivity()), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                themeid = which;
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (getActivity() instanceof MainActivity) {
+                                    ((MainActivity) getActivity()).changeTheme = true;
+                                }
+                                ImageLoader.getInstance().clearMemoryCache();
+                                ThemeManger.changeToTheme(getActivity(), themeid);
+                            }
+                        }).create().show();
             }
-        });
-        Preference theme = findPreference("theme");
-        theme.setSummary(getResources().getStringArray(R.array.theme_text)[ThemeManger.getCurrentTheme(getActivity())]);
-        theme.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                new ChoiseThemeFragment().setCallBack(new ChoiseThemeFragment.callBack() {
-                    @Override
-                    public void onSelect(int which) {
-                        if (getActivity() instanceof MainActivity) {
-                            ((MainActivity) getActivity()).changeTheme = true;
-                        }
-                        ImageLoader.getInstance().clearMemoryCache();
-                        ThemeManger.changeToTheme(getActivity(), which);
-                    }
-                }).show(getActivity().getFragmentManager(), "theme");
-                return false;
-            }
-        });
-        findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceChangeListener(listener);
-        findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceChangeListener(listener);
-        findPreference(getString(R.string.pref_enable_ripple_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                MaterialRippleLayout.setEnableRipple((Boolean) newValue);
-                return true;
-            }
-        });
-    }
-
-    Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            MyApplication.getInstance().setListImageShowStatusChange(true);
-            return true;
+            return false;
         }
     };
 
@@ -115,6 +127,6 @@ public class SettingFragment extends PreferenceFragment {
     }
 
     private String getVersionName() {
-        return "Ver. " + BuildConfig.VERSION_NAME +" " +BuildConfig.BUILD_TYPE;
+        return "Ver. " + BuildConfig.VERSION_NAME + " " + BuildConfig.BUILD_TYPE;
     }
 }
