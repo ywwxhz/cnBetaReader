@@ -2,6 +2,7 @@ package com.ywwxhz.data.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -41,6 +42,9 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             if(callback!=null) {
                 callback.onLoadFailure();
+            }
+            if(MyApplication.getInstance().getDebug()){
+                Toast.makeText(getActivity(), throwable.toString(), Toast.LENGTH_SHORT).show();
             }
         }
 

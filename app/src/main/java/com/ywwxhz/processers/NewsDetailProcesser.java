@@ -30,6 +30,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
@@ -472,7 +473,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    NetKit.getInstance().getClient().get(requestUrl, new JsonHttpResponseHandler() {
+                    NetKit.getAsyncClient().get(requestUrl, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
@@ -485,6 +486,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                             Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
+                            if(MyApplication.getInstance().getDebug()){
+                                Toast.makeText(getActivity(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }

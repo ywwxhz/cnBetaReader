@@ -10,9 +10,10 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.ywwxhz.cnbetareader.BuildConfig;
 import com.ywwxhz.cnbetareader.R;
+import com.ywwxhz.crash.CustomActivityOnCrash;
 import com.ywwxhz.lib.Emoticons;
-import com.ywwxhz.lib.MyCrashHandler;
 import com.ywwxhz.lib.database.DbUtils;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -42,7 +43,7 @@ public class MyApplication extends Application {
         instance = this;
         debug = PrefKit.getBoolean(this, R.string.pref_debug_key, false);
         FileCacheKit.getInstance(this);
-        MyCrashHandler.getInstance().init(this);
+        CustomActivityOnCrash.install(this);
         initImageLoader(getApplicationContext());
         Emoticons.init(this);
         mDbUtils = DbUtils.create(this);
@@ -99,5 +100,10 @@ public class MyApplication extends Application {
 
     public void setListImageShowStatusChange(boolean listImageShowStatusChange) {
         this.listImageShowStatusChange = listImageShowStatusChange;
+    }
+
+    public String getUpdateUrl() {
+        return "http://192.168.53.100/api/update-" +
+                PrefKit.getString(this, R.string.pref_release_channel_key, BuildConfig.BUILD_TYPE) + ".php";
     }
 }

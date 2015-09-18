@@ -1,7 +1,9 @@
 package com.ywwxhz.lib.kits;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.text.format.Formatter;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -10,8 +12,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
 
 /**
  * Created by ywwxhz on 2014/10/17.
@@ -246,7 +250,7 @@ public class FileKit {
     public static void deleteDir(File dir) {
         File to = new File(dir.getAbsolutePath() + System.currentTimeMillis());
         dir.renameTo(to);// in order to fix android java.io.IOException: open failed: EBUSY (Device or resource busy)
-                         // detail http://stackoverflow.com/questions/11539657/open-failed-ebusy-device-or-resource-busy
+        // detail http://stackoverflow.com/questions/11539657/open-failed-ebusy-device-or-resource-busy
         if (to.isDirectory()) {
             String[] children = to.list();
             for (String aChildren : children) {
@@ -259,5 +263,42 @@ public class FileKit {
             }
             to.delete();
         }
+    }
+
+    public static boolean valifyFileMd5(File file, String md5code) {
+        String value = null;
+        FileInputStream in = null;
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = in.read(buffer)) != -1) {
+                md5.update(buffer, 0, length);
+            }
+            BigInteger bi = new BigInteger(1, md5.digest());
+            value = bi.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (null != in) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Log.v("md5", value);
+        return md5code.equals(value);
+    }
+
+    public static String formatFileSize(Context content, long size) {
+        return Formatter.formatFileSize(content, size);
+    }
+
+    public static boolean isExternalStorageAvalible() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 }

@@ -1,4 +1,4 @@
-package com.ywwxhz.lib;
+package com.ywwxhz.crash;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -13,71 +13,33 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * 自定义的 异常处理类 , 实现了 UncaughtExceptionHandler接口
- *
- * @author Administrator
- */
-public class MyCrashHandler implements UncaughtExceptionHandler {
-    private static final String TAG = "MyCrashHandler";
-    // 需求是 整个应用程序 只有一个 MyCrash-Handler
-    private static MyCrashHandler myCrashHandler;
-    //系统默认的UncaughtException处理类
-    private UncaughtExceptionHandler mDefaultHandler;
+public class CrashLogWriter {
     private Context mContext;
     private SimpleDateFormat dataFormat = new SimpleDateFormat(
             "yyyyMMddHHmmss", Locale.CHINA);
     private File fileDir;
 
-    // 1.私有化构造方法
-    private MyCrashHandler() {
-
+    public CrashLogWriter(Context mContext) {
+        this.mContext = mContext;
     }
 
-    public static synchronized MyCrashHandler getInstance() {
-        if (myCrashHandler != null) {
-            return myCrashHandler;
-        } else {
-            myCrashHandler = new MyCrashHandler();
-            return myCrashHandler;
-        }
-    }
-
-    public void init(Context context) {
-        this.mContext = context;
-        //获取系统默认的UncaughtException处理器
-        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        //设置该CrashHandler为程序的默认处理器
-        Thread.setDefaultUncaughtExceptionHandler(this);
-    }
-
-    public void uncaughtException(Thread thread, Throwable ex) {
-        if (!handleException(thread, ex) && mDefaultHandler != null) {
-            //如果用户没有处理则让系统默认的异常处理器来处理
-            mDefaultHandler.uncaughtException(thread, ex);
-        } else {
-            //退出程序
-            Process.killProcess(Process.myPid());
-        }
-    }
-
-    private boolean handleException(Thread thread, Throwable ex) {
+    public String writeLogToFile(Thread thread, Throwable ex) {
         if (ex == null) {
-            return false;
+            return null;
         }
         // 4.把所有的信息写入日志
         try {
             if (Environment.getExternalStorageState().equals(
                     Environment.MEDIA_MOUNTED)) {
-                File f = mContext.getExternalFilesDir("Logs");// 获取SD卡目录
-                fileDir = new File(f, "crash-"
-                        + dataFormat.format(new Date()) + ".txt");
+                File f = Environment.getExternalStorageDirectory();// 获取SD卡目录
+                File fileDir = new File(f, String.format(Locale.CHINA, "%s-crash-%s.txt",
+                        mContext.getApplicationInfo().loadLabel(mContext.getPackageManager()),
+                        dataFormat.format(new Date())));
 
                 StringBuilder stringBuilder = new StringBuilder();
                 // 1.获取当前程序的版本号. 版本的id
@@ -93,10 +55,12 @@ public class MyCrashHandler implements UncaughtExceptionHandler {
                 os.write(stringBuilder.toString()
                         .getBytes());
                 os.close();
+                return fileDir.getAbsolutePath();
             }
+            return null;
         } catch (Exception ignored) {
+            return null;
         }
-        return false;
     }
 
     /**

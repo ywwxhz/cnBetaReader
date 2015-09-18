@@ -41,6 +41,11 @@ public class PrefKit {
         return appPrefs.getString(key, def);
     }
 
+    public static String getString(Context context, int key, String def) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        return appPrefs.getString(context.getString(key), def);
+    }
+
     public static void writeInt(Context context, String key, int value) {
         SharedPreferences appPrefs = getSharedPreferences(context);
         SharedPreferences.Editor edit = appPrefs.edit();
@@ -57,6 +62,13 @@ public class PrefKit {
         SharedPreferences appPrefs = getSharedPreferences(context);
         SharedPreferences.Editor edit = appPrefs.edit();
         edit.remove(key);
+        edit.apply();
+    }
+
+    public static void writeString(Context context, String key, String value) {
+        SharedPreferences appPrefs = getSharedPreferences(context);
+        SharedPreferences.Editor edit = appPrefs.edit();
+        edit.putString(key, value);
         edit.apply();
     }
 }

@@ -13,9 +13,7 @@
             android:summaryOff="@string/pref_auto_page_off"
             android:summaryOn="@string/pref_auto_page_on"
             android:title="@string/pref_auto_page_title" />
-        <Preference
-            android:key="theme"
-            android:title="@string/theme"/>
+        <com.ywwxhz.preference.ChangeThemePreference />
 
     </PreferenceCategory>
 
@@ -23,29 +21,29 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_show_list_news_image_key"
-            android:title="@string/pref_show_list_news_image_title"
-            android:summary="@string/pref_show_list_news_image_summary" />
+            android:summary="@string/pref_show_list_news_image_summary"
+            android:title="@string/pref_show_list_news_image_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:dependency="@string/pref_show_list_news_image_key"
             android:key="@string/pref_show_large_image_key"
-            android:title="@string/pref_show_large_image_title"
-            android:summary="@string/pref_show_large_image_summary" />
+            android:summary="@string/pref_show_large_image_summary"
+            android:title="@string/pref_show_large_image_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_show_detail_image_key"
-            android:title="@string/pref_show_detail_image_title"
-            android:summary="@string/pref_show_detail_image_summary" />
+            android:summary="@string/pref_show_detail_image_summary"
+            android:title="@string/pref_show_detail_image_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_preload_image_key"
-            android:title="@string/pref_preload_image_title"
-            android:summary="@string/pref_preload_image_summary" />
+            android:summary="@string/pref_preload_image_summary"
+            android:title="@string/pref_preload_image_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_offline_image_key"
-            android:title="@string/pref_offline_image_title"
-            android:summary="@string/pref_offline_image_summary" />
+            android:summary="@string/pref_offline_image_summary"
+            android:title="@string/pref_offline_image_title" />
         <Preference
             android:key="@string/pref_clean_cache_key"
             android:title="@string/pref_clean_cache_title" />
@@ -55,27 +53,39 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_reverse_key"
-            android:title="@string/pref_reverse_title"
+            android:summaryOff="@string/pref_reverse_off"
             android:summaryOn="@string/pref_reverse_on"
-            android:summaryOff="@string/pref_reverse_off" />
+            android:title="@string/pref_reverse_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_show_emoji_key"
-            android:title="@string/pref_show_emoji_title"
-            android:summary="@string/pref_show_emoji_summary"/>
+            android:summary="@string/pref_show_emoji_summary"
+            android:title="@string/pref_show_emoji_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_update_categroy">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_auto_update_key"
+            android:summary="@string/pref_auto_update_summary"
+            android:title="@string/pref_auto_update_title" />
+        <com.ywwxhz.preference.UpdateChannelPreference />
+        <Preference
+            android:key="@string/pref_check_update_key"
+            android:title="@string/pref_check_updat_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_advience_categroy">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_debug_key"
-            android:title="@string/pref_debug_title"
-            android:summary="@string/pref_debug_summary" />
+            android:summary="@string/pref_debug_summary"
+            android:title="@string/pref_debug_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_swipeback_key"
-            android:title="@string/pref_swipeback_title"
-            android:summary="@string/pref_swipeback_summary" />
+            android:summary="@string/pref_swipeback_summary"
+            android:title="@string/pref_swipeback_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_flash_to_html5_key"
@@ -91,14 +101,17 @@
             android:key="@string/pref_enable_ripple_key"
             android:summary="@string/pref_enable_ripple_summary"
             android:title="@string/pref_enable_ripple_title" />
+        <Preference
+            android:key="@string/pref_crash_key"
+            android:title="@string/pref_crash_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_about_title">
         <Preference
             android:summary="@string/pref_about_summary"
             android:title="@string/pref_about_title" />
         <Preference
-            android:title="@string/pref_source_title"
-            android:summary="@string/pref_source_summary">
+            android:summary="@string/pref_source_summary"
+            android:title="@string/pref_source_title">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/pref_source_summary" />
@@ -106,9 +119,7 @@
         <Preference
             android:summary="@string/pref_author_summary"
             android:title="@string/pref_author_title" />
-        <Preference
-            android:key="@string/pref_version_key"
-            android:title="@string/pref_version_title" />
+        <com.ywwxhz.preference.VersionPreference />
     </PreferenceCategory>
 
 </PreferenceScreen>

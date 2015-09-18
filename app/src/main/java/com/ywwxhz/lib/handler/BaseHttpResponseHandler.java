@@ -2,8 +2,10 @@ package com.ywwxhz.lib.handler;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.lib.kits.Toolkit;
@@ -26,6 +28,9 @@ public abstract class BaseHttpResponseHandler<T> extends GsonHttpResponseHandler
         Log.e(this.getClass().getSimpleName(), responseString + "");
         cause.printStackTrace();
         Toolkit.showCrouton(getActivity(), R.string.message_data_structure_change, Style.ALERT);
+        if(MyApplication.getInstance().getDebug()){
+            Toast.makeText(getActivity(),cause.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -43,6 +48,9 @@ public abstract class BaseHttpResponseHandler<T> extends GsonHttpResponseHandler
         Log.e(this.getClass().getSimpleName(), responseString + "");
         throwable.printStackTrace();
         Toolkit.showCrouton(getActivity(), R.string.message_no_network, Style.ALERT);
+        if(MyApplication.getInstance().getDebug()){
+            Toast.makeText(getActivity(),throwable.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     protected abstract void onSuccess(T result);

@@ -26,7 +26,9 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ThemeManger.onActivityCreateSetTheme(this);
+        if(shouldChangeTheme()) {
+            ThemeManger.onActivityCreateSetTheme(this);
+        }
         super.onCreate(savedInstanceState);
         super.setContentView(getBasicContentLayout());
         TypedArray array = obtainStyledAttributes(new int[]{R.attr.colorPrimary,R.attr.colorPrimaryDark,R.attr.colorAccent});
@@ -85,5 +87,9 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
 
     protected int getBasicContentLayout() {
         return R.layout.activity_basetoolbar;
+    }
+
+    protected boolean shouldChangeTheme(){
+        return true;
     }
 }

@@ -6,8 +6,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.fragments.NavigationDrawerFragment;
+import com.ywwxhz.lib.kits.PrefKit;
+import com.ywwxhz.update.UpdateHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
@@ -33,6 +36,15 @@ public class MainActivity extends BaseToolBarActivity
                R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         changeTheme = false;
+        if(PrefKit.getBoolean(this,R.string.pref_auto_update_key,true)) {
+            toolbar.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    UpdateHelper.build(MainActivity.this, MyApplication.getInstance().getUpdateUrl())
+                            .check();
+                }
+            }, 500);
+        }
     }
 
     @Override

@@ -322,9 +322,9 @@ public class FloatingActionButton extends ImageButton {
             }
 
             // On pre-Honeycomb a translated view is still clickable, so we need to disable clicks manually
-            if (!hasHoneycombApi()) {
+//            if (!hasHoneycombApi()) {
                 setClickable(visible);
-            }
+//            }
         }
     }
 

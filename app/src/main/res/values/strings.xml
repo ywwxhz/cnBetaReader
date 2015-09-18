@@ -18,6 +18,7 @@
     <string name="message_load_from_cache">无可用网络，加载之前的缓存  ( &gt;﹏&lt;。)～</string>
     <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。快联系联系开发者吧。 </string>
     <string name="message_no_subscribe" >还没有关注任何新闻主题。\n\n 左滑界面开始关注吧。</string>
+    <string name="message_no_favorite">还没有收藏任何新闻呢</string>
 
     <string name="menu_reflush">刷新</string>
     <string name="menu_share">分享</string>
@@ -27,7 +28,6 @@
     <string name="pref_about_title">关于</string>
     <string name="pref_version_title">版本</string>
     <string name="pref_author_title">开发者</string>
-    <string name="pref_version_key">version</string>
     <string name="pref_general_category">通用</string>
     <string name="pref_auto_page_on">自动加载更多</string>
     <string name="pref_author_summary">远望の无限</string>
@@ -91,6 +91,20 @@
     <string name="pref_enable_ripple_key">enable_ripple_key</string>
     <string name="pref_enable_ripple_summary">是否启用Android 5.0列表波纹效果</string>
     <string name="pref_enable_ripple_title">Android 5.0 波纹效果</string>
-    <string name="message_no_favorite">还没有收藏任何新闻呢</string>
+    <string name="pref_crash_key">crash</string>
+    <string name="pref_crash_title">立即崩溃</string>
+
+    <string name="crash_restart_app">重启应用</string>
+    <string name="crash_close_app">关闭应用</string>
+    <string name="crash_log">崩溃日志</string>
+    <string name="pref_auto_update_key">auto_update</string>
+    <string name="pref_auto_update_summary">是否开启自动更新</string>
+    <string name="pref_auto_update_title">自动更新</string>
+    <string name="pref_update_categroy">更新</string>
+    <string name="pref_check_update_key">check_update</string>
+    <string name="pref_check_updat_title">检查更新</string>
+    <string name="pref_release_channel_key">pref_release_chinnal_key</string>
+    <string name="pref_release_channel_title">更新频道</string>
+
 
 </resources>

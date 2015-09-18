@@ -1,24 +1,19 @@
 package com.ywwxhz.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.format.Formatter;
 
 import com.balysv.materialripple.MaterialRippleLayout;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
-import com.ywwxhz.activitys.MainActivity;
-import com.ywwxhz.cnbetareader.BuildConfig;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.CroutonStyle;
-import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.FileKit;
 import com.ywwxhz.lib.kits.Toolkit;
+import com.ywwxhz.update.UpdateHelper;
 
 import java.io.File;
 
@@ -32,19 +27,16 @@ public class SettingFragment extends PreferenceFragment {
     private Preference preference;
     private boolean running = false;
     private Context context;
-    private int themeid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_general);
-        findPreference(getString(R.string.pref_version_key)).setSummary(getVersionName());
         preference = findPreference(getString(R.string.pref_clean_cache_key));
         preference.setSummary(getFileSize());
         preference.setOnPreferenceClickListener(onPreferenceClickListener);
-        Preference theme = findPreference("theme");
-        theme.setSummary(getResources().getStringArray(R.array.theme_text)[ThemeManger.getCurrentTheme(getActivity())]);
-        theme.setOnPreferenceClickListener(onPreferenceClickListener);
+        findPreference(getString(R.string.pref_crash_key)).setOnPreferenceClickListener(onPreferenceClickListener);
+        findPreference(getString(R.string.pref_check_update_key)).setOnPreferenceClickListener(onPreferenceClickListener);
         findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
         findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
         findPreference(getString(R.string.pref_enable_ripple_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
@@ -66,7 +58,7 @@ public class SettingFragment extends PreferenceFragment {
     Preference.OnPreferenceClickListener onPreferenceClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            if(preference.getKey().equals(getString(R.string.pref_clean_cache_key))){
+            if (preference.getKey().equals(getString(R.string.pref_clean_cache_key))) {
                 if (!running) {
                     running = true;
                     Toolkit.showCrouton(getActivity(), "正在清理缓存中。请稍候。。", CroutonStyle.CONFIRM);
@@ -95,24 +87,14 @@ public class SettingFragment extends PreferenceFragment {
                     }.execute();
                 }
                 return false;
-            }else{
-                new AlertDialog.Builder(getActivity()).setTitle(R.string.theme)
-                        .setSingleChoiceItems(R.array.theme_text, ThemeManger.getCurrentTheme(getActivity()), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                themeid = which;
-                            }
-                        })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (getActivity() instanceof MainActivity) {
-                                    ((MainActivity) getActivity()).changeTheme = true;
-                                }
-                                ImageLoader.getInstance().clearMemoryCache();
-                                ThemeManger.changeToTheme(getActivity(), themeid);
-                            }
-                        }).create().show();
+            }if (preference.getKey().equals(getString(R.string.pref_check_update_key))) {
+                UpdateHelper.build(getActivity(), MyApplication.getInstance().getUpdateUrl(),
+                        new UpdateHelper.Options()
+                                .setShowIgnoreVersion(true)
+                                .setHintVersion(true)
+                ).check();
+            } else {
+                throw new RuntimeException("Test Application Crash");
             }
             return false;
         }
@@ -124,9 +106,5 @@ public class SettingFragment extends PreferenceFragment {
         size += FileKit.getFolderSize(MyApplication.getInstance().getExternalCacheDir());
         size += FileKit.getFolderSize(new File(MyApplication.getInstance().getInternalCacheDir().getAbsolutePath() + "/../app_webview"));
         return Formatter.formatFileSize(getActivity(), size);
-    }
-
-    private String getVersionName() {
-        return "Ver. " + BuildConfig.VERSION_NAME + " " + BuildConfig.BUILD_TYPE;
     }
 }

@@ -20,20 +20,24 @@ import org.apache.http.message.BasicHeader;
  */
 public class NetKit {
 
-    private static NetKit instance;
-    private AsyncHttpClient mClient;
-
+    private static NetKit instance = new NetKit();
+    private AsyncHttpClient mAsyncHttpClient;
     private SyncHttpClient mSyncHttpClient;
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
 
     private NetKit() {
-        mClient = new AsyncHttpClient();
-        mClient.setCookieStore(new BasicCookieStore());
-        mClient.setConnectTimeout(3000);
-        mClient.setResponseTimeout(6000);
-        mClient.setMaxRetriesAndTimeout(3, 200);
-        mClient.setUserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36");
+        mAsyncHttpClient = new AsyncHttpClient();
         mSyncHttpClient = new SyncHttpClient();
+        setupHttpClient(mAsyncHttpClient);
+        setupHttpClient(mSyncHttpClient);
+    }
+
+    private void setupHttpClient(AsyncHttpClient client) {
+        client.setCookieStore(new BasicCookieStore());
+        client.setConnectTimeout(3000);
+        client.setResponseTimeout(6000);
+        client.setMaxRetriesAndTimeout(3, 200);
+        client.setUserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36");
     }
 
     public static int getConnectedType() {
@@ -47,10 +51,15 @@ public class NetKit {
     }
 
     public static NetKit getInstance() {
-        if (instance == null) {
-            instance = new NetKit();
-        }
         return instance;
+    }
+
+    public static AsyncHttpClient getAsyncClient() {
+        return instance.mAsyncHttpClient;
+    }
+
+    public static SyncHttpClient getSyncClient() {
+        return instance.mSyncHttpClient;
     }
 
     public void getNewslistByPage(int page, String type, ResponseHandlerInterface handlerInterface) {
@@ -58,7 +67,7 @@ public class NetKit {
         params.add("type", type);
         params.add("page", page + "");
         params.add("_", System.currentTimeMillis() + "");
-        mClient.get(null, Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
+        mAsyncHttpClient.get(null, Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
     }
 
     public void getNewslistByTopic(int page, String type, ResponseHandlerInterface handlerInterface) {
@@ -66,11 +75,11 @@ public class NetKit {
         params.add("id", type);
         params.add("page", page + "");
         params.add("_", System.currentTimeMillis() + "");
-        mClient.get(null, Configure.TOPIC_NEWS_LIST, getAuthHeader(), params, handlerInterface);
+        mAsyncHttpClient.get(null, Configure.TOPIC_NEWS_LIST, getAuthHeader(), params, handlerInterface);
     }
 
     public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
-        mClient.get(Configure.buildArticleUrl(sid), handlerInterface);
+        mAsyncHttpClient.get(Configure.buildArticleUrl(sid), handlerInterface);
     }
 
     public void getNewsBySidSync(String sid, ResponseHandlerInterface handlerInterface) {
@@ -80,7 +89,7 @@ public class NetKit {
     public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
         RequestParams params = new RequestParams();
         params.add("op", "1," + sid + "," + sn);
-        mClient.post(null, Configure.COMMENT_URL, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
+        mAsyncHttpClient.post(null, Configure.COMMENT_URL, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
     }
 
     public void setCommentAction(String op, String sid, String tid, String csrf_token, ResponseHandlerInterface handlerInterface) {
@@ -89,7 +98,7 @@ public class NetKit {
         params.add("sid", sid);
         params.add("tid", tid);
         params.add("csrf_token", csrf_token);
-        mClient.post(null, Configure.COMMENT_VIEW, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
+        mAsyncHttpClient.post(null, Configure.COMMENT_VIEW, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
     }
 
     public static Header[] getAuthHeader() {
@@ -98,10 +107,6 @@ public class NetKit {
                 new BasicHeader("Origin", "http://www.cnbeta.com"),
                 new BasicHeader("X-Requested-With", "XMLHttpRequest")
         };
-    }
-
-    public AsyncHttpClient getClient() {
-        return mClient;
     }
 
     public boolean isNetworkConnected() {
@@ -136,5 +141,19 @@ public class NetKit {
         NetworkInfo networkINfo = cm.getActiveNetworkInfo();
         return networkINfo != null
                 && networkINfo.getType() == ConnectivityManager.TYPE_MOBILE;
+    }
+
+    public static int getNetType(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (!(networkInfo != null && networkInfo.isConnected())) {
+            return 0;
+        }
+        int type = networkInfo.getType();
+        if (type == ConnectivityManager.TYPE_WIFI) {
+            return 1;
+        } else {
+            return 2;
+        }
     }
 }

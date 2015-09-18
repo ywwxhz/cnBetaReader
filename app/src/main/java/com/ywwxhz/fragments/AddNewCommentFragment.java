@@ -130,7 +130,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
             RequestParams params = new RequestParams();
             params.put("refresh", 1);
             params.put("_", System.currentTimeMillis());
-            NetKit.getInstance().getClient().get(getActivity(), Configure.SECOND_VIEW, NetKit.getAuthHeader(), params,
+            NetKit.getAsyncClient().get(getActivity(), Configure.SECOND_VIEW, NetKit.getAuthHeader(), params,
                     new JsonHttpResponseHandler() {
                         @Override
                         public void onStart() {
@@ -141,7 +141,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
                                 String url = response.getString("url");
-                                NetKit.getInstance().getClient().get(getActivity(), Configure.BASE_URL + url, NetKit.getAuthHeader()
+                                NetKit.getAsyncClient().get(getActivity(), Configure.BASE_URL + url, NetKit.getAuthHeader()
                                         , null, new BinaryHttpResponseHandler() {
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
@@ -213,7 +213,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
                 params.put("pid", tid);
                 params.put("seccode", seccode.getText().toString());
                 params.put("csrf_token", token);
-                NetKit.getInstance().getClient().post(getActivity(), Configure.COMMENT_VIEW,
+                NetKit.getAsyncClient().post(getActivity(), Configure.COMMENT_VIEW,
                         NetKit.getAuthHeader(), params, NetKit.CONTENT_TYPE,
                         new JsonHttpResponseHandler() {
                             @Override
