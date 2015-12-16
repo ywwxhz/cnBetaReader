@@ -178,7 +178,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 fromDB = false;
                 this.mNewsItem = new NewsItem(sid, title);
             } else {
-                mNewsItem.setTitle(title);
+                if(title.length()>0) {
+                    mNewsItem.setTitle(title);
+                }
                 fromDB = true;
             }
         } catch (DbException e) {
@@ -191,15 +193,15 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     @Override
     public void loadData(boolean startup) {
         String title = mNewsItem.getTitle();
-        shouldLoadCache = !title.contains("直播")||title.contains("已完结");
+        shouldLoadCache = !title.contains("直播") || title.contains("已完结");
         NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
-        if (mNews == null||!shouldLoadCache) {
+        if (mNews == null || !shouldLoadCache) {
             makeRequest();
         } else {
             hascontent = true;
             mNews.setTitle(title);
             mNewsItem = mNews;
-            blindData(mNews);
+            blindData();
         }
     }
 
@@ -220,14 +222,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             new AsyncTask<String, String, Boolean>() {
                 @Override
                 protected Boolean doInBackground(String... strings) {
-                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem, strings[0],shouldLoadCache);
+                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem, strings[0], shouldLoadCache);
                     return hascontent;
                 }
 
                 @Override
                 protected void onPostExecute(Boolean hascontent) {
                     if (hascontent) {
-                        blindData(mNewsItem);
+                        blindData();
                         mProgressBar.setVisibility(View.GONE);
                     } else {
                         onLoadFailure();
@@ -252,14 +254,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 callBack.onNewsLoadFinish(mNewsItem, false);
             }
         } else {
-            blindData(mNewsItem);
+            blindData();
             mWebView.setVisibility(View.VISIBLE);
         }
         mProgressBar.setVisibility(View.GONE);
         Toolkit.showCrouton(mActivity, R.string.message_no_network, Style.ALERT);
     }
 
-    private void blindData(NewsItem mNews) {
+    private void blindData() {
         String colorString = Integer.toHexString(titleColor);
         String add;
         if (ThemeManger.isNightTheme(getActivity())) {
@@ -267,8 +269,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         } else {
             add = light;
         }
+        mActivity.setTitle(mNewsItem.getTitle());
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
-                add,mNewsItem.getTitle(),mNewsItem.getFrom(),mNewsItem.getInputtime(),mNewsItem.getHometext(),mNewsItem.getContent(), showImage, convertFlashToHtml5);
+                add, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent(), showImage, convertFlashToHtml5);
         mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
         mWebView.setVisibility(View.VISIBLE);
         mActionButtom.postDelayed(new Runnable() {
@@ -282,7 +285,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         if (callBack != null) {
             callBack.onNewsLoadFinish(mNewsItem, true);
         }
-        if(fromDB){
+        if (fromDB) {
             try {
                 MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
             } catch (DbException ignored) {
@@ -365,17 +368,17 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     public void handleFontSize() {
-        final DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) LayoutInflater.from(mActivity).inflate(R.layout.fragment_font_size,null);
+        final DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) LayoutInflater.from(mActivity).inflate(R.layout.fragment_font_size, null);
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case AlertDialog.BUTTON_POSITIVE:
                         PrefKit.writeInt(getActivity(), "font_size", discreteSeekBar.getProgress());
                         break;
                     case AlertDialog.BUTTON_NEUTRAL:
                         break;
-                    case AlertDialog.BUTTON_NEGATIVE :
+                    case AlertDialog.BUTTON_NEGATIVE:
                         settings.setTextZoom(100);
                         PrefKit.delete(getActivity(), "font_size");
                         break;
@@ -404,9 +407,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         });
         new AlertDialog.Builder(mActivity).setTitle("字体大小")
                 .setView(discreteSeekBar)
-                .setPositiveButton("保存",listener)
-                .setNegativeButton("默认",listener)
-                .setNeutralButton("取消",listener).create().show();
+                .setPositiveButton("保存", listener)
+                .setNegativeButton("默认", listener)
+                .setNeutralButton("取消", listener).create().show();
     }
 
     public void doBookmark(MenuItem item) {
@@ -486,7 +489,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                             Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
-                            if(MyApplication.getInstance().getDebug()){
+                            if (MyApplication.getInstance().getDebug()) {
                                 Toast.makeText(getActivity(), throwable.toString(), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -519,19 +522,25 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Intent intent;
-            Matcher sidMatcher = Configure.ARTICLE_PATTERN.matcher(url);
-            if (sidMatcher.find()){
-                intent = new Intent(mActivity,NewsDetailActivity.class);
-                intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, Integer.parseInt(sidMatcher.group(0)));
-                intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,"");
-            }else {
-                intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setData(Uri.parse(url));
+            try {
+                Intent intent;
+                Matcher sidMatcher = Configure.ARTICLE_PATTERN.matcher(url);
+                if (sidMatcher.find()) {
+                    intent = new Intent(mActivity, NewsDetailActivity.class);
+                    intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, Integer.parseInt(sidMatcher.group(1)));
+                    intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY, "");
+                    mActivity.startActivity(intent);
+                    mActivity.finish();
+                } else {
+                    intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse(url));
+                    mActivity.startActivity(intent);
+                }
+            } catch (Exception ignored) {
+
             }
-            mActivity.startActivity(intent);
             return true;
         }
 
@@ -616,12 +625,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         }
     }
 
-    private void onShowHtmlVideoView(View html5VideoView){
+    private void onShowHtmlVideoView(View html5VideoView) {
 
         if (callBack != null) {
             callBack.onVideoFullScreen(true);
             callBack.onShowHtmlVideoView(html5VideoView);
-        }else{
+        } else {
             ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
             parent.addView(html5VideoView);
         }
@@ -629,11 +638,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         mActionButtom.setVisibility(View.GONE);
     }
 
-    private void onHideHtmlVideoView(View html5VideoView){
+    private void onHideHtmlVideoView(View html5VideoView) {
         if (callBack != null) {
             callBack.onVideoFullScreen(false);
             callBack.onHideHtmlVideoView(html5VideoView);
-        }else{
+        } else {
             ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
             parent.removeView(html5VideoView);
         }

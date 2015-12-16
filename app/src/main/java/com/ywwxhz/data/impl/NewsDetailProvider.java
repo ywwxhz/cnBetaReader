@@ -83,6 +83,7 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         introduce.select("div").remove();
         item.setHometext(introduce.html());
         Elements content = newsHeadlines.select(".content");
+        content.select(".tigerstock").remove();
         if(cacheImage){
             Elements images = content.select("img");
             for(Element image:images){

@@ -136,7 +136,6 @@ android {
 
 dependencies {
     compile project(':Crouton')
-    compile files('libs/gson-2.2.4.jar')
     compile project(':FloatingActionButton')
     compile project(':materialish-progress')
     //compile project(':PhotoView')
@@ -153,4 +152,5 @@ dependencies {
     compile project(':SuperSaiyanScrollView')
     compile project(':FilterMenu')
     compile project(':MaterialRipple')
+    compile 'com.google.code.gson:gson:2.3'
 }

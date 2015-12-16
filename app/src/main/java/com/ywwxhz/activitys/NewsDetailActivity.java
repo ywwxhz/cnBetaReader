@@ -32,7 +32,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     private List<Fragment> fragments = new ArrayList<>(2);
     private FixViewPager pager;
     private FragmentAdapter adapter;
-    private String title;
+    private CharSequence title;
     private ViewGroup contentView;
 
     @Override
@@ -41,9 +41,8 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY) && bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
             title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
-            setTitle("详情：" + title);
             contentView = (ViewGroup) findViewById(R.id.content);
-            fragments.add(NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY), title));
+            fragments.add(NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY), title.toString()));
                 setContentView(R.layout.pager_layout);
                 pager = (FixViewPager) findViewById(R.id.pager);
                 adapter = new FragmentAdapter(getSupportFragmentManager());
@@ -57,11 +56,10 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
                     @Override
                     public void onPageSelected(int position) {
+                        updateTitle();
                         if (position == 0) {
-                            setTitle("详情：" + title);
                             setSwipeBackEnable(PrefKit.getBoolean(NewsDetailActivity.this, R.string.pref_swipeback_key, true));
                         } else {
-                            setTitle("评论：" + title);
                             setSwipeBackEnable(false);
                         }
                     }
@@ -155,4 +153,20 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
         }
     }
 
+    @Override
+    public void setTitle(CharSequence title) {
+        switch (pager.getCurrentItem()){
+            case 0:
+                super.setTitle("详情：" + title);
+                break;
+            case 1:
+                super.setTitle("评论：" + title);
+                break;
+        }
+        this.title = title;
+    }
+
+    void updateTitle(){
+        setTitle(title);
+    }
 }
