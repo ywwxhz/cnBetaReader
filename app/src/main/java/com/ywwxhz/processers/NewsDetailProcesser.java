@@ -199,7 +199,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             makeRequest();
         } else {
             hascontent = true;
-            mNews.setTitle(title);
+            if(title.length()>0) {
+                mNews.setTitle(title);
+            }
             mNewsItem = mNews;
             blindData();
         }

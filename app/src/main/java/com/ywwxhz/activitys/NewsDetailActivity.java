@@ -41,6 +41,9 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY) && bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
             title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
+            if(title!=null && title.length()>0){
+                setTitle(title);
+            }
             contentView = (ViewGroup) findViewById(R.id.content);
             fragments.add(NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY), title.toString()));
                 setContentView(R.layout.pager_layout);
@@ -117,8 +120,10 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     public void onVideoFullScreen(boolean isFullScreen) {
         if (!isFullScreen) {
             setSwipeBackEnable(PrefKit.getBoolean(this, R.string.pref_swipeback_key, true));
+            helper.setEnable(true);
         } else {
             setSwipeBackEnable(false);
+            helper.setEnable(false);
         }
     }
 
@@ -155,13 +160,17 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
     @Override
     public void setTitle(CharSequence title) {
-        switch (pager.getCurrentItem()){
-            case 0:
-                super.setTitle("详情：" + title);
-                break;
-            case 1:
-                super.setTitle("评论：" + title);
-                break;
+        if(pager!=null) {
+            switch (pager.getCurrentItem()) {
+                case 0:
+                    super.setTitle("详情：" + title);
+                    break;
+                case 1:
+                    super.setTitle("评论：" + title);
+                    break;
+            }
+        }else{
+            super.setTitle("详情：" + title);
         }
         this.title = title;
     }
