@@ -92,4 +92,8 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
     protected boolean shouldChangeTheme(){
         return true;
     }
+
+    protected FrameLayout getRootView(){
+        return content;
+    }
 }

@@ -20,4 +20,8 @@
     <attr name="subTitleColor" format="color|reference"/>
     <attr name="toolbarTheme"  format="reference"/>
     <attr name="toolbarPopupTheme"  format="reference"/>
+
+    <declare-styleable name="AVLoadingIndicatorView">
+        <attr name="indicator_color" format="color"/>
+    </declare-styleable>
 </resources>

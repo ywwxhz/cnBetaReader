@@ -9,17 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.pnikosis.materialishprogress.ProgressWheel
+    <com.ywwxhz.widget.AVLoadingIndicatorView.AVLoadingIndicatorView
         android:id="@+id/loading"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        app:barColor="?colorPrimary"
-        app:barWidth="2dp"
-        app:circleRadius="30dp"
-        app:progressIndeterminate="true"
-        app:rimColor="#E1E8EC"
-        app:rimWidth="2dp" />
+        app:indicator_color="?colorPrimary"/>
 
     <TextView
         android:id="@+id/message"

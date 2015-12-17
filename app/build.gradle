@@ -75,8 +75,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix '.debug'
-            signingConfig signingConfigs.debug
+//            applicationIdSuffix '.debug'
+            signingConfig signingConfigs.release
         }
     }
 

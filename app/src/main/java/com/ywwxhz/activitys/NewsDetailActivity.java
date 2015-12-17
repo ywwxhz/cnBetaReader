@@ -1,5 +1,7 @@
 package com.ywwxhz.activitys;
 
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,11 +36,14 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     private FragmentAdapter adapter;
     private CharSequence title;
     private ViewGroup contentView;
+    private int orientation;
+    private int requiredOrientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
+        oldSystemUIVisuablity = getRootView().getSystemUiVisibility();
         if (bundle != null && bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY) && bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
             title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
             if(title!=null && title.length()>0){
@@ -116,14 +121,34 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
         pager.setCurrentItem(1, true);
     }
 
+    private int oldSystemUIVisuablity;
+
     @Override
     public void onVideoFullScreen(boolean isFullScreen) {
         if (!isFullScreen) {
+            setRequestedOrientation(orientation);
+            setRequestedOrientation(requiredOrientation);
+            getSupportActionBar().show();
             setSwipeBackEnable(PrefKit.getBoolean(this, R.string.pref_swipeback_key, true));
             helper.setEnable(true);
+            if(Build.VERSION_CODES.JELLY_BEAN<Build.VERSION.SDK_INT) {
+                getRootView().setSystemUiVisibility(oldSystemUIVisuablity);
+            }
         } else {
+            requiredOrientation = getRequestedOrientation();
+            orientation = getResources().getConfiguration().orientation;
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            getSupportActionBar().hide();
             setSwipeBackEnable(false);
             helper.setEnable(false);
+            if(Build.VERSION_CODES.JELLY_BEAN<Build.VERSION.SDK_INT) {
+                getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+            }
         }
     }
 

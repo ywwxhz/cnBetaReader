@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -35,7 +34,6 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
 import com.ywwxhz.activitys.NewsDetailActivity;
@@ -52,6 +50,7 @@ import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
+import com.ywwxhz.widget.AVLoadingIndicatorView.AVLoadingIndicatorView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import org.apache.http.Header;
@@ -75,7 +74,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private WebView mWebView;
     private boolean hascontent;
     private NewsItem mNewsItem;
-    private ProgressWheel mProgressBar;
+    private AVLoadingIndicatorView mProgressBar;
     private FloatingActionButton mActionButtom;
     private VideoWebChromeClient client = new VideoWebChromeClient();
     private boolean showImage;
@@ -130,7 +129,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         if (ThemeManger.isNightTheme(getActivity())) {
             this.mWebView.setBackgroundColor(windowBackground);
         }
-        this.mProgressBar = (ProgressWheel) view.findViewById(R.id.loading);
+        this.mProgressBar = (AVLoadingIndicatorView) view.findViewById(R.id.loading);
         this.mActionButtom = (FloatingActionButton) view.findViewById(R.id.action);
         this.mActionButtom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +202,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 mNews.setTitle(title);
             }
             mNewsItem = mNews;
-            blindData();
+            bindData();
         }
     }
 
@@ -231,7 +230,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 @Override
                 protected void onPostExecute(Boolean hascontent) {
                     if (hascontent) {
-                        blindData();
+                        bindData();
                         mProgressBar.setVisibility(View.GONE);
                     } else {
                         onLoadFailure();
@@ -256,14 +255,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 callBack.onNewsLoadFinish(mNewsItem, false);
             }
         } else {
-            blindData();
+            bindData();
             mWebView.setVisibility(View.VISIBLE);
         }
         mProgressBar.setVisibility(View.GONE);
         Toolkit.showCrouton(mActivity, R.string.message_no_network, Style.ALERT);
     }
 
-    private void blindData() {
+    private void bindData() {
         String colorString = Integer.toHexString(titleColor);
         String add;
         if (ThemeManger.isNightTheme(getActivity())) {
@@ -589,8 +588,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     class VideoWebChromeClient extends WebChromeClient {
         private View myView = null;
         CustomViewCallback myCallback = null;
-        private int orientation;
-        private int requiredOrientation;
+
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback customViewCallback) {
@@ -599,10 +597,6 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 myCallback = null;
                 return;
             }
-            requiredOrientation = mActivity.getRequestedOrientation();
-            orientation = mActivity.getResources().getConfiguration().orientation;
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            mActivity.getSupportActionBar().hide();
             view.setBackgroundColor(Color.BLACK);
             onShowHtmlVideoView(view);
             myView = view;
@@ -618,9 +612,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                     myCallback.onCustomViewHidden();
                     myCallback = null;
                 }
-                mActivity.setRequestedOrientation(orientation);
-                mActivity.setRequestedOrientation(requiredOrientation);
-                mActivity.getSupportActionBar().show();
+
                 onHideHtmlVideoView(myView);
                 myView = null;
             }
