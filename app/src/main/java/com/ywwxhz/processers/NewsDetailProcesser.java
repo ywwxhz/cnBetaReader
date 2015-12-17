@@ -92,6 +92,18 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private Handler myHandler;
     private WebSettings settings;
     private boolean shouldLoadCache;
+    private Handler showProgressHandler = new Handler();
+    private Runnable showProgress = new Runnable() {
+        @Override
+        public void run() {
+            showProgressHandler.removeCallbacks(this);
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+    };
+    private void hideProgressBar(){
+        showProgressHandler.removeCallbacks(showProgress);
+        mProgressBar.setVisibility(View.GONE);
+    }
 
     public NewsDetailProcesser(NewsDetailProvider provider) {
         super(provider);
@@ -212,7 +224,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
     @Override
     public void onLoadStart() {
-        mProgressBar.setVisibility(View.VISIBLE);
+        showProgressHandler.postDelayed(showProgress,100);
         mWebView.setVisibility(View.GONE);
         loadFail.setVisibility(View.GONE);
     }
@@ -231,7 +243,6 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 protected void onPostExecute(Boolean hascontent) {
                     if (hascontent) {
                         bindData();
-                        mProgressBar.setVisibility(View.GONE);
                     } else {
                         onLoadFailure();
                     }
@@ -258,7 +269,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             bindData();
             mWebView.setVisibility(View.VISIBLE);
         }
-        mProgressBar.setVisibility(View.GONE);
+        hideProgressBar();
         Toolkit.showCrouton(mActivity, R.string.message_no_network, Style.ALERT);
     }
 
@@ -274,24 +285,26 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
                 add, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent(), showImage, convertFlashToHtml5);
         mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
-        mWebView.setVisibility(View.VISIBLE);
+
         mActionButtom.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if (callBack != null) {
+                    callBack.onNewsLoadFinish(mNewsItem, true);
+                }
+                if (fromDB) {
+                    try {
+                        MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
+                    } catch (DbException ignored) {
+                    }
+                }
                 mActionButtom.setVisibility(View.VISIBLE);
                 mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+                hideProgressBar();
+                mWebView.setVisibility(View.VISIBLE);
             }
-        }, 200);
-        mProgressBar.setVisibility(View.GONE);
-        if (callBack != null) {
-            callBack.onNewsLoadFinish(mNewsItem, true);
-        }
-        if (fromDB) {
-            try {
-                MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
-            } catch (DbException ignored) {
-            }
-        }
+        }, 500);
+
     }
 
     @Override

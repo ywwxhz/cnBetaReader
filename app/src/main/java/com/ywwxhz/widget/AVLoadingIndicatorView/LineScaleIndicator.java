@@ -40,7 +40,7 @@ public class LineScaleIndicator extends BaseIndicatorController {
     @Override
     public List<Animator> createAnimation() {
         List<Animator> animators=new ArrayList<>();
-        long[] delays=new long[]{500,250,0,250,500};
+        long[] delays=new long[]{0,250,500,250,0};
         for (int i = 0; i < 5; i++) {
             final int index=i;
             ValueAnimator scaleAnim=ValueAnimator.ofFloat(1,0.3f,1);
