@@ -142,10 +142,8 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
             setSwipeBackEnable(false);
             helper.setEnable(false);
             if(Build.VERSION_CODES.JELLY_BEAN<Build.VERSION.SDK_INT) {
-                getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                getRootView().setSystemUiVisibility(oldSystemUIVisuablity
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
             }
@@ -156,7 +154,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     public void onShowHtmlVideoView(View html5VideoView) {
         contentView.addView(html5VideoView);
         html5VideoView.bringToFront();
-        pager.setVisibility(View.INVISIBLE);
+        pager.setVisibility(View.GONE);
     }
 
     @Override

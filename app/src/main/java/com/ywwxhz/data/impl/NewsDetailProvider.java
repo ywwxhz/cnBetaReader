@@ -18,6 +18,7 @@ import org.apache.http.Header;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.util.regex.Matcher;
@@ -84,6 +85,28 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         item.setHometext(introduce.html());
         Elements content = newsHeadlines.select(".content");
         content.select(".tigerstock").remove();
+        Elements scripts = content.select("script");
+        for (int i=0;i<scripts.size();i++){
+            Element script = scripts.get(i);
+            Element SiblingScript = script.nextElementSibling();
+            String _script;
+            if(SiblingScript!=null&&SiblingScript.tag()==Tag.valueOf("script")){
+                i++;
+                _script = script.toString().replaceAll(",?\"?(width|height)\"?:?\"(.*)?\"","");
+                _script += SiblingScript.toString();
+                _script = _script.replaceAll("\"|'","'");
+                SiblingScript.remove();
+            }else{
+                _script = script.toString().replaceAll(",?\"(width|height)\":\"\\d+\"","").replaceAll("\"|'","'");
+            }
+            Element element = new Element(Tag.valueOf("iframe"),"");
+            element.attr("contentScript",_script);
+            element.attr("ignoreHolder","true");
+            element.attr("style","width:100%");
+            element.attr("allowfullscreen ","true");
+            element.attr("onload","VideoTool.onloadIframeVideo(this)");
+            script.replaceWith(element);
+        }
         if(cacheImage){
             Elements images = content.select("img");
             for(Element image:images){
@@ -93,6 +116,7 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
                 }
             }
         }
+
         item.setContent(content.html());
         Matcher snMatcher = Configure.SN_PATTERN.matcher(resp);
         if (snMatcher.find())

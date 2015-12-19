@@ -83,10 +83,13 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private NewsDetailFragment.NewsDetailCallBack callBack;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style></head>" +
+            "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
+            "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};</script>" +
+            "<script src=\"file:///android_asset/BaseTool.js\"></script>" +
+            "<script src=\"file:///android_asset/ImageTool.js\"></script>" +
+            "<script src=\"file:///android_asset/VideoTool.js\"></script></head>" +
             "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
-            "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};" +
-            "</script><script src=\"file:///android_asset/loder.js\"></script></body></html>";
+            "<script src=\"file:///android_asset/loder.js\"></script></body></html>";
     private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
     private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
     private Handler myHandler;
@@ -283,7 +286,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         }
         mActivity.setTitle(mNewsItem.getTitle());
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
-                add, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent(), showImage, convertFlashToHtml5);
+                add, showImage, convertFlashToHtml5, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent());
         mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
 
         mActionButtom.postDelayed(new Runnable() {
@@ -347,11 +350,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     private void showAllImage() {
-        mWebView.loadUrl("javascript:Loader.showAllImage()");
+        mWebView.loadUrl("javascript:ImageTool.showAllImage()");
     }
 
     private void nightMode() {
-        mWebView.loadUrl("javascript:Loader.setNight(true)");
+        mWebView.loadUrl("javascript:BaseTool.setNight(true)");
     }
 
     public void setCallBack(NewsDetailFragment.NewsDetailCallBack callBack) {
@@ -494,7 +497,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
-                                mWebView.loadUrl("javascript:Loader.VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
+                                mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
                             } catch (Exception e) {
                                 Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
                             }
@@ -660,6 +663,6 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mWebView.loadUrl("javascript:Loader.updateWidth()");
+        mWebView.loadUrl("javascript:BaseTool.updateWidth()");
     }
 }

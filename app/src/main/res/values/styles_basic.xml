@@ -23,6 +23,7 @@
         <item name="refBackground">@drawable/ref_background_normal</item>
         <item name="titleColor">?colorPrimary</item>
         <item name="subTitleColor">#5d5b5b</item>
+        <item name="indicatorColor">?attr/colorPrimary</item>
         <item name="toolbarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
@@ -67,6 +68,7 @@
         <item name="cardBackground">@drawable/list_item_background_night</item>
         <item name="titleColor">?android:textColor</item>
         <item name="subTitleColor">#707e94</item>
+        <item name="indicatorColor">?attr/textSelectColor</item>
         <item name="refBackground">@drawable/ref_background_normal_night</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
     </style>
