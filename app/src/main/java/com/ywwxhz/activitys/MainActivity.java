@@ -36,7 +36,7 @@ public class MainActivity extends BaseToolBarActivity
                R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         changeTheme = false;
-        if(PrefKit.getBoolean(this,R.string.pref_auto_update_key,true)) {
+        if(PrefKit.getBoolean(this,R.string.pref_auto_update_key,false)) {
             toolbar.postDelayed(new Runnable() {
                 @Override
                 public void run() {

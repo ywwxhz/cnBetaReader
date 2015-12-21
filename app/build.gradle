@@ -2,7 +2,7 @@ import java.nio.charset.Charset
 
 apply plugin: 'com.android.application'
 
-project.archivesBaseName = "cnBeta_Plus"
+project.ext.set("archivesBaseName", "cnBeta_Plus");
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_COMPILE_SDK_VERSION)
@@ -94,11 +94,12 @@ android {
             versionProps['VERSION_CODE'] = vercode.toString()
             versionProps.store(versionPropsFile.newWriter(), null)
         }
-        buildDate = " Build " + new Date().format("yyyyMMddHHmmss")
+        buildDate = new Date().format("yyyyMMddHHmmss")
 
         defaultConfig {
             versionCode vercode
-            versionName verName + buildDate
+            versionName verName
+            buildConfigField  "String",  "buildDate" ,"\""+buildDate.toString()+"\""
         }
 
     }

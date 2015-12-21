@@ -46,7 +46,7 @@ public class UpdateChannelPreference extends Preference {
 
     @Override
     protected void onClick() {
-        new AlertDialog.Builder(getContext()).setTitle(R.string.theme)
+        new AlertDialog.Builder(getContext()).setTitle(R.string.pref_release_channel_title)
                 .setSingleChoiceItems(Channel, channelid, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

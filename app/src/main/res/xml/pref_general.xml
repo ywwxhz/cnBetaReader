@@ -65,7 +65,7 @@
 
     <PreferenceCategory android:title="@string/pref_update_categroy">
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="@string/pref_auto_update_key"
             android:summary="@string/pref_auto_update_summary"
             android:title="@string/pref_auto_update_title" />
