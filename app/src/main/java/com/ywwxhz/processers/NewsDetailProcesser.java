@@ -95,16 +95,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private Handler myHandler;
     private WebSettings settings;
     private boolean shouldLoadCache;
-    private Handler showProgressHandler = new Handler();
-    private Runnable showProgress = new Runnable() {
-        @Override
-        public void run() {
-            showProgressHandler.removeCallbacks(this);
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-    };
     private void hideProgressBar(){
-        showProgressHandler.removeCallbacks(showProgress);
         mProgressBar.setVisibility(View.GONE);
     }
 
@@ -227,7 +218,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
     @Override
     public void onLoadStart() {
-        showProgressHandler.postDelayed(showProgress,100);
+        mProgressBar.setVisibility(View.VISIBLE);
         mWebView.setVisibility(View.GONE);
         loadFail.setVisibility(View.GONE);
     }

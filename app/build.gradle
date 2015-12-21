@@ -1,8 +1,4 @@
-import java.nio.charset.Charset
-
 apply plugin: 'com.android.application'
-
-project.ext.set("archivesBaseName", "cnBeta_Plus");
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_COMPILE_SDK_VERSION)
@@ -13,10 +9,10 @@ android {
 
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
+        archivesBaseName = "cnBeta_Plus"
         minSdkVersion 15
         targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
         resConfigs "zh-rCN"
-        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
     }
 
     signingConfigs {
@@ -102,19 +98,6 @@ android {
             buildConfigField  "String",  "buildDate" ,"\""+buildDate.toString()+"\""
         }
 
-    }
-
-    applicationVariants.all { variant ->
-        def buildType = variant.buildType
-        def encoding = Charset.defaultCharset().toString()
-        if (buildType.applicationIdSuffix) {
-            variant.mergeResources.doLast {
-                def values = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
-                String content = values.getText(encoding)
-                content = content.replaceAll("cnBeta Plus( Dev)?", "cnBeta Plus Dev")
-                values.write(content, encoding)
-            }
-        }
     }
 
     def runTasks = gradle.startParameter.taskNames
