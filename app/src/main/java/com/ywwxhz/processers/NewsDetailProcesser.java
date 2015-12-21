@@ -306,7 +306,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 hideProgressBar();
                 mWebView.setVisibility(View.VISIBLE);
             }
-        }, 500);
+        }, 200);
 
     }
 
