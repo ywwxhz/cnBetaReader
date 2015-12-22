@@ -15,11 +15,11 @@ import java.util.List;
 public class LineScaleIndicator extends BaseIndicatorController {
 
     public static final float SCALE=1.0f;
-    public static final float START_SCALE=0.0f;
+    public static final float START_SCALE=0.3f;
 
     float[] scaleYFloats=new float[]{START_SCALE,
             START_SCALE,
-            START_SCALE,
+            SCALE,
             START_SCALE,
             START_SCALE};
 

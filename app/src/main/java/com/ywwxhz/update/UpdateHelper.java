@@ -116,6 +116,7 @@ public class UpdateHelper {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, String responseString) {
+            System.out.println(responseString);
             updateInfo = new Gson().fromJson(responseString, UpdateInfo.class);
             if (mContext != null && updateInfo != null) {
                 int ignoreVersionCode = PrefKit.getInt(mContext, "ignoreVersionCode", 0);

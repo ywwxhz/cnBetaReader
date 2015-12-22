@@ -63,7 +63,7 @@
             android:title="@string/pref_show_emoji_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_update_categroy">
+    <PreferenceCategory android:title="@string/pref_update_categroy" android:enabled="false">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_auto_update_key"

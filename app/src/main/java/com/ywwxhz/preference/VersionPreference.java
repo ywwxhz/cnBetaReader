@@ -33,6 +33,6 @@ public class VersionPreference extends Preference {
         setSummary(getVersionName());
     }
     private String getVersionName() {
-        return "Ver. " + BuildConfig.VERSION_NAME + "\nBuildDate " +BuildConfig.buildDate+ "\nChannel " + BuildConfig.BUILD_TYPE;
+        return "Ver. " + BuildConfig.VERSION_NAME + "\nBuildDate " +BuildConfig.buildDate+ "\n" + BuildConfig.BUILD_TYPE+ " Channel";
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.format.Formatter;
+import android.widget.Toast;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.ywwxhz.MyApplication;
@@ -88,6 +89,7 @@ public class SettingFragment extends PreferenceFragment {
                 }
                 return false;
             }if (preference.getKey().equals(getString(R.string.pref_check_update_key))) {
+                Toast.makeText(getActivity(), "正在检查更新中", Toast.LENGTH_SHORT).show();
                 UpdateHelper.build(getActivity(), MyApplication.getInstance().getUpdateUrl(),
                         new UpdateHelper.Options()
                                 .setShowIgnoreVersion(true)

@@ -103,7 +103,7 @@ public class MyApplication extends Application {
     }
 
     public String getUpdateUrl() {
-        return "http://ywwxhz.byethost31.com/project/cnBetaPlus/api/update-" +
-                PrefKit.getString(this, R.string.pref_release_channel_key, BuildConfig.BUILD_TYPE) + ".php";
+        return "http://ywwxhz.byethost31.com/projects/cnBetaPlus/api/update-" +
+                PrefKit.getString(this, R.string.pref_release_channel_key, BuildConfig.BUILD_TYPE) + ".php?ckattempt=1";
     }
 }
