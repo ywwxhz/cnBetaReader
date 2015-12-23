@@ -27,9 +27,9 @@ import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.update.listener.OnUpdateListener;
 import com.ywwxhz.update.pojo.UpdateInfo;
 
-import org.apache.http.Header;
-
 import java.io.File;
+
+import cz.msebera.android.httpclient.Header;
 
 public class UpdateHelper {
 
@@ -262,7 +262,7 @@ public class UpdateHelper {
             }
 
             @Override
-            public void onProgress(int bytesWritten, int totalSize) {
+            public void onProgress(long bytesWritten, long totalSize) {
                 int progress = (int) ((bytesWritten / (float) totalSize) * 100);
                 if (progress != oldProgress) {
                     showDownloadNotificationUI(progress, bytesWritten, totalSize);
@@ -290,7 +290,7 @@ public class UpdateHelper {
      *
      * @param progress
      */
-    private void showDownloadNotificationUI(int progress, int bytesWritten, int totalSize) {
+    private void showDownloadNotificationUI(int progress, long bytesWritten, long totalSize) {
         if (mContext != null) {
             if (progress == 100) {
                 ntfBuilder.setContentText("文件校验中");
@@ -309,7 +309,7 @@ public class UpdateHelper {
      * 获取当前app版本
      *
      * @return PackageInfo
-     * @throws PackageManager.NameNotFoundException
+     *
      */
     private PackageInfo getPackageInfo() {
         PackageInfo pinfo = null;

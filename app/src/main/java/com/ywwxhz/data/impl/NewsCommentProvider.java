@@ -24,11 +24,10 @@ import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
-import org.apache.http.Header;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cz.msebera.android.httpclient.Header;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**

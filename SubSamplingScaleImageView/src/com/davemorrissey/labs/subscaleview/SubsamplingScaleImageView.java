@@ -19,30 +19,50 @@ package com.davemorrissey.labs.subscaleview;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.*;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.FloatMath;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.davemorrissey.labs.subscaleview.R.styleable;
+import com.davemorrissey.labs.subscaleview.decoder.CompatDecoderFactory;
+import com.davemorrissey.labs.subscaleview.decoder.DecoderFactory;
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder;
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * Displays an image subsampled as necessary to avoid loading too much image data into memory. After a pinch to zoom in,
@@ -110,7 +130,13 @@ public class SubsamplingScaleImageView extends View {
     private Bitmap bitmap;
 
     // Whether the bitmap is a preview image
-    private boolean preview;
+    private boolean bitmapIsPreview;
+
+    // Specifies if a cache handler is also referencing the bitmap. Do not recycle if so.
+    private boolean bitmapIsCached;
+
+    // Uri of full size image
+    private Uri uri;
 
     // Sample size used to display the whole image when fully zoomed out
     private int fullImageSampleSize;
@@ -138,6 +164,9 @@ public class SubsamplingScaleImageView extends View {
 
     // Minimum scale type
     private int minimumScaleType = SCALE_TYPE_CENTER_INSIDE;
+
+    // Whether to use the thread pool executor to load tiles
+    private boolean parallelLoadingEnabled;
 
     // Gesture detection settings
     private boolean panEnabled = true;
@@ -183,8 +212,8 @@ public class SubsamplingScaleImageView extends View {
     // Tile and image decoding
     private ImageRegionDecoder decoder;
     private final Object decoderLock = new Object();
-    private Class<? extends ImageRegionDecoder> regionDecoderClass = SkiaImageRegionDecoder.class;
-    private Class<? extends ImageDecoder> bitmapDecoderClass = SkiaImageDecoder.class;
+    private DecoderFactory<? extends ImageDecoder> bitmapDecoderFactory = new CompatDecoderFactory<ImageDecoder>(SkiaImageDecoder.class);
+    private DecoderFactory<? extends ImageRegionDecoder> regionDecoderFactory = new CompatDecoderFactory<ImageRegionDecoder>(SkiaImageRegionDecoder.class);
 
     // Debug values
     private PointF vCenterStart;
@@ -359,35 +388,36 @@ public class SubsamplingScaleImageView extends View {
             this.sHeight = imageSource.getSHeight();
             this.pRegion = previewSource.getSRegion();
             if (previewSource.getBitmap() != null) {
+                this.bitmapIsCached = previewSource.isCached();
                 onPreviewLoaded(previewSource.getBitmap());
             } else {
                 Uri uri = previewSource.getUri();
                 if (uri == null && previewSource.getResource() != null) {
                     uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getContext().getPackageName() + "/" + previewSource.getResource());
                 }
-                BitmapLoadTask task = new BitmapLoadTask(this, getContext(), bitmapDecoderClass, uri, true);
-                task.execute();
+                BitmapLoadTask task = new BitmapLoadTask(this, getContext(), bitmapDecoderFactory, uri, true);
+                execute(task);
             }
         }
 
         if (imageSource.getBitmap() != null && imageSource.getSRegion() != null) {
-            onImageLoaded(Bitmap.createBitmap(imageSource.getBitmap(), imageSource.getSRegion().left, imageSource.getSRegion().top, imageSource.getSRegion().width(), imageSource.getSRegion().height()), ORIENTATION_0);
+            onImageLoaded(Bitmap.createBitmap(imageSource.getBitmap(), imageSource.getSRegion().left, imageSource.getSRegion().top, imageSource.getSRegion().width(), imageSource.getSRegion().height()), ORIENTATION_0, false);
         } else if (imageSource.getBitmap() != null) {
-            onImageLoaded(imageSource.getBitmap(), ORIENTATION_0);
+            onImageLoaded(imageSource.getBitmap(), ORIENTATION_0, imageSource.isCached());
         } else {
-            this.sRegion = imageSource.getSRegion();
-            Uri uri = imageSource.getUri();
+            sRegion = imageSource.getSRegion();
+            uri = imageSource.getUri();
             if (uri == null && imageSource.getResource() != null) {
                 uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getContext().getPackageName() + "/" + imageSource.getResource());
             }
-            if (imageSource.getTile() || this.sRegion != null) {
+            if (imageSource.getTile() || sRegion != null) {
                 // Load the bitmap using tile decoding.
-                TilesInitTask task = new TilesInitTask(this, getContext(), regionDecoderClass, uri);
-                task.execute();
+                TilesInitTask task = new TilesInitTask(this, getContext(), regionDecoderFactory, uri);
+                execute(task);
             } else {
                 // Load the bitmap as a single image.
-                BitmapLoadTask task = new BitmapLoadTask(this, getContext(), bitmapDecoderClass, uri, false);
-                task.execute();
+                BitmapLoadTask task = new BitmapLoadTask(this, getContext(), bitmapDecoderFactory, uri, false);
+                execute(task);
             }
         }
     }
@@ -419,13 +449,14 @@ public class SubsamplingScaleImageView extends View {
         matrix = null;
         sRect = null;
         if (newImage) {
+            uri = null;
             if (decoder != null) {
                 synchronized (decoderLock) {
                     decoder.recycle();
                     decoder = null;
                 }
             }
-            if (bitmap != null) {
+            if (bitmap != null && !bitmapIsCached) {
                 bitmap.recycle();
             }
             sWidth = 0;
@@ -436,7 +467,8 @@ public class SubsamplingScaleImageView extends View {
             readySent = false;
             imageLoadedSent = false;
             bitmap = null;
-            preview = false;
+            bitmapIsPreview = false;
+            bitmapIsCached = false;
         }
         if (tileMap != null) {
             for (Map.Entry<Integer, List<Tile>> tileMapEntry : tileMap.entrySet()) {
@@ -551,12 +583,19 @@ public class SubsamplingScaleImageView extends View {
      * Handle touch events. One finger pans, and two finger pinch and zoom plus panning.
      */
     @Override @SuppressWarnings("deprecation")
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         // During non-interruptible anims, ignore all touch events
         if (anim != null && !anim.interruptible) {
             getParent().requestDisallowInterceptTouchEvent(true);
             return true;
         } else {
+            if (anim != null && anim.listener != null) {
+                try {
+                    anim.listener.onInterruptedByUser();
+                } catch (Exception e) {
+                    Log.w(TAG, "Error thrown by animation listener", e);
+                }
+            }
             anim = null;
         }
 
@@ -856,6 +895,13 @@ public class SubsamplingScaleImageView extends View {
             fitToBounds(finished || (anim.scaleStart == anim.scaleEnd));
             refreshRequiredTiles(finished);
             if (finished) {
+                if (anim.listener != null) {
+                    try {
+                        anim.listener.onComplete();
+                    } catch (Exception e) {
+                        Log.w(TAG, "Error thrown by animation listener", e);
+                    }
+                }
                 anim = null;
             }
             invalidate();
@@ -864,7 +910,7 @@ public class SubsamplingScaleImageView extends View {
         if (tileMap != null && isBaseLayerReady()) {
 
             // Optimum sample size for current scale
-            int sampleSize = Math.min(fullImageSampleSize, calculateInSampleSize());
+            int sampleSize = Math.min(fullImageSampleSize, calculateInSampleSize(scale));
 
             // First check for missing tiles - if there are any we need the base layer underneath to avoid gaps
             boolean hasMissingTiles = false;
@@ -934,7 +980,7 @@ public class SubsamplingScaleImageView extends View {
         } else if (bitmap != null) {
 
             float xScale = scale, yScale = scale;
-            if (preview) {
+            if (bitmapIsPreview) {
                 xScale = scale * ((float)sWidth/bitmap.getWidth());
                 yScale = scale * ((float)sHeight/bitmap.getHeight());
             }
@@ -942,14 +988,14 @@ public class SubsamplingScaleImageView extends View {
             if (matrix == null) { matrix = new Matrix(); }
             matrix.reset();
             matrix.postScale(xScale, yScale);
-            matrix.postRotate(getOrientation());
+            matrix.postRotate(getRequiredRotation());
             matrix.postTranslate(vTranslate.x, vTranslate.y);
 
-            if (getOrientation() == ORIENTATION_180) {
+            if (getRequiredRotation() == ORIENTATION_180) {
                 matrix.postTranslate(scale * sWidth, scale * sHeight);
-            } else if (getOrientation() == ORIENTATION_90) {
+            } else if (getRequiredRotation() == ORIENTATION_90) {
                 matrix.postTranslate(scale * sHeight, 0);
-            } else if (getOrientation() == ORIENTATION_270) {
+            } else if (getRequiredRotation() == ORIENTATION_270) {
                 matrix.postTranslate(0, scale * sWidth);
             }
 
@@ -982,7 +1028,7 @@ public class SubsamplingScaleImageView extends View {
      * Checks whether the base layer of tiles or full size bitmap is ready.
      */
     private boolean isBaseLayerReady() {
-        if (bitmap != null && !preview) {
+        if (bitmap != null && !bitmapIsPreview) {
             return true;
         } else if (tileMap != null) {
             boolean baseLayerReady = true;
@@ -1059,21 +1105,36 @@ public class SubsamplingScaleImageView extends View {
      */
     private synchronized void initialiseBaseLayer(Point maxTileDimensions) {
 
-        fitToBounds(true);
+        satTemp = new ScaleAndTranslate(0f, new PointF(0, 0));
+        fitToBounds(true, satTemp);
 
         // Load double resolution - next level will be split into four tiles and at the center all four are required,
         // so don't bother with tiling until the next level 16 tiles are needed.
-        fullImageSampleSize = calculateInSampleSize();
+        fullImageSampleSize = calculateInSampleSize(satTemp.scale);
         if (fullImageSampleSize > 1) {
             fullImageSampleSize /= 2;
         }
 
-        initialiseTileMap(maxTileDimensions);
+        if (fullImageSampleSize == 1 && sRegion == null && sWidth() < maxTileDimensions.x && sHeight() < maxTileDimensions.y) {
 
-        List<Tile> baseGrid = tileMap.get(fullImageSampleSize);
-        for (Tile baseTile : baseGrid) {
-            TileLoadTask task = new TileLoadTask(this, decoder, baseTile);
-            task.execute();
+            // Whole image is required at native resolution, and is smaller than the canvas max bitmap size.
+            // Use BitmapDecoder for better image support.
+            decoder.recycle();
+            decoder = null;
+            BitmapLoadTask task = new BitmapLoadTask(this, getContext(), bitmapDecoderFactory, uri, false);
+            execute(task);
+
+        } else {
+
+            initialiseTileMap(maxTileDimensions);
+
+            List<Tile> baseGrid = tileMap.get(fullImageSampleSize);
+            for (Tile baseTile : baseGrid) {
+                TileLoadTask task = new TileLoadTask(this, decoder, baseTile);
+                execute(task);
+            }
+            refreshRequiredTiles(true);
+
         }
 
     }
@@ -1086,7 +1147,7 @@ public class SubsamplingScaleImageView extends View {
     private void refreshRequiredTiles(boolean load) {
         if (decoder == null || tileMap == null) { return; }
 
-        int sampleSize = Math.min(fullImageSampleSize, calculateInSampleSize());
+        int sampleSize = Math.min(fullImageSampleSize, calculateInSampleSize(scale));
 
         // Load tiles of the correct sample size that are on screen. Discard tiles off screen, and those that are higher
         // resolution than required, or lower res than required but not the base layer, so the base layer is always present.
@@ -1104,7 +1165,7 @@ public class SubsamplingScaleImageView extends View {
                         tile.visible = true;
                         if (!tile.loading && tile.bitmap == null && load) {
                             TileLoadTask task = new TileLoadTask(this, decoder, tile);
-                            task.execute();
+                            execute(task);
                         }
                     } else if (tile.sampleSize != fullImageSampleSize) {
                         tile.visible = false;
@@ -1143,6 +1204,9 @@ public class SubsamplingScaleImageView extends View {
         // If waiting to translate to new center position, set translate now
         if (sPendingCenter != null && pendingScale != null) {
             scale = pendingScale;
+            if (vTranslate == null) {
+                vTranslate = new PointF();
+            }
             vTranslate.x = (getWidth()/2) - (scale * sPendingCenter.x);
             vTranslate.y = (getHeight()/2) - (scale * sPendingCenter.y);
             sPendingCenter = null;
@@ -1158,16 +1222,15 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Calculates sample size to fit the source image in given bounds.
      */
-    private int calculateInSampleSize() {
-        float adjustedScale = scale;
+    private int calculateInSampleSize(float scale) {
         if (minimumTileDpi > 0) {
             DisplayMetrics metrics = getResources().getDisplayMetrics();
             float averageDpi = (metrics.xdpi + metrics.ydpi)/2;
-            adjustedScale = (minimumTileDpi/averageDpi) * scale;
+            scale = (minimumTileDpi/averageDpi) * scale;
         }
 
-        int reqWidth = (int)(sWidth() * adjustedScale);
-        int reqHeight = (int)(sHeight() * adjustedScale);
+        int reqWidth = (int)(sWidth() * scale);
+        int reqHeight = (int)(sHeight() * scale);
 
         // Raw height and width of image
         int inSampleSize = 1;
@@ -1326,15 +1389,15 @@ public class SubsamplingScaleImageView extends View {
     private static class TilesInitTask extends AsyncTask<Void, Void, int[]> {
         private final WeakReference<SubsamplingScaleImageView> viewRef;
         private final WeakReference<Context> contextRef;
-        private final WeakReference<Class<? extends ImageRegionDecoder>> decoderClassRef;
+        private final WeakReference<DecoderFactory<? extends ImageRegionDecoder>> decoderFactoryRef;
         private final Uri source;
         private ImageRegionDecoder decoder;
         private Exception exception;
 
-        public TilesInitTask(SubsamplingScaleImageView view, Context context, Class<? extends ImageRegionDecoder> decoderClass, Uri source) {
+        public TilesInitTask(SubsamplingScaleImageView view, Context context, DecoderFactory<? extends ImageRegionDecoder> decoderFactory, Uri source) {
             this.viewRef = new WeakReference<SubsamplingScaleImageView>(view);
             this.contextRef = new WeakReference<Context>(context);
-            this.decoderClassRef = new WeakReference<Class<? extends ImageRegionDecoder>>(decoderClass);
+            this.decoderFactoryRef = new WeakReference<DecoderFactory<? extends ImageRegionDecoder>>(decoderFactory);
             this.source = source;
         }
 
@@ -1343,10 +1406,10 @@ public class SubsamplingScaleImageView extends View {
             try {
                 String sourceUri = source.toString();
                 Context context = contextRef.get();
-                Class<? extends ImageRegionDecoder> decoderClass = decoderClassRef.get();
+                DecoderFactory<? extends ImageRegionDecoder> decoderFactory = decoderFactoryRef.get();
                 SubsamplingScaleImageView view = viewRef.get();
-                if (context != null && decoderClass != null && view != null) {
-                    decoder = decoderClass.newInstance();
+                if (context != null && decoderFactory != null && view != null) {
+                    decoder = decoderFactory.make();
                     Point dimensions = decoder.init(context, source);
                     int sWidth = dimensions.x;
                     int sHeight = dimensions.y;
@@ -1385,9 +1448,12 @@ public class SubsamplingScaleImageView extends View {
         if (this.sWidth > 0 && this.sHeight > 0 && (this.sWidth != sWidth || this.sHeight != sHeight)) {
             reset(false);
             if (bitmap != null) {
-                bitmap.recycle();
+                if (!bitmapIsCached) {
+                    bitmap.recycle();
+                }
                 bitmap = null;
-                preview = false;
+                bitmapIsPreview = false;
+                bitmapIsCached = false;
             }
         }
         this.decoder = decoder;
@@ -1422,7 +1488,7 @@ public class SubsamplingScaleImageView extends View {
                 SubsamplingScaleImageView view = viewRef.get();
                 ImageRegionDecoder decoder = decoderRef.get();
                 Tile tile = tileRef.get();
-                if (decoder != null && tile != null && view != null && decoder.isReady()) {
+                if (decoder != null && tile != null && view != null && decoder.isReady() && tile.visible) {
                     synchronized (view.decoderLock) {
                         // Update tile's file sRect according to rotation
                         view.fileSRect(tile.sRect, tile.fileSRect);
@@ -1464,9 +1530,12 @@ public class SubsamplingScaleImageView extends View {
         checkReady();
         checkImageLoaded();
         if (isBaseLayerReady() && bitmap != null) {
-            bitmap.recycle();
+            if (!bitmapIsCached) {
+                bitmap.recycle();
+            }
             bitmap = null;
-            preview = false;
+            bitmapIsPreview = false;
+            bitmapIsCached = false;
         }
         invalidate();
     }
@@ -1477,16 +1546,16 @@ public class SubsamplingScaleImageView extends View {
     private static class BitmapLoadTask extends AsyncTask<Void, Void, Integer> {
         private final WeakReference<SubsamplingScaleImageView> viewRef;
         private final WeakReference<Context> contextRef;
-        private final WeakReference<Class<? extends ImageDecoder>> decoderClassRef;
+        private final WeakReference<DecoderFactory<? extends ImageDecoder>> decoderFactoryRef;
         private final Uri source;
         private final boolean preview;
         private Bitmap bitmap;
         private Exception exception;
 
-        public BitmapLoadTask(SubsamplingScaleImageView view, Context context, Class<? extends ImageDecoder> decoderClass, Uri source, boolean preview) {
+        public BitmapLoadTask(SubsamplingScaleImageView view, Context context, DecoderFactory<? extends ImageDecoder> decoderFactory, Uri source, boolean preview) {
             this.viewRef = new WeakReference<SubsamplingScaleImageView>(view);
             this.contextRef = new WeakReference<Context>(context);
-            this.decoderClassRef = new WeakReference<Class<? extends ImageDecoder>>(decoderClass);
+            this.decoderFactoryRef = new WeakReference<DecoderFactory<? extends ImageDecoder>>(decoderFactory);
             this.source = source;
             this.preview = preview;
         }
@@ -1496,10 +1565,10 @@ public class SubsamplingScaleImageView extends View {
             try {
                 String sourceUri = source.toString();
                 Context context = contextRef.get();
-                Class<? extends ImageDecoder> decoderClass = decoderClassRef.get();
+                DecoderFactory<? extends ImageDecoder> decoderFactory = decoderFactoryRef.get();
                 SubsamplingScaleImageView subsamplingScaleImageView = viewRef.get();
-                if (context != null && decoderClass != null && subsamplingScaleImageView != null) {
-                    bitmap = decoderClass.newInstance().decode(context, source);
+                if (context != null && decoderFactory != null && subsamplingScaleImageView != null) {
+                    bitmap = decoderFactory.make().decode(context, source);
                     return subsamplingScaleImageView.getExifOrientation(sourceUri);
                 }
             } catch (Exception e) {
@@ -1517,7 +1586,7 @@ public class SubsamplingScaleImageView extends View {
                     if (preview) {
                         subsamplingScaleImageView.onPreviewLoaded(bitmap);
                     } else {
-                        subsamplingScaleImageView.onImageLoaded(bitmap, orientation);
+                        subsamplingScaleImageView.onImageLoaded(bitmap, orientation, false);
                     }
                 } else if (exception != null && subsamplingScaleImageView.onImageEventListener != null) {
                     if (preview) {
@@ -1543,7 +1612,7 @@ public class SubsamplingScaleImageView extends View {
         } else {
             bitmap = previewBitmap;
         }
-        preview = true;
+        bitmapIsPreview = true;
         if (checkReady()) {
             invalidate();
             requestLayout();
@@ -1553,20 +1622,23 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Called by worker task when full size image bitmap is ready (tiling is disabled).
      */
-    private synchronized void onImageLoaded(Bitmap bitmap, int sOrientation) {
+    private synchronized void onImageLoaded(Bitmap bitmap, int sOrientation, boolean bitmapIsCached) {
         // If actual dimensions don't match the declared size, reset everything.
         if (this.sWidth > 0 && this.sHeight > 0 && (this.sWidth != bitmap.getWidth() || this.sHeight != bitmap.getHeight())) {
             reset(false);
         }
-        if (this.bitmap != null) {
+        if (this.bitmap != null && !this.bitmapIsCached) {
             this.bitmap.recycle();
         }
-        this.preview = false;
+        this.bitmapIsPreview = false;
+        this.bitmapIsCached = bitmapIsCached;
         this.bitmap = bitmap;
         this.sWidth = bitmap.getWidth();
         this.sHeight = bitmap.getHeight();
         this.sOrientation = sOrientation;
-        if (checkReady() || checkImageLoaded()) {
+        boolean ready = checkReady();
+        boolean imageLoaded = checkImageLoaded();
+        if (ready || imageLoaded) {
             invalidate();
             requestLayout();
         }
@@ -1578,7 +1650,25 @@ public class SubsamplingScaleImageView extends View {
      */
     private int getExifOrientation(String sourceUri) {
         int exifOrientation = ORIENTATION_0;
-        if (sourceUri.startsWith(ImageSource.FILE_SCHEME) && !sourceUri.startsWith(ImageSource.ASSET_SCHEME)) {
+        if (sourceUri.startsWith(ContentResolver.SCHEME_CONTENT)) {
+            try {
+                final String[] columns = { MediaStore.Images.Media.ORIENTATION };
+                final Cursor cursor = getContext().getContentResolver().query(Uri.parse(sourceUri), columns, null, null, null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        int orientation = cursor.getInt(0);
+                        if (VALID_ORIENTATIONS.contains(orientation) && orientation != ORIENTATION_USE_EXIF) {
+                            exifOrientation = orientation;
+                        } else {
+                            Log.w(TAG, "Unsupported orientation: " + orientation);
+                        }
+                    }
+                    cursor.close();
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "Could not get orientation of image from media store");
+            }
+        } else if (sourceUri.startsWith(ImageSource.FILE_SCHEME) && !sourceUri.startsWith(ImageSource.ASSET_SCHEME)) {
             try {
                 ExifInterface exifInterface = new ExifInterface(sourceUri.substring(ImageSource.FILE_SCHEME.length() - 1));
                 int orientationAttr = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -1598,6 +1688,21 @@ public class SubsamplingScaleImageView extends View {
             }
         }
         return exifOrientation;
+    }
+
+    private void execute(AsyncTask<Void, Void, ?> asyncTask) {
+        if (parallelLoadingEnabled && VERSION.SDK_INT >= 11) {
+            try {
+                Field executorField = AsyncTask.class.getField("THREAD_POOL_EXECUTOR");
+                Executor executor = (Executor)executorField.get(null);
+                Method executeMethod = AsyncTask.class.getMethod("executeOnExecutor", new Class[] { Executor.class, Object[].class });
+                executeMethod.invoke(asyncTask, executor, null);
+                return;
+            } catch (Exception e) {
+                Log.i(TAG, "Failed to execute AsyncTask on thread pool executor, falling back to single threaded executor", e);
+            }
+        }
+        asyncTask.execute();
     }
 
     private static class Tile {
@@ -1627,6 +1732,7 @@ public class SubsamplingScaleImageView extends View {
         private boolean interruptible = true; // Whether the anim can be interrupted by a touch
         private int easing = EASE_IN_OUT_QUAD; // Easing style
         private long time = System.currentTimeMillis(); // Start time
+        private OnAnimationEventListener listener; // Event listener
 
     }
 
@@ -1727,7 +1833,7 @@ public class SubsamplingScaleImageView extends View {
     private float distance(float x0, float x1, float y0, float y1) {
         float x = x0 - x1;
         float y = y0 - y1;
-        return FloatMath.sqrt(x * x + y * y);
+        return (float) Math.sqrt(x * x + y * y);
     }
 
     /**
@@ -1958,6 +2064,7 @@ public class SubsamplingScaleImageView extends View {
     }
 
     /**
+     *
      * Swap the default region decoder implementation for one of your own. You must do this before setting the image file or
      * asset, and you cannot use a custom decoder when using layout XML to set an asset name. Your class must have a
      * public default constructor.
@@ -1967,7 +2074,20 @@ public class SubsamplingScaleImageView extends View {
         if (regionDecoderClass == null) {
             throw new IllegalArgumentException("Decoder class cannot be set to null");
         }
-        this.regionDecoderClass = regionDecoderClass;
+        this.regionDecoderFactory = new CompatDecoderFactory<ImageRegionDecoder>(regionDecoderClass);
+    }
+
+    /**
+     * Swap the default region decoder implementation for one of your own. You must do this before setting the image file or
+     * asset, and you cannot use a custom decoder when using layout XML to set an asset name.
+     * @param regionDecoderFactory The {@link DecoderFactory} implementation that produces {@link ImageRegionDecoder}
+     *                             instances.
+     */
+    public final void setRegionDecoderFactory(DecoderFactory<? extends ImageRegionDecoder> regionDecoderFactory) {
+        if (regionDecoderFactory == null) {
+            throw new IllegalArgumentException("Decoder factory cannot be set to null");
+        }
+        this.regionDecoderFactory = regionDecoderFactory;
     }
 
     /**
@@ -1980,7 +2100,19 @@ public class SubsamplingScaleImageView extends View {
         if (bitmapDecoderClass == null) {
             throw new IllegalArgumentException("Decoder class cannot be set to null");
         }
-        this.bitmapDecoderClass = bitmapDecoderClass;
+        this.bitmapDecoderFactory = new CompatDecoderFactory<ImageDecoder>(bitmapDecoderClass);
+    }
+
+    /**
+     * Swap the default bitmap decoder implementation for one of your own. You must do this before setting the image file or
+     * asset, and you cannot use a custom decoder when using layout XML to set an asset name.
+     * @param bitmapDecoderFactory The {@link DecoderFactory} implementation that produces {@link ImageDecoder} instances.
+     */
+    public final void setBitmapDecoderFactory(DecoderFactory<? extends ImageDecoder> bitmapDecoderFactory) {
+        if (bitmapDecoderFactory == null) {
+            throw new IllegalArgumentException("Decoder factory cannot be set to null");
+        }
+        this.bitmapDecoderFactory = bitmapDecoderFactory;
     }
 
     /**
@@ -2048,7 +2180,7 @@ public class SubsamplingScaleImageView extends View {
     public final void setMaximumDpi(int dpi) {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         float averageDpi = (metrics.xdpi + metrics.ydpi)/2;
-        setMinScale(averageDpi/dpi);
+        setMinScale(averageDpi / dpi);
     }
 
     /**
@@ -2304,6 +2436,17 @@ public class SubsamplingScaleImageView extends View {
     }
 
     /**
+     * Toggle parallel loading. When enabled, tiles are loaded using the thread pool executor available
+     * in SDK 11+. In older versions this has no effect. Parallel loading may use more memory and there
+     * is a possibility that it will make the tile loading unreliable, but it reduces the chances of
+     * an app's background processes blocking loading.
+     * @param parallelLoadingEnabled Whether to run AsyncTasks using a thread pool executor.
+     */
+    public void setParallelLoadingEnabled(boolean parallelLoadingEnabled) {
+        this.parallelLoadingEnabled = parallelLoadingEnabled;
+    }
+
+    /**
      * Enables visual debugging, showing tile boundaries and sizes.
      */
     public final void setDebug(boolean debug) {
@@ -2331,7 +2474,7 @@ public class SubsamplingScaleImageView extends View {
      * image is instead animated to move the center point as near to the center of the screen as is allowed - it's
      * guaranteed to be on screen.
      * @param sCenter Target center point
-     * @return {@link AnimationBuilder} instance. Call {@link SubsamplingScaleImageView.AnimationBuilder#start()} to start the anim.
+     * @return {@link AnimationBuilder} instance. Call {@link AnimationBuilder#start()} to start the anim.
      */
     public AnimationBuilder animateCenter(PointF sCenter) {
         if (!isReady()) {
@@ -2344,7 +2487,7 @@ public class SubsamplingScaleImageView extends View {
      * Creates a scale animation builder, that when started will animate a zoom in or out. If this would move the image
      * beyond the panning limits, the image is automatically panned during the animation.
      * @param scale Target scale.
-     * @return {@link AnimationBuilder} instance. Call {@link SubsamplingScaleImageView.AnimationBuilder#start()} to start the anim.
+     * @return {@link AnimationBuilder} instance. Call {@link AnimationBuilder#start()} to start the anim.
      */
     public AnimationBuilder animateScale(float scale) {
         if (!isReady()) {
@@ -2357,7 +2500,7 @@ public class SubsamplingScaleImageView extends View {
      * Creates a scale animation builder, that when started will animate a zoom in or out. If this would move the image
      * beyond the panning limits, the image is automatically panned during the animation.
      * @param scale Target scale.
-     * @return {@link AnimationBuilder} instance. Call {@link SubsamplingScaleImageView.AnimationBuilder#start()} to start the anim.
+     * @return {@link AnimationBuilder} instance. Call {@link AnimationBuilder#start()} to start the anim.
      */
     public AnimationBuilder animateScaleAndCenter(float scale, PointF sCenter) {
         if (!isReady()) {
@@ -2379,6 +2522,7 @@ public class SubsamplingScaleImageView extends View {
         private int easing = EASE_IN_OUT_QUAD;
         private boolean interruptible = true;
         private boolean panLimited = true;
+        private OnAnimationEventListener listener;
 
         private AnimationBuilder(PointF sCenter) {
             this.targetScale = scale;
@@ -2438,6 +2582,16 @@ public class SubsamplingScaleImageView extends View {
         }
 
         /**
+         * Add an animation event listener.
+         * @param listener The listener.
+         * @return this builder for method chaining.
+         */
+        public AnimationBuilder withOnAnimationEventListener(OnAnimationEventListener listener) {
+            this.listener = listener;
+            return this;
+        }
+
+        /**
          * Only for internal use. When set to true, the animation proceeds towards the actual end point - the nearest
          * point to the center allowed by pan limits. When false, animation is in the direction of the requested end
          * point and is stopped when the limit for each axis is reached. The latter behaviour is used for flings but
@@ -2452,6 +2606,14 @@ public class SubsamplingScaleImageView extends View {
          * Starts the animation.
          */
         public void start() {
+            if (anim != null && anim.listener != null) {
+                try {
+                    anim.listener.onInterruptedByNewAnim();
+                } catch (Exception e) {
+                    Log.w(TAG, "Error thrown by animation listener", e);
+                }
+            }
+
             int vxCenter = getPaddingLeft() + (getWidth() - getPaddingRight() - getPaddingLeft())/2;
             int vyCenter = getPaddingTop() + (getHeight() - getPaddingBottom() - getPaddingTop())/2;
             float targetScale = limitedScale(this.targetScale);
@@ -2472,6 +2634,7 @@ public class SubsamplingScaleImageView extends View {
             anim.interruptible = interruptible;
             anim.easing = easing;
             anim.time = System.currentTimeMillis();
+            anim.listener = listener;
 
             if (vFocus != null) {
                 // Calculate where translation will be at the end of the anim
@@ -2489,6 +2652,42 @@ public class SubsamplingScaleImageView extends View {
 
             invalidate();
         }
+
+    }
+
+    /**
+     * An event listener for animations, allows events to be triggered when an animation completes,
+     * is aborted by another animation starting, or is aborted by a touch event. Note that none of
+     * these events are triggered if the activity is paused, the image is swapped, or in other cases
+     * where the view's internal state gets wiped or draw events stop.
+     */
+    public static interface OnAnimationEventListener {
+
+        /**
+         * The animation has completed, having reached its endpoint.
+         */
+        void onComplete();
+
+        /**
+         * The animation has been aborted before reaching its endpoint because the user touched the screen.
+         */
+        void onInterruptedByUser();
+
+        /**
+         * The animation has been aborted before reaching its endpoint because a new animation has been started.
+         */
+        void onInterruptedByNewAnim();
+
+    }
+
+    /**
+     * Default implementation of {@link OnAnimationEventListener} for extension. This does nothing in any method.
+     */
+    public static class DefaultOnAnimationEventListener implements OnAnimationEventListener {
+
+        @Override public void onComplete() { }
+        @Override public void onInterruptedByUser() { }
+        @Override public void onInterruptedByNewAnim() { }
 
     }
 

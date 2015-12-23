@@ -9,11 +9,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
- * Default implementation of {@link com.davemorrissey.labs.subscaleview.decoder.ImageDecoder}
- * using Android's {@link android.graphics.BitmapFactory}, based on the Skia library. This
+ * Default implementation of {@link ImageDecoder}
+ * using Android's {@link BitmapFactory}, based on the Skia library. This
  * works well in most circumstances and has reasonable performance, however it has some problems
  * with grayscale, indexed and CMYK images.
  */
@@ -27,6 +28,7 @@ public class SkiaImageDecoder implements ImageDecoder {
     public Bitmap decode(Context context, Uri uri) throws Exception {
         String uriString = uri.toString();
         BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         if (uriString.startsWith(RESOURCE_PREFIX)) {
             Resources res;
@@ -51,15 +53,27 @@ public class SkiaImageDecoder implements ImageDecoder {
                 }
             }
 
-            return BitmapFactory.decodeResource(context.getResources(), id, options);
+            bitmap = BitmapFactory.decodeResource(context.getResources(), id, options);
         } else if (uriString.startsWith(ASSET_PREFIX)) {
             String assetName = uriString.substring(ASSET_PREFIX.length());
-            return BitmapFactory.decodeStream(context.getAssets().open(assetName), null, options);
+            bitmap = BitmapFactory.decodeStream(context.getAssets().open(assetName), null, options);
         } else if (uriString.startsWith(FILE_PREFIX)) {
-            return BitmapFactory.decodeFile(uriString.substring(FILE_PREFIX.length()), options);
+            bitmap = BitmapFactory.decodeFile(uriString.substring(FILE_PREFIX.length()), options);
         } else {
-            ContentResolver contentResolver = context.getContentResolver();
-            return BitmapFactory.decodeStream(contentResolver.openInputStream(uri), null, options);
+            InputStream inputStream = null;
+            try {
+                ContentResolver contentResolver = context.getContentResolver();
+                inputStream = contentResolver.openInputStream(uri);
+                bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+            } finally {
+                if (inputStream != null) {
+                    try { inputStream.close(); } catch (Exception e) { }
+                }
+            }
         }
+        if (bitmap == null) {
+            throw new RuntimeException("Skia image region decoder returned null bitmap - image format may not be supported");
+        }
+        return bitmap;
     }
 }

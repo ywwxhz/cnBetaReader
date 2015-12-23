@@ -122,19 +122,18 @@ dependencies {
     compile project(':Crouton')
     compile project(':FloatingActionButton')
     compile project(':materialish-progress')
-    //compile project(':PhotoView')
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.0.12'
     compile project(':SubSamplingScaleImageView')
     compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.loopj.android:android-async-http:1.4.6'
-    compile files('libs/jsoup-1.8.1.jar')
-    compile files('libs/universal-image-loader-1.9.3-with-sources.jar')
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:appcompat-v7:'+project.ANDROID_SUPPORT_VERSION
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
     compile project(':SuperSaiyanScrollView')
     compile project(':FilterMenu')
     compile project(':MaterialRipple')
-    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.google.code.gson:gson:2.5'
 }

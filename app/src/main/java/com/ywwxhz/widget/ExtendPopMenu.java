@@ -14,8 +14,9 @@ import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.fragments.AddNewCommentFragment;
 import com.ywwxhz.lib.kits.NetKit;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class ExtendPopMenu extends PopupMenu {
     public int SUPPORT = 1;

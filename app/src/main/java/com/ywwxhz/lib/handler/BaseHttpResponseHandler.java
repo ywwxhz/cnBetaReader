@@ -10,12 +10,13 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.lib.kits.Toolkit;
 
-import org.apache.http.Header;
-
+import cz.msebera.android.httpclient.Header;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
- * Created by ywwxhz on 2014/11/2.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/11/2 18:01.
  */
 public abstract class BaseHttpResponseHandler<T> extends GsonHttpResponseHandler<ResponseObject<T>> {
 

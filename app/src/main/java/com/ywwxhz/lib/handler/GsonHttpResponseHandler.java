@@ -4,12 +4,14 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.ywwxhz.lib.kits.Toolkit;
 
-import org.apache.http.Header;
-
 import java.lang.reflect.Type;
 
+import cz.msebera.android.httpclient.Header;
+
 /**
- * Created by ywwxhz on 2014/9/23.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/9/23 18:01.
  */
 public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler {
 
@@ -39,7 +41,4 @@ public abstract class GsonHttpResponseHandler<T> extends TextHttpResponseHandler
 
     public abstract void onSuccess(int statusCode, Header[] headers, String responseString, T object);
 
-    @Override
-    public void onProgress(int bytesWritten, int totalSize) {
-    }
 }

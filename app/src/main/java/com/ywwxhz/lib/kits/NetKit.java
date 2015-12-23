@@ -11,9 +11,10 @@ import com.loopj.android.http.SyncHttpClient;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.lib.Configure;
 
-import org.apache.http.Header;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.message.BasicHeader;
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.impl.client.BasicCookieStore;
+import cz.msebera.android.httpclient.message.BasicHeader;
+
 
 /**
  * Created by ywwxhz on 2014/10/17.

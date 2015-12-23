@@ -23,12 +23,12 @@ import com.ywwxhz.lib.kits.LogKits;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 
-import org.apache.http.Header;
-
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * cnBetaReader
@@ -192,7 +192,7 @@ public class NewsCacheHandler extends Handler {
                         }
 
                         @Override
-                        public void onProgress(int bytesWritten, int totalSize) {
+                        public void onProgress(long bytesWritten, long totalSize) {
 
                         }
                     });

@@ -26,9 +26,10 @@ import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.UIKit;
 
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * cnBetaReader
@@ -166,7 +167,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
                                     }
 
                                     @Override
-                                    public void onProgress(int bytesWritten, int totalSize) {
+                                    public void onProgress(long bytesWritten, long totalSize) {
                                         progress.setProgress(bytesWritten * 1.0f / totalSize);
                                     }
                                 });

@@ -25,6 +25,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -53,7 +54,6 @@ import com.ywwxhz.lib.kits.Toolkit;
 import com.ywwxhz.widget.AVLoadingIndicatorView.AVLoadingIndicatorView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
+import cz.msebera.android.httpclient.Header;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
@@ -557,6 +558,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             System.out.println("MyWebViewClient.onPageFinished");
             super.onPageFinished(view, url);
             finish = true;
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            return shouldInterceptRequest(view,request.toString());
         }
 
         @Override

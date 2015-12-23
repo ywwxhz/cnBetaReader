@@ -24,11 +24,11 @@ Android Studio 1.5
 
 gradle 2.8
 
-Android SDK v22
+Android SDK v23
 
-Android Build Tool 22.0.1
+Android Build Tool 23.0.2
 
-Android Support v22.2.1
+Android Support v23.1.1
 
 
 

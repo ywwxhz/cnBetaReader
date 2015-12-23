@@ -14,7 +14,6 @@ import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
-import org.apache.http.Header;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,6 +21,8 @@ import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.util.regex.Matcher;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * cnBetaReader

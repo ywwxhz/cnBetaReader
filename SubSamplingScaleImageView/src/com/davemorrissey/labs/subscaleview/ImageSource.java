@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 /**
  * Helper class used to set the source and additional attributes from a variety of sources. Supports
  * use of a bitmap, asset, resource, external file or any other URI.
@@ -23,17 +27,31 @@ public final class ImageSource {
     private int sWidth;
     private int sHeight;
     private Rect sRegion;
+    private boolean cached;
 
-    private ImageSource(Bitmap bitmap) {
+    private ImageSource(Bitmap bitmap, boolean cached) {
         this.bitmap = bitmap;
         this.uri = null;
         this.resource = null;
         this.tile = false;
         this.sWidth = bitmap.getWidth();
         this.sHeight = bitmap.getHeight();
+        this.cached = cached;
     }
 
     private ImageSource(Uri uri) {
+        // #114 If file doesn't exist, attempt to url decode the URI and try again
+        String uriString = uri.toString();
+        if (uriString.startsWith(FILE_SCHEME)) {
+            File uriFile = new File(uriString.substring(FILE_SCHEME.length() - 1));
+            if (!uriFile.exists()) {
+                try {
+                    uri = Uri.parse(URLDecoder.decode(uriString, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    // Fallback to encoded URI. This exception is not expected.
+                }
+            }
+        }
         this.bitmap = null;
         this.uri = uri;
         this.resource = null;
@@ -103,7 +121,20 @@ public final class ImageSource {
         if (bitmap == null) {
             throw new NullPointerException("Bitmap must not be null");
         }
-        return new ImageSource(bitmap);
+        return new ImageSource(bitmap, false);
+    }
+
+    /**
+     * Provide a loaded and cached bitmap for display. This bitmap will not be recycled when it is no
+     * longer needed. Use this method if you loaded the bitmap with an image loader such as Picasso
+     * or Volley.
+     * @param bitmap bitmap to be displayed.
+     */
+    public static ImageSource cachedBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
+            throw new NullPointerException("Bitmap must not be null");
+        }
+        return new ImageSource(bitmap, true);
     }
 
     /**
@@ -194,5 +225,9 @@ public final class ImageSource {
 
     protected final Rect getSRegion() {
         return sRegion;
+    }
+
+    protected final boolean isCached() {
+        return cached;
     }
 }
