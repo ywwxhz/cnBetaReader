@@ -63,18 +63,6 @@
             android:title="@string/pref_show_emoji_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_update_categroy" android:enabled="false">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/pref_auto_update_key"
-            android:summary="@string/pref_auto_update_summary"
-            android:title="@string/pref_auto_update_title" />
-        <com.ywwxhz.preference.UpdateChannelPreference />
-        <Preference
-            android:key="@string/pref_check_update_key"
-            android:title="@string/pref_check_updat_title" />
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/pref_advience_categroy">
         <CheckBoxPreference
             android:defaultValue="false"
@@ -96,15 +84,23 @@
             android:key="@string/pref_hardware_accelerated_key"
             android:summary="@string/pref_hardware_accelerated_summary"
             android:title="@string/pref_hardware_accelerated_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_enable_ripple_key"
-            android:summary="@string/pref_enable_ripple_summary"
-            android:title="@string/pref_enable_ripple_title" />
         <Preference
             android:key="@string/pref_crash_key"
             android:title="@string/pref_crash_title" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_update_categroy" android:enabled="false">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_auto_update_key"
+            android:summary="@string/pref_auto_update_summary"
+            android:title="@string/pref_auto_update_title" />
+        <com.ywwxhz.preference.UpdateChannelPreference />
+        <Preference
+            android:key="@string/pref_check_update_key"
+            android:title="@string/pref_check_updat_title" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_about_title">
         <Preference
             android:summary="@string/pref_about_summary"

@@ -52,6 +52,7 @@ public class NewsCacheHandler extends Handler {
     private Notification.Builder builder;
     private String stringFormate = "成功 %d 条 失败 %d 条";
     private Bitmap largeLogo;
+    private int msgid=this.hashCode();
 
 
     public NewsCacheHandler(Context context) {
@@ -75,13 +76,13 @@ public class NewsCacheHandler extends Handler {
                 info.set("正在缓存第 " + len + " 条新闻");
                 builder.setProgress(size, len, false);
                 builder.setContentText(info.get());
-                manager.notify(0, notificationCompt(builder));
+                manager.notify(msgid, notificationCompt(builder));
                 break;
             case MESSAGE_FINISH_PROGRESS:
                 start = false;
                 info.set(String.format(Locale.CHINA, stringFormate, successCount, failedCount));
                 Toast.makeText(context.get(), info.get(), Toast.LENGTH_SHORT).show();
-                manager.notify(0, notificationCompt(new Notification.Builder(context.get())
+                manager.notify(msgid, notificationCompt(new Notification.Builder(context.get())
                         .setContentTitle("离线缓存已完成").setContentText(info.get()).setTicker("离线缓存已完成")
                         .setSmallIcon(R.mipmap.ic_logo).setLargeIcon(largeLogo)));
                 break;
@@ -89,7 +90,7 @@ public class NewsCacheHandler extends Handler {
                 start = false;
                 info.set(String.format(Locale.CHINA, stringFormate, successCount, failedCount));
                 Toast.makeText(context.get(), info.get(), Toast.LENGTH_SHORT).show();
-                manager.notify(0, notificationCompt(new Notification.Builder(context.get())
+                manager.notify(msgid, notificationCompt(new Notification.Builder(context.get())
                         .setContentTitle("离线缓存已取消").setContentText(info.get()).setTicker("离线缓存已取消")
                         .setSmallIcon(R.mipmap.ic_logo).setLargeIcon(largeLogo)));
                 break;
@@ -106,8 +107,9 @@ public class NewsCacheHandler extends Handler {
             builder.setSmallIcon(R.mipmap.ic_logo);
             builder.setLargeIcon(largeLogo);
             builder.setOngoing(true);
-            manager.notify(0, notificationCompt(builder));
+            manager.notify(msgid, notificationCompt(builder));
             thread = new CacheThread("Cache Thread");
+            thread.setDaemon(true);
             thread.start();
         }
     }
@@ -145,7 +147,7 @@ public class NewsCacheHandler extends Handler {
     }
 
     public void cleanNotification() {
-        manager.cancel(0);
+        manager.cancel(msgid);
     }
 
     private class CacheThread extends Thread {
@@ -161,6 +163,9 @@ public class NewsCacheHandler extends Handler {
             successCount = 0;
             failedCount = 0;
             for (final NewsItem item : mCacheList) {
+                if(isInterrupted()){
+                    return;
+                }
                 len++;
                 post(new Runnable() {
                     @Override

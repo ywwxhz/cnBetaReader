@@ -1,19 +1,21 @@
 package com.ywwxhz.hoderview;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.lib.SpannableStringUtils;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.kits.PrefKit;
+import com.ywwxhz.lib.kits.UIKit;
 import com.ywwxhz.widget.ExtendPopMenu;
 import com.ywwxhz.widget.textdrawable.TextDrawable;
 import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
@@ -23,7 +25,7 @@ import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
  * com.ywwxhz.hoder
  * Created by 远望の无限(ywwxhz) on 2015/2/3 9:49.
  */
-public class NewsCommentItemHoderView extends MaterialRippleLayout implements View.OnClickListener {
+public class NewsCommentItemHoderView extends RelativeLayout implements View.OnClickListener {
 
     private TextView comment_name;
     private TextView comment_ref;
@@ -63,13 +65,17 @@ public class NewsCommentItemHoderView extends MaterialRippleLayout implements Vi
         this.comment_from = (TextView) findViewById(R.id.comment_from);
         this.popMenu = new ExtendPopMenu(getContext(), comment_more);
         showEmoji = PrefKit.getBoolean(getContext(), R.string.pref_show_emoji_key, true);
-        if (!PrefKit.getBoolean(getContext(), R.string.pref_enable_ripple_key, true)){
-            if(ThemeManger.isNightTheme(getContext())){
-                this.comment_ref.setBackgroundResource(R.drawable.ref_background_night);
-            }else{
-                this.comment_ref.setBackgroundResource(R.drawable.ref_background);
-            }
+        if (ThemeManger.isNightTheme(getContext())) {
+            this.comment_ref.setBackgroundResource(R.drawable.ref_background_night);
+        } else {
+            this.comment_ref.setBackgroundResource(R.drawable.ref_background);
         }
+        Drawable[] reasonDrawables = comment_reason.getCompoundDrawables();
+        reasonDrawables[0] = UIKit.tintDrawable(reasonDrawables[0], comment_reason.getCurrentTextColor());
+        comment_reason.setCompoundDrawables(reasonDrawables[0], null, null, null);
+        Drawable[] scoreDrawables = comment_score.getCompoundDrawables();
+        scoreDrawables[0] = UIKit.tintDrawable(scoreDrawables[0], comment_score.getCurrentTextColor());
+        comment_score.setCompoundDrawables(scoreDrawables[0], null, null, null);
     }
 
     public void showComment(CommentItem item, String token, BaseAdapter adapter, boolean enable, TextDrawable.IBuilder drawableBuilder, ColorGenerator colorGenerator) {

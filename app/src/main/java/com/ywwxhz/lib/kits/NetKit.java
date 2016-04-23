@@ -11,6 +11,8 @@ import com.loopj.android.http.SyncHttpClient;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.lib.Configure;
 
+import java.net.SocketTimeoutException;
+
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.impl.client.BasicCookieStore;
 import cz.msebera.android.httpclient.message.BasicHeader;
@@ -29,6 +31,7 @@ public class NetKit {
     private NetKit() {
         mAsyncHttpClient = new AsyncHttpClient();
         mSyncHttpClient = new SyncHttpClient();
+        AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
         setupHttpClient(mAsyncHttpClient);
         setupHttpClient(mSyncHttpClient);
     }

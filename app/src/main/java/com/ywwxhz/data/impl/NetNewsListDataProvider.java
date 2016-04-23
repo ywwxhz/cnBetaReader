@@ -45,6 +45,7 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
             boolean find = false;
             for (int i = 0; i < itemList.size(); i++) {
                 NewsItem item = itemList.get(i);
+//                item.setCache(FileCacheKit.getInstance().isCached(item.getSid()+"","json"));
                 if (itemList.get(i).getCounter() != null && item.getComments() != null) {
                     int num = Integer.parseInt(item.getCounter());
                     if (num > 9999) {
@@ -135,8 +136,10 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 NewsItem item = getAdapter().getDataSetItem(i - 1);
+//                item.setCache(true);
                 intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, item.getSid());
                 intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,item.getTitle());
+
                 getActivity().startActivity(intent);
             }
         };
@@ -146,7 +149,7 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
     public void loadData(boolean startup) {
         ArrayList<NewsItem> newsList = FileCacheKit.getInstance().getAsObject(getTypeKey().hashCode() + "", "list", new TypeToken<ArrayList<NewsItem>>() {
         });
-        if (newsList != null) {
+        if (newsList != null&&newsList.size()>2) {
             hasCached = true;
             topSid = newsList.get(1).getSid();
             getAdapter().setDataSet(newsList);

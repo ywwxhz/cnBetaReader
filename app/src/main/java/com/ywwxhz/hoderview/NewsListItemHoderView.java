@@ -1,23 +1,25 @@
 package com.ywwxhz.hoderview;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.NewsItem;
+import com.ywwxhz.lib.kits.UIKit;
 
 /**
  * CnbetaReader
  * com.ywwxhz.hoder
  * Created by 远望の无限(ywwxhz) on 2015/2/2 22:31.
  */
-public class NewsListItemHoderView extends MaterialRippleLayout {
+public class NewsListItemHoderView extends LinearLayout {
     private TextView news_time;
     private TextView news_title;
     private TextView news_views;
@@ -48,6 +50,12 @@ public class NewsListItemHoderView extends MaterialRippleLayout {
         this.news_comment = (TextView) findViewById(R.id.news_comments);
         this.news_image_large = (ImageView) findViewById(R.id.news_image_large);
         this.news_image_small = (ImageView) findViewById(R.id.news_image_small);
+        Drawable[] viewDrawables = news_views.getCompoundDrawables();
+        viewDrawables[0] = UIKit.tintDrawable(viewDrawables[0],news_views.getTextColors());
+        news_views.setCompoundDrawables(viewDrawables[0],null,null,null);
+        Drawable[] commentDrawables = news_comment.getCompoundDrawables();
+        commentDrawables[0] = UIKit.tintDrawable(commentDrawables[0],news_comment.getTextColors());
+        news_comment.setCompoundDrawables(commentDrawables[0],null,null,null);
     }
 
     public void showNews(NewsItem item, boolean showImage, boolean showLarge, DisplayImageOptions optionsLarge, DisplayImageOptions optionsSmall, NewsListAdapter.AnimateFirstDisplayListener listener) {

@@ -1,5 +1,7 @@
 package com.ywwxhz.activitys;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -84,6 +86,7 @@ public class MainActivity extends BaseToolBarActivity
         super.onDestroy();
         if(!changeTheme) {
             this.finish();
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
             System.exit(0);
         }
     }

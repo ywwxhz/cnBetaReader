@@ -1,6 +1,7 @@
 package com.ywwxhz.processers;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
@@ -86,11 +88,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
             "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};</script>" +
-            "<script src=\"file:///android_asset/BaseTool.js\"></script>" +
-            "<script src=\"file:///android_asset/ImageTool.js\"></script>" +
-            "<script src=\"file:///android_asset/VideoTool.js\"></script></head>" +
-            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
-            "<script src=\"file:///android_asset/loder.js\"></script></body></html>";
+            "<script src=\"file:///android_asset/js/BaseTool.js\"></script>" +
+            "<script src=\"file:///android_asset/js/ImageTool.js\"></script>" +
+            "<script src=\"file:///android_asset/js/VideoTool.js\"></script></head>" +
+            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right;margin-top: 3pt;\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
+            "<script src=\"file:///android_asset/js/loder.js\"></script></body></html>";
     private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
     private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
     private Handler myHandler;
@@ -147,6 +149,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         mActionButtom.setScaleX(0);
         mActionButtom.setScaleY(0);
         settings = mWebView.getSettings();
+        //android 5.0 以上版本Webview设置允许使用第三方COOKIE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptCookie(true);
+            CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView,true);
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         settings.setSupportZoom(false);
         settings.setAllowFileAccess(true);
         settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
@@ -521,11 +529,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
 
     class MyWebViewClient extends WebViewClient {
         private static final String TAG = "WebView ImageLoader";
-        private boolean finish = false;
+        //private boolean finish = false;
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            finish = false;
+//            finish = false;
             super.onPageStarted(view, url, favicon);
         }
 
@@ -557,22 +565,34 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         public void onPageFinished(WebView view, String url) {
             System.out.println("MyWebViewClient.onPageFinished");
             super.onPageFinished(view, url);
-            finish = true;
+//            finish = true;
         }
 
         @Override
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            return shouldInterceptRequest(view,request.toString());
+            return shouldInterceptRequest(view,request.getUrl().toString());
         }
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            if(url.startsWith("file")){
+                return null;
+            }
+            //屏蔽优酷广告
+            if(url.matches(".*((atm.youku.com)|(admaster.com.cn)).*")){
+                System.out.println("MyWebViewClient.Block "+url);
+                try {
+                    return new WebResourceResponse("text/plain", "UTF-8", mActivity.getAssets().open("empty"));
+                } catch (IOException ignored) {
+                }
+            }
             System.out.println("MyWebViewClient.shouldInterceptRequest(view,url) url = [" + url + "]");
             String prefix = MimeTypeMap.getFileExtensionFromUrl(url);
             if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
                 if (mimeType != null && mimeType.startsWith("image")) {
-                    if (finish || showImage) {
+//                    if (finish || showImage) {
                         File image = ImageLoader.getInstance().getDiskCache().get(url);
                         if (image != null) {
                             System.out.println("load Image From disk cache");
@@ -583,13 +603,13 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                         } else {
                             System.out.println("load Image From net");
                         }
-                    } else {
-                        System.out.println("Load Image Hoder");
-                        try {
-                            return new WebResourceResponse("image/svg+xml", "UTF-8", mActivity.getAssets().open("image.svg"));
-                        } catch (IOException ignored) {
-                        }
-                    }
+//                    } else {
+//                        System.out.println("Load Image Hoder");
+//                        try {
+//                            return new WebResourceResponse("image/svg+xml", "UTF-8", mActivity.getAssets().open("svg/image.svg"));
+//                        } catch (IOException ignored) {
+//                        }
+//                    }
                 } else {
                     System.out.println("load other resourse");
                 }

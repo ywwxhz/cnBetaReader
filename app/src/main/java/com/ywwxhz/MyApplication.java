@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -40,6 +39,7 @@ public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         instance = this;
         debug = PrefKit.getBoolean(this, R.string.pref_debug_key, false);
         FileCacheKit.getInstance(this);
@@ -47,7 +47,6 @@ public class MyApplication extends Application {
         initImageLoader(getApplicationContext());
         Emoticons.init(this);
         mDbUtils = DbUtils.create(this);
-        MaterialRippleLayout.setEnableRipple(PrefKit.getBoolean(this, R.string.pref_enable_ripple_key, true));
     }
 
     public void initImageLoader(Context context) {

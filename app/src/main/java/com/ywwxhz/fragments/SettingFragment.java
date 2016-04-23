@@ -7,8 +7,6 @@ import android.preference.Preference;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.format.Formatter;
 import android.widget.Toast;
-
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.CroutonStyle;
@@ -40,18 +38,13 @@ public class SettingFragment extends PreferenceFragment {
         findPreference(getString(R.string.pref_check_update_key)).setOnPreferenceClickListener(onPreferenceClickListener);
         findPreference(getString(R.string.pref_show_large_image_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
         findPreference(getString(R.string.pref_show_list_news_image_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
-        findPreference(getString(R.string.pref_enable_ripple_key)).setOnPreferenceChangeListener(onPreferenceChangeListener);
     }
 
     Preference.OnPreferenceChangeListener onPreferenceChangeListener
             = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            if (preference.getKey().equals(getString(R.string.pref_enable_ripple_key))) {
-                MaterialRippleLayout.setEnableRipple((Boolean) newValue);
-            } else {
                 MyApplication.getInstance().setListImageShowStatusChange(true);
-            }
             return true;
         }
     };

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceFragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.widget.ListView;
 
@@ -84,5 +85,17 @@ public class UIKit {
         p.setTextSize(px);
         Paint.FontMetrics fm = p.getFontMetrics();
         return (int) Math.ceil(fm.descent - fm.ascent);
+    }
+
+    public static Drawable tintDrawable(Drawable drawable, ColorStateList colors) {
+        final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTintList(wrappedDrawable, colors);
+        return wrappedDrawable;
+    }
+
+    public static Drawable tintDrawable(Drawable drawable, int color) {
+        final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(wrappedDrawable, color);
+        return wrappedDrawable;
     }
 }

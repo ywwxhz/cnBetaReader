@@ -10,6 +10,10 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.data.NewsCacheHandler;
 import com.ywwxhz.entitys.NewsItem;
+import com.ywwxhz.lib.kits.FileCacheKit;
+import com.ywwxhz.lib.kits.Toolkit;
+
+import java.util.List;
 
 /**
  * cnBetaReader
@@ -53,6 +57,17 @@ public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem,? 
         super.onResume();
         if(MyApplication.getInstance().isListImageShowStatusChange()) {
             provider.getAdapter().notifyDataSetChanged(true);
+        }else{
+            if(FileCacheKit.getInstance().isCached(provider.getTypeKey().hashCode()+"","list")) {
+                provider.getAdapter().notifyDataSetChanged();
+                List<NewsItem> dataSet = provider.getAdapter().getDataSet();
+                if (dataSet.size() > 0) {
+                    if (dataSet.size() > 40) {
+                        dataSet = dataSet.subList(0, 39);
+                    }
+                    FileCacheKit.getInstance().putAsync(provider.getTypeKey().hashCode() + "", Toolkit.getGson().toJson(dataSet), "list", null);
+                }
+            }
         }
     }
 }

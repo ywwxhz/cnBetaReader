@@ -3,9 +3,9 @@ package com.ywwxhz.hoderview;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.HotCommentItem;
 import com.ywwxhz.lib.SpannableStringUtils;
@@ -18,7 +18,7 @@ import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
  *
  * Created by 远望の无限(ywwxhz) on 15-3-23 17:54.
  */
-public class NewsHotCommentItemHoderView extends MaterialRippleLayout {
+public class NewsHotCommentItemHoderView extends RelativeLayout {
     private TextView mCommentContent;
     private ImageView mCommentImage;
     private TextView mCommentName;

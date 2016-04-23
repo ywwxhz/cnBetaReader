@@ -88,9 +88,6 @@
     <string name="pref_preload_image_key">image-preload</string>
     <string name="pref_preload_image_title">预加载图片</string>
     <string name="pref_preload_image_summary">查看大图时是否预加载两侧图片</string>
-    <string name="pref_enable_ripple_key">enable_ripple_key</string>
-    <string name="pref_enable_ripple_summary">是否启用Android 5.0列表波纹效果</string>
-    <string name="pref_enable_ripple_title">Android 5.0 波纹效果</string>
     <string name="pref_crash_key">crash</string>
     <string name="pref_crash_title">立即崩溃</string>
 

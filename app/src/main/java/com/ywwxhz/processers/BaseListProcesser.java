@@ -142,7 +142,7 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
 
     public void setHeadViewText(String type){
         if(headView!=null) {
-            headView.setText("类型：" + type);
+            headView.setText(String.format("类型：%s", type));
         }
     }
 }

@@ -1,6 +1,6 @@
 var VideoTool = (function(){
-	var no_support = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiB2aWV3Qm94PSIwIDAgNjAwIDM3NSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzc1IiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTM2Ljg3NSIgeT0iMjAwLjciIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MzBwdCI+5bCa5pyq5pSv5oyB6K+l6KeG6aKR5rqQPC90ZXh0PjwvZz48L3N2Zz4=";
-    var video_img = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjM3NSIgdmlld0JveD0iMCAwIDYwMCAzNzUiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTFiNTYyNWU0MyB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjMwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MWI1NjI1ZTQzIj48cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjM3NSIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjI0NS41NDY4NzUiIHk9IjIwMC43Ij5WaWRlbzwvdGV4dD48L2c+PC9nPjwvc3ZnPg==";
+	var no_support = "file:///android_asset/svg/video_not_support.svg";
+    var video_img = "file:///android_asset/svg/video.svg";
     	
     function _onloadIframeVideo(iframe){
     	if(config.enableImage){
@@ -142,6 +142,9 @@ var VideoTool = (function(){
 			var iframe = document.createElement("iframe");
 			iframe.src = "http://v.qq.com/iframe/player.html?vid="+vid;+"&amp;width="+flashVideo.offsetWidth+"&amp;height="+flashVideo.offsetWidth * 10 / 16+"&amp;auto=0"
 			iframe.setAttribute("allowfullscreen","true");
+			iframe.setAttribute("allowfullscreen","");
+			iframe.setAttribute("webkitallowfullscreen","true");
+			iframe.setAttribute("webkitallowfullscreen","");
 			BaseTool.fixWidthAndHight(iframe,flashVideo);
 			iframe.onload=function(){
 				console.log("QQ html5 video player loading success");

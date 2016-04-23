@@ -108,6 +108,10 @@ public class FileCacheKit {
         }
     }
 
+    public boolean isCached(String key, String type){
+        return FileKit.isExit(cacheDir, key + "." + type);
+    }
+
     public <T> T getAsObject(String key, TypeToken<T> typeToken) {
         return getAsObject(key, "json", typeToken);
     }

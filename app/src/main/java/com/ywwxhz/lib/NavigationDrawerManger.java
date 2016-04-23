@@ -18,6 +18,10 @@ public class NavigationDrawerManger {
         return fragments.get(pos);
     }
 
+    public List<Fragment> getFragments() {
+        return fragments;
+    }
+
     public List<String> getTitles() {
         return titles;
     }

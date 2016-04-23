@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" fill="#777">
+  <rect x="272.5" y="167.5" width="6" height="40" rx="2">
+    <animate attributeName="height" begin="0.5s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
+    calcMode="linear" repeatCount="indefinite" />
+    <animate attributeName="y" begin="0.5s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
+    calcMode="linear" repeatCount="indefinite" />
+  </rect>
+  <rect x="282.5" y="167.5" width="6" height="40" rx="2">
+    <animate attributeName="height" begin="0.25s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
+    calcMode="linear" repeatCount="indefinite" />
+    <animate attributeName="y" begin="0.25s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
+    calcMode="linear" repeatCount="indefinite" />
+  </rect>
+  <rect x="292.5" y="167.5" width="6" height="40" rx="2">
+    <animate attributeName="height" begin="0s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
+    calcMode="linear" repeatCount="indefinite" />
+    <animate attributeName="y" begin="0s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
+    calcMode="linear" repeatCount="indefinite" />
+  </rect>
+  <rect x="302.5" y="167.5" width="6" height="40" rx="2">
+    <animate attributeName="height" begin="0.25s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
+    calcMode="linear" repeatCount="indefinite" />
+    <animate attributeName="y" begin="0.25s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
+    calcMode="linear" repeatCount="indefinite" />
+  </rect>
+  <rect x="312.5" y="167.5" width="6" height="40" rx="2">
+    <animate attributeName="height" begin="0.5s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
+    calcMode="linear" repeatCount="indefinite" />
+    <animate attributeName="y" begin="0.5s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
+    calcMode="linear" repeatCount="indefinite" />
+  </rect>
+</svg>

@@ -20,6 +20,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import cz.msebera.android.httpclient.Header;
@@ -30,6 +32,13 @@ import cz.msebera.android.httpclient.Header;
  * Created by 远望の无限(ywwxhz) on 2015/3/31 11:13.
  */
 public class NewsDetailProvider extends BaseDataProvider<String> {
+
+    private static List<String> removeList = new ArrayList<>();
+
+    static {
+        removeList.add("");
+    }
+
 
     private TextHttpResponseHandler handler =  new TextHttpResponseHandler() {
 
@@ -82,6 +91,10 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         item.setFrom(newsHeadlines.select(".where").html());
         item.setInputtime(newsHeadlines.select(".date").html());
         Elements introduce = newsHeadlines.select(".introduction");
+        Elements thumb =introduce.select("img");
+        if(thumb.size()>0){
+            item.setThumb(thumb.get(0).attributes().get("src"));
+        }
         introduce.select("div").remove();
         item.setHometext(introduce.html());
         Elements content = newsHeadlines.select(".content");
@@ -108,13 +121,32 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
             element.attr("onload","VideoTool.onloadIframeVideo(this)");
             script.replaceWith(element);
         }
-        if(cacheImage){
-            Elements images = content.select("img");
-            for(Element image:images){
+        Elements imagea = content.select("a>img");
+        for (Element image:imagea){
+            if("".equals(image.attr("ignore"))){
+                Element a = image.parent();
+                if(a!=null) {
+                    Element element = new Element(Tag.valueOf("div"), "");
+                    element.attr("RemoveHandlar","java");
+                    Elements children = a.children();
+                    for (Element subimg : children) {
+                        handleImage(subimg);
+                        element.appendChild(subimg);
+                    }
+                    a.replaceWith(element);
+                }
+            }
+        }
+        Elements images = content.select("img");
+        for(Element image:images) {
+            if (cacheImage) {
                 Bitmap img = ImageLoader.getInstance().loadImageSync(image.attr("src"), MyApplication.getDefaultDisplayOption());
-                if(img!=null) {
+                if (img != null) {
                     img.recycle();
                 }
+            }
+            if("".equals(image.attr("ignore"))){
+                handleImage(image);
             }
         }
 
@@ -130,5 +162,19 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         }else{
             return false;
         }
+    }
+
+
+    private static void handleImage(Element image){
+        image.attr("ignore", "true");
+        image.attr("replaceSrcHandlar", "java");
+        image.attr("dest-src", image.attr("src"));
+        image.attr("src","file:///android_asset/svg/empty.svg");
+        image.removeAttr("width");
+        image.removeAttr("height");
+        image.removeAttr("style");
+        //image.removeAttr("src");
+        image.attr("onload","ImageTool.onLoadImage(this)");
+        image.attr("onerror","ImageTool.onLoadImageError(this)");
     }
 }

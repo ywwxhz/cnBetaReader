@@ -184,6 +184,10 @@ public class FileKit {
         return getFileContent(new File(path, fileName));
     }
 
+    public static boolean isExit(File path, String fileName) {
+        return new File(path, fileName).exists();
+    }
+
     public static String getFileContent(File file) {
         if (!file.exists())
             return null;
