@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.ywwxhz.adapters.CommentListAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.ListDataProvider;
@@ -19,16 +19,16 @@ import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.entitys.CommentListObject;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.lib.CroutonStyle;
-import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
+import com.ywwxhz.lib.handler.BaseResponseObjectResponse;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import cz.msebera.android.httpclient.Header;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * cnBetaReader
@@ -43,11 +43,13 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
     private TextView message;
     private View listView;
     private View mSwipeLayout;
-    private final AsyncHttpResponseHandler handler = new BaseHttpResponseHandler<CommentListObject>(new TypeToken<ResponseObject<CommentListObject>>() {
+    private final BaseResponseObjectResponse handler = new BaseResponseObjectResponse<CommentListObject>(new TypeToken<ResponseObject<CommentListObject>>() {
     }) {
+
         @Override
         protected void onSuccess(CommentListObject result) {
             callOnLoadingSuccess(result, false, false);
+            System.out.println(result.getCmntlist());
         }
 
         @Override
@@ -55,23 +57,31 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
             return NewsCommentProvider.this.getActivity();
         }
 
-        @Override
-        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-            if (!callOnFailure(false, false)) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        }
+//        @Override
+//        protected void onError(int httpCode, Response response, Exception cause) {
+//            if (!callOnFailure(false, false)) {
+//                super.onFailure(statusCode, headers, responseString, throwable);
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//            if (!callOnFailure(false, false)) {
+//                super.onFailure(statusCode, headers, responseString, throwable);
+//            }
+//        }
+//
+//        @Override
+//        protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
+//            super.onError(statusCode, headers, responseString, cause);
+//            callOnFailure(true, true);
+//        }
 
         @Override
-        protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
-            super.onError(statusCode, headers, responseString, cause);
-            callOnFailure(true, true);
-        }
-
-        @Override
-        public void onFinish() {
+        public void onAfter(boolean isFromCache, @Nullable ResponseObject<CommentListObject> commentListObjectResponseObject, Call call, @Nullable Response response, @Nullable Exception e) {
             if (callback != null) callback.onLoadFinish(1);
         }
+
     };
 
     public NewsCommentProvider(Activity activity) {
@@ -95,7 +105,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
 
     @Override
     public void loadNewData() {
-        NetKit.getInstance().getCommentBySnAndSid(sn, sid + "", handler);
+        NetKit.getCommentBySnAndSid(getActivity(),sn, sid + "", handler);
     }
 
     @Override

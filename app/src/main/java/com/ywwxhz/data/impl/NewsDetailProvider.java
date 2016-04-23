@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import com.loopj.android.http.TextHttpResponseHandler;
+import com.lzy.okhttputils.request.BaseRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.data.BaseDataProvider;
 import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.lib.Configure;
+import com.ywwxhz.lib.handler.BaseCallback;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
@@ -24,14 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Response;
 
 /**
  * cnBetaReader
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/31 11:13.
  */
-public class NewsDetailProvider extends BaseDataProvider<String> {
+public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
 
     private static List<String> removeList = new ArrayList<>();
 
@@ -39,30 +40,44 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         removeList.add("");
     }
 
+    private NewsItem mNewsItem;
 
-    private TextHttpResponseHandler handler =  new TextHttpResponseHandler() {
+    private BaseCallback<NewsItem> handler = new BaseCallback<NewsItem>() {
 
         @Override
-        public void onStart() {
-            if(callback!=null) {
+        public void onBefore(BaseRequest request) {
+            if (callback != null) {
                 callback.onLoadStart();
             }
         }
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-            if(callback!=null) {
+        protected NewsItem parseResponse(Response response) throws Exception {
+            String resp = response.body().string();
+            if (Configure.STANDRA_PATTERN.matcher(resp).find()) {
+                handleResponceString(mNewsItem, resp, true);
+            } else {
                 callback.onLoadFailure();
             }
-            if(MyApplication.getInstance().getDebug()){
-                Toast.makeText(getActivity(), throwable.toString(), Toast.LENGTH_SHORT).show();
+            return mNewsItem;
+        }
+
+        @Override
+        protected void onError(int httpCode, Response response, Exception cause) {
+            if (callback != null) {
+                callback.onLoadFailure();
+            }
+            if (cause != null) {
+                if (MyApplication.getInstance().getDebug()) {
+                    Toast.makeText(getActivity(), cause.toString(), Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
         @Override
-        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-            if(callback!=null){
-                callback.onLoadSuccess(responseString);
+        protected void onResponse(NewsItem newsItem) {
+            if (callback != null) {
+                callback.onLoadSuccess(newsItem);
             }
         }
     };
@@ -76,23 +91,24 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
 
     }
 
-    public void loadNewsAsync(String sid){
-        NetKit.getInstance().getNewsBySid(sid,handler);
+    public void loadNewsAsync(NewsItem mNewsItem) {
+        this.mNewsItem = mNewsItem;
+        NetKit.getNewsBySid(getActivity(), mNewsItem.getSid() + "", handler);
     }
 
-    public static boolean handleResponceString(NewsItem item,String resp,boolean shouldCache){
-        return handleResponceString(item, resp,shouldCache,false);
+    public static boolean handleResponceString(NewsItem item, String resp, boolean shouldCache) {
+        return handleResponceString(item, resp, shouldCache, false);
     }
 
-    public static boolean handleResponceString(NewsItem item,String resp,boolean shouldCache,boolean cacheImage){
+    public static boolean handleResponceString(NewsItem item, String resp, boolean shouldCache, boolean cacheImage) {
         Document doc = Jsoup.parse(resp);
         Elements newsHeadlines = doc.select(".body");
         item.setTitle(newsHeadlines.select("#news_title").html().replaceAll("<.*?>", ""));
         item.setFrom(newsHeadlines.select(".where").html());
         item.setInputtime(newsHeadlines.select(".date").html());
         Elements introduce = newsHeadlines.select(".introduction");
-        Elements thumb =introduce.select("img");
-        if(thumb.size()>0){
+        Elements thumb = introduce.select("img");
+        if (thumb.size() > 0) {
             item.setThumb(thumb.get(0).attributes().get("src"));
         }
         introduce.select("div").remove();
@@ -100,34 +116,34 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         Elements content = newsHeadlines.select(".content");
         content.select(".tigerstock").remove();
         Elements scripts = content.select("script");
-        for (int i=0;i<scripts.size();i++){
+        for (int i = 0; i < scripts.size(); i++) {
             Element script = scripts.get(i);
             Element SiblingScript = script.nextElementSibling();
             String _script;
-            if(SiblingScript!=null&&SiblingScript.tag()==Tag.valueOf("script")){
+            if (SiblingScript != null && SiblingScript.tag() == Tag.valueOf("script")) {
                 i++;
-                _script = script.toString().replaceAll(",?\"?(width|height)\"?:?\"(.*)?\"","");
+                _script = script.toString().replaceAll(",?\"?(width|height)\"?:?\"(.*)?\"", "");
                 _script += SiblingScript.toString();
-                _script = _script.replaceAll("\"|'","'");
+                _script = _script.replaceAll("\"|'", "'");
                 SiblingScript.remove();
-            }else{
-                _script = script.toString().replaceAll(",?\"(width|height)\":\"\\d+\"","").replaceAll("\"|'","'");
+            } else {
+                _script = script.toString().replaceAll(",?\"(width|height)\":\"\\d+\"", "").replaceAll("\"|'", "'");
             }
-            Element element = new Element(Tag.valueOf("iframe"),"");
-            element.attr("contentScript",_script);
-            element.attr("ignoreHolder","true");
-            element.attr("style","width:100%");
-            element.attr("allowfullscreen ","true");
-            element.attr("onload","VideoTool.onloadIframeVideo(this)");
+            Element element = new Element(Tag.valueOf("iframe"), "");
+            element.attr("contentScript", _script);
+            element.attr("ignoreHolder", "true");
+            element.attr("style", "width:100%");
+            element.attr("allowfullscreen ", "true");
+            element.attr("onload", "VideoTool.onloadIframeVideo(this)");
             script.replaceWith(element);
         }
         Elements imagea = content.select("a>img");
-        for (Element image:imagea){
-            if("".equals(image.attr("ignore"))){
+        for (Element image : imagea) {
+            if ("".equals(image.attr("ignore"))) {
                 Element a = image.parent();
-                if(a!=null) {
+                if (a != null) {
                     Element element = new Element(Tag.valueOf("div"), "");
-                    element.attr("RemoveHandlar","java");
+                    element.attr("RemoveHandlar", "java");
                     Elements children = a.children();
                     for (Element subimg : children) {
                         handleImage(subimg);
@@ -138,14 +154,14 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
             }
         }
         Elements images = content.select("img");
-        for(Element image:images) {
+        for (Element image : images) {
             if (cacheImage) {
                 Bitmap img = ImageLoader.getInstance().loadImageSync(image.attr("src"), MyApplication.getDefaultDisplayOption());
                 if (img != null) {
                     img.recycle();
                 }
             }
-            if("".equals(image.attr("ignore"))){
+            if ("".equals(image.attr("ignore"))) {
                 handleImage(image);
             }
         }
@@ -154,27 +170,27 @@ public class NewsDetailProvider extends BaseDataProvider<String> {
         Matcher snMatcher = Configure.SN_PATTERN.matcher(resp);
         if (snMatcher.find())
             item.setSN(snMatcher.group(1));
-        if(item.getContent()!=null&&item.getContent().length()>0){
-            if(shouldCache) {
+        if (item.getContent() != null && item.getContent().length() > 0) {
+            if (shouldCache) {
                 FileCacheKit.getInstance().put(item.getSid() + "", Toolkit.getGson().toJson(item));
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
 
-    private static void handleImage(Element image){
+    private static void handleImage(Element image) {
         image.attr("ignore", "true");
         image.attr("replaceSrcHandlar", "java");
         image.attr("dest-src", image.attr("src"));
-        image.attr("src","file:///android_asset/svg/empty.svg");
+        image.attr("src", "file:///android_asset/svg/empty.svg");
         image.removeAttr("width");
         image.removeAttr("height");
         image.removeAttr("style");
         //image.removeAttr("src");
-        image.attr("onload","ImageTool.onLoadImage(this)");
-        image.attr("onerror","ImageTool.onLoadImageError(this)");
+        image.attr("onload", "ImageTool.onLoadImage(this)");
+        image.attr("onerror", "ImageTool.onLoadImageError(this)");
     }
 }

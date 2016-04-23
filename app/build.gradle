@@ -126,7 +126,7 @@ dependencies {
     compile project(':SubSamplingScaleImageView')
     compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.lzy.net:okhttputils:1.4.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:appcompat-v7:23.1.1'

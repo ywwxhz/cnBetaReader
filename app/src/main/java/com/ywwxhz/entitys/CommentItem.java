@@ -116,4 +116,20 @@ public class CommentItem {
         this.host_name = item.getHost_name();
     }
 
+    @Override
+    public String toString() {
+        return "CommentItem{" +
+                "comment='" + comment + '\'' +
+                ", score=" + score +
+                ", tid='" + tid + '\'' +
+                ", pid='" + pid + '\'' +
+                ", sid=" + sid +
+                ", reason=" + reason +
+                ", icon='" + icon + '\'' +
+                ", date='" + date + '\'' +
+                ", name='" + name + '\'' +
+                ", host_name='" + host_name + '\'' +
+                ", refContent='" + refContent + '\'' +
+                '}';
+    }
 }

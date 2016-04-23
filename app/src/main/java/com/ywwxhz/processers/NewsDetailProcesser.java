@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -34,7 +32,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.lzy.okhttputils.OkHttpUtils;
 import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
@@ -49,6 +47,7 @@ import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.database.exception.DbException;
+import com.ywwxhz.lib.handler.BaseJsonCallback;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -65,14 +64,14 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
-import cz.msebera.android.httpclient.Header;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import okhttp3.Response;
 
 /**
  * cnBetaReader
  * Created by 远望の无限(ywwxhz) on 2014/11/1 17:48.
  */
-public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailProvider> implements DataProviderCallback<String> {
+public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailProvider> implements DataProviderCallback<NewsItem> {
     private View loadFail;
     private WebView mWebView;
     private boolean hascontent;
@@ -98,7 +97,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     private Handler myHandler;
     private WebSettings settings;
     private boolean shouldLoadCache;
-    private void hideProgressBar(){
+
+    private void hideProgressBar() {
         mProgressBar.setVisibility(View.GONE);
     }
 
@@ -152,7 +152,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         //android 5.0 以上版本Webview设置允许使用第三方COOKIE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptCookie(true);
-            CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView,true);
+            CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         settings.setSupportZoom(false);
@@ -192,7 +192,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
                 fromDB = false;
                 this.mNewsItem = new NewsItem(sid, title);
             } else {
-                if(title.length()>0) {
+                if (title.length() > 0) {
                     mNewsItem.setTitle(title);
                 }
                 fromDB = true;
@@ -213,7 +213,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             makeRequest();
         } else {
             hascontent = true;
-            if(title.length()>0) {
+            if (title.length() > 0) {
                 mNews.setTitle(title);
             }
             mNewsItem = mNews;
@@ -222,7 +222,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     public void makeRequest() {
-        provider.loadNewsAsync(mNewsItem.getSid() + "");
+        provider.loadNewsAsync(mNewsItem);
     }
 
     @Override
@@ -233,27 +233,9 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     @Override
-    public void onLoadSuccess(String resp) {
-        if (Configure.STANDRA_PATTERN.matcher(resp).find()) {
-            new AsyncTask<String, String, Boolean>() {
-                @Override
-                protected Boolean doInBackground(String... strings) {
-                    hascontent = NewsDetailProvider.handleResponceString(mNewsItem, strings[0], shouldLoadCache);
-                    return hascontent;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean hascontent) {
-                    if (hascontent) {
-                        bindData();
-                    } else {
-                        onLoadFailure();
-                    }
-                }
-            }.execute(resp);
-        } else {
-            onLoadFailure();
-        }
+    public void onLoadSuccess(NewsItem newsItem) {
+        bindData();
+        hascontent = true;
     }
 
     @Override
@@ -493,21 +475,25 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    NetKit.getAsyncClient().get(requestUrl, new JsonHttpResponseHandler() {
+                    OkHttpUtils.get(requestUrl).execute(new BaseJsonCallback() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            try {
-                                mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
-                            } catch (Exception e) {
-                                Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
+                        protected void onError(int httpCode, Response response, Exception cause) {
+                            Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
+                            if (cause != null) {
+                                if (MyApplication.getInstance().getDebug()) {
+                                    Toast.makeText(getActivity(), cause.toString(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
-                            if (MyApplication.getInstance().getDebug()) {
-                                Toast.makeText(getActivity(), throwable.toString(), Toast.LENGTH_SHORT).show();
+                        protected void onResponse(JSONObject jsonObject) {
+                            try {
+                                mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id
+                                        + "\",\"" + jsonObject.getJSONObject("data").getString("url_high_mp4") + "\",\""
+                                        + jsonObject.getJSONObject("data").getString("hor_big_pic") + "\")");
+                            } catch (Exception e) {
+                                Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
                             }
                         }
                     });
@@ -528,14 +514,6 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
     }
 
     class MyWebViewClient extends WebViewClient {
-        private static final String TAG = "WebView ImageLoader";
-        //private boolean finish = false;
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//            finish = false;
-            super.onPageStarted(view, url, favicon);
-        }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -562,26 +540,19 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
         }
 
         @Override
-        public void onPageFinished(WebView view, String url) {
-            System.out.println("MyWebViewClient.onPageFinished");
-            super.onPageFinished(view, url);
-//            finish = true;
-        }
-
-        @Override
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            return shouldInterceptRequest(view,request.getUrl().toString());
+            return shouldInterceptRequest(view, request.getUrl().toString());
         }
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            if(url.startsWith("file")){
+            if (url.startsWith("file")) {
                 return null;
             }
             //屏蔽优酷广告
-            if(url.matches(".*((atm.youku.com)|(admaster.com.cn)).*")){
-                System.out.println("MyWebViewClient.Block "+url);
+            if (url.matches(".*((atm.youku.com)|(admaster.com.cn)).*")) {
+                System.out.println("MyWebViewClient.Block " + url);
                 try {
                     return new WebResourceResponse("text/plain", "UTF-8", mActivity.getAssets().open("empty"));
                 } catch (IOException ignored) {
@@ -592,24 +563,17 @@ public class NewsDetailProcesser extends BaseProcesserImpl<String, NewsDetailPro
             if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
                 if (mimeType != null && mimeType.startsWith("image")) {
-//                    if (finish || showImage) {
-                        File image = ImageLoader.getInstance().getDiskCache().get(url);
-                        if (image != null) {
-                            System.out.println("load Image From disk cache");
-                            try {
-                                return new WebResourceResponse(mimeType, "UTF-8", new FileInputStream(image));
-                            } catch (FileNotFoundException ignored) {
-                            }
-                        } else {
-                            System.out.println("load Image From net");
+                    //                    if (finish || showImage) {
+                    File image = ImageLoader.getInstance().getDiskCache().get(url);
+                    if (image != null) {
+                        System.out.println("load Image From disk cache");
+                        try {
+                            return new WebResourceResponse(mimeType, "UTF-8", new FileInputStream(image));
+                        } catch (FileNotFoundException ignored) {
                         }
-//                    } else {
-//                        System.out.println("Load Image Hoder");
-//                        try {
-//                            return new WebResourceResponse("image/svg+xml", "UTF-8", mActivity.getAssets().open("svg/image.svg"));
-//                        } catch (IOException ignored) {
-//                        }
-//                    }
+                    } else {
+                        System.out.println("load Image From net");
+                    }
                 } else {
                     System.out.println("load other resourse");
                 }

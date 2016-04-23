@@ -5,12 +5,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.ResponseHandlerInterface;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.HotCommentAdapter;
 import com.ywwxhz.cnbetareader.R;
@@ -20,7 +20,7 @@ import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
-import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
+import com.ywwxhz.lib.handler.BaseResponseObjectResponse;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
@@ -28,6 +28,9 @@ import com.ywwxhz.lib.kits.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * cnBetaReader
@@ -38,12 +41,12 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
 
     private int current;
 
-    private ResponseHandlerInterface newsPage = new BaseHttpResponseHandler<List<HotCommentItem>>(new TypeToken<ResponseObject<List<HotCommentItem>>>() {
+    private BaseResponseObjectResponse<List<HotCommentItem>> newsPage = new BaseResponseObjectResponse<List<HotCommentItem>>(new TypeToken<ResponseObject<List<HotCommentItem>>>() {
     }){
-
         @Override
-        protected void onSuccess(List<HotCommentItem> result) {
-            for (HotCommentItem item:result){
+        protected ResponseObject<List<HotCommentItem>> parseResponse(Response response) throws Exception {
+            ResponseObject<List<HotCommentItem>> responseObject = super.parseResponse(response);
+            for (HotCommentItem item:responseObject.getResult()){
                 Matcher hotMatcher = Configure.HOT_COMMENT_PATTERN.matcher(item.getDescription());
                 if (hotMatcher.find()) {
                     item.setFrom(hotMatcher.group(1));
@@ -52,6 +55,11 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
                     item.setNewstitle(hotMatcher.group(4));
                 }
             }
+            return responseObject;
+        }
+
+        @Override
+        protected void onSuccess(List<HotCommentItem> result) {
             if(current == 1){
                 getAdapter().setDataSet(result);
                 Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_flush_success), CroutonStyle.INFO);
@@ -67,8 +75,8 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
         }
 
         @Override
-        public void onFinish() {
-            if(callback!=null){
+        public void onAfter(boolean isFromCache, @Nullable ResponseObject<List<HotCommentItem>> listResponseObject, Call call, @Nullable Response response, @Nullable Exception e) {
+            if (callback != null) {
                 callback.onLoadFinish(10);
             }
         }
@@ -97,13 +105,13 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
     @Override
     public void loadNewData() {
         current = 1;
-        NetKit.getInstance().getNewslistByPage(current, getTypeKey(), newsPage);
+        NetKit.getNewslistByPage(getActivity(),current, getTypeKey(), newsPage);
     }
 
     @Override
     public void loadNextData() {
         current++;
-        NetKit.getInstance().getNewslistByPage(current, getTypeKey(), newsPage);
+        NetKit.getNewslistByPage(getActivity(),current, getTypeKey(), newsPage);
     }
 
     @Override

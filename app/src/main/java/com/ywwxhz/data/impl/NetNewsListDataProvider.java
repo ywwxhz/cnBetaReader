@@ -2,12 +2,12 @@ package com.ywwxhz.data.impl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.ResponseHandlerInterface;
 import com.ywwxhz.activitys.NewsDetailActivity;
 import com.ywwxhz.adapters.NewsListAdapter;
 import com.ywwxhz.cnbetareader.R;
@@ -16,13 +16,17 @@ import com.ywwxhz.entitys.NewsListObject;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.CroutonStyle;
-import com.ywwxhz.lib.handler.BaseHttpResponseHandler;
+import com.ywwxhz.lib.handler.BaseCallback;
+import com.ywwxhz.lib.handler.BaseResponseObjectResponse;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * cnBetaReader
@@ -34,18 +38,19 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
     private int topSid;
     private int current;
 
-    private ResponseHandlerInterface newsPage = new BaseHttpResponseHandler<NewsListObject>(new TypeToken<ResponseObject<NewsListObject>>() {
-    }){
+    private BaseResponseObjectResponse newsPage = new BaseResponseObjectResponse<NewsListObject>(new TypeToken<ResponseObject<NewsListObject>>() {
+    }) {
+        private int size = 0;
+        private boolean find = false;
+        private List<NewsItem> itemList;
 
         @Override
-        protected void onSuccess(NewsListObject result) {
-            List<NewsItem> itemList = result.getList();
-            List<NewsItem> dataSet = getAdapter().getDataSet();
-            int size = 0;
-            boolean find = false;
+        protected ResponseObject<NewsListObject> parseResponse(Response response) throws Exception {
+            ResponseObject<NewsListObject> responseObject = super.parseResponse(response);
+            itemList = responseObject.getResult().getList();
+
             for (int i = 0; i < itemList.size(); i++) {
                 NewsItem item = itemList.get(i);
-//                item.setCache(FileCacheKit.getInstance().isCached(item.getSid()+"","json"));
                 if (itemList.get(i).getCounter() != null && item.getComments() != null) {
                     int num = Integer.parseInt(item.getCounter());
                     if (num > 9999) {
@@ -78,11 +83,16 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
             if (!find) {
                 size++;
             }
+            return responseObject;
+        }
 
+        @Override
+        protected void onSuccess(NewsListObject result) {
+            List<NewsItem> dataSet = getAdapter().getDataSet();
             if (!hasCached || result.getPage() == 1) {
                 hasCached = true;
                 getAdapter().setDataSet(itemList);
-                if(itemList.size()>2) {
+                if (itemList.size() > 2) {
                     topSid = itemList.get(1).getSid();
                 }
                 showToastAndCache(itemList, size - 1);
@@ -98,11 +108,12 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         }
 
         @Override
-        public void onFinish() {
-            if(callback!=null){
+        public void onAfter(boolean isFromCache, @Nullable ResponseObject<NewsListObject> newsListObjectResponseObject, Call call, @Nullable Response response, @Nullable Exception e) {
+            if (callback != null) {
                 callback.onLoadFinish(40);
             }
         }
+
     };
 
     public NetNewsListDataProvider(Activity mActivity) {
@@ -125,8 +136,8 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         makeRequest(current + 1, getTypeKey(), newsPage);
     }
 
-    public void makeRequest(int page, String type, ResponseHandlerInterface handlerInterface){
-        NetKit.getInstance().getNewslistByPage(page, type, handlerInterface);
+    public void makeRequest(int page, String type, BaseCallback handlerInterface) {
+        NetKit.getNewslistByPage(getActivity(), page, type, handlerInterface);
     }
 
     @Override
@@ -136,9 +147,9 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 NewsItem item = getAdapter().getDataSetItem(i - 1);
-//                item.setCache(true);
+                //                item.setCache(true);
                 intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, item.getSid());
-                intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,item.getTitle());
+                intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY, item.getTitle());
 
                 getActivity().startActivity(intent);
             }
@@ -149,7 +160,7 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
     public void loadData(boolean startup) {
         ArrayList<NewsItem> newsList = FileCacheKit.getInstance().getAsObject(getTypeKey().hashCode() + "", "list", new TypeToken<ArrayList<NewsItem>>() {
         });
-        if (newsList != null&&newsList.size()>2) {
+        if (newsList != null && newsList.size() > 2) {
             hasCached = true;
             topSid = newsList.get(1).getSid();
             getAdapter().setDataSet(newsList);

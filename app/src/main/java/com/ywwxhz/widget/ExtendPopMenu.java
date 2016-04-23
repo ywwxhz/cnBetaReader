@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.fragments.AddNewCommentFragment;
+import com.ywwxhz.lib.handler.BaseJsonCallback;
 import com.ywwxhz.lib.kits.NetKit;
 
 import org.json.JSONObject;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Response;
 
 public class ExtendPopMenu extends PopupMenu {
     public int SUPPORT = 1;
@@ -38,22 +38,22 @@ public class ExtendPopMenu extends PopupMenu {
                 switch (item.getItemId()) {
                     case R.id.comment_support:
                         action = SUPPORT;
-                        NetKit.getInstance().setCommentAction("support", citem.getSid()+"", citem.getTid(), token, chandler);
+                        NetKit.setCommentAction(mContext, "support", citem.getSid() + "", citem.getTid(), token, chandler);
                         break;
                     case R.id.comment_against:
                         action = AGAINST;
-                        NetKit.getInstance().setCommentAction("against", citem.getSid()+"", citem.getTid(), token, chandler);
+                        NetKit.setCommentAction(mContext, "against", citem.getSid() + "", citem.getTid(), token, chandler);
                         break;
                     case R.id.comment_report:
                         action = REPORT;
-                        NetKit.getInstance().setCommentAction("report", citem.getSid()+"", citem.getTid(), token, chandler);
+                        NetKit.setCommentAction(mContext, "report", citem.getSid() + "", citem.getTid(), token, chandler);
                         break;
                     case R.id.comment_replay:
-                        if(mContext instanceof Activity) {
+                        if (mContext instanceof Activity) {
                             AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(citem.getSid(), citem.getTid(), token);
                             fragment.show(((Activity) mContext).getFragmentManager(), "new comment");
-                        }else{
-                            Toast.makeText(mContext,"function not impletment",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, "function not impletment", Toast.LENGTH_SHORT).show();
                         }
                         break;
                 }
@@ -63,17 +63,18 @@ public class ExtendPopMenu extends PopupMenu {
 
     }
 
-    private JsonHttpResponseHandler chandler = new JsonHttpResponseHandler() {
+    private BaseJsonCallback chandler = new BaseJsonCallback() {
         @Override
-        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+        protected void onError(int httpCode, Response response, Exception cause) {
             Toast.makeText(mContext, "操作失败", Toast.LENGTH_LONG).show();
-            throwable.printStackTrace();
+            if (cause != null)
+                cause.printStackTrace();
         }
 
         @Override
-        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        protected void onResponse(JSONObject jsonObject) {
             try {
-                if ("success".equals(response.getString("state"))) {
+                if ("success".equals(jsonObject.getString("state"))) {
                     String actionString;
                     if (action == SUPPORT) {
                         actionString = "支持";
@@ -90,7 +91,7 @@ public class ExtendPopMenu extends PopupMenu {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                onFailure(statusCode, headers, e, response);
+                onError(200, null, e);
             }
         }
     };

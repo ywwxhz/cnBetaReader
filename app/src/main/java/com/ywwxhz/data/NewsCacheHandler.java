@@ -11,8 +11,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
-
-import com.loopj.android.http.TextHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
@@ -23,12 +21,13 @@ import com.ywwxhz.lib.kits.LogKits;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Response;
 
 /**
  * cnBetaReader
@@ -183,24 +182,14 @@ public class NewsCacheHandler extends Handler {
                             img.recycle();
                         }
                     }
-                    NetKit.getInstance().getNewsBySidSync(item.getSid() + "", new TextHttpResponseHandler() {
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            failedCount++;
-                            LogKits.e(item.getTitle() + " 缓存失败");
-                        }
-
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                            successCount++;
-                            NewsDetailProvider.handleResponceString(item, responseString,true,cacheImage);
-                        }
-
-                        @Override
-                        public void onProgress(long bytesWritten, long totalSize) {
-
-                        }
-                    });
+                    try {
+                        Response response = NetKit.getNewsBySidSync(item.getSid() + "");
+                        NewsDetailProvider.handleResponceString(item, response.body().string(),true,cacheImage);
+                        successCount++;
+                    } catch (IOException e) {
+                        failedCount++;
+                        LogKits.e(item.getTitle() + " 缓存失败");
+                    }
                 }
             }
             post(new Runnable() {

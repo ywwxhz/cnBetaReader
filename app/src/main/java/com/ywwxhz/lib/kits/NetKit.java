@@ -4,44 +4,25 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.ResponseHandlerInterface;
-import com.loopj.android.http.SyncHttpClient;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.model.HttpParams;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.lib.Configure;
+import com.ywwxhz.lib.handler.BaseCallback;
 
-import java.net.SocketTimeoutException;
+import java.io.IOException;
 
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.impl.client.BasicCookieStore;
-import cz.msebera.android.httpclient.message.BasicHeader;
+import okhttp3.Response;
 
 
 /**
- * Created by ywwxhz on 2014/10/17.
+ * cnBetaReader
+ *
+ * Created by 远望の无限(ywwxhz) on 2014/10/17 21:44.
  */
 public class NetKit {
 
-    private static NetKit instance = new NetKit();
-    private AsyncHttpClient mAsyncHttpClient;
-    private SyncHttpClient mSyncHttpClient;
-    public static final String CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8";
-
     private NetKit() {
-        mAsyncHttpClient = new AsyncHttpClient();
-        mSyncHttpClient = new SyncHttpClient();
-        AsyncHttpClient.allowRetryExceptionClass(SocketTimeoutException.class);
-        setupHttpClient(mAsyncHttpClient);
-        setupHttpClient(mSyncHttpClient);
-    }
-
-    private void setupHttpClient(AsyncHttpClient client) {
-        client.setCookieStore(new BasicCookieStore());
-        client.setConnectTimeout(3000);
-        client.setResponseTimeout(6000);
-        client.setMaxRetriesAndTimeout(3, 200);
-        client.setUserAgent("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36");
     }
 
     public static int getConnectedType() {
@@ -54,66 +35,60 @@ public class NetKit {
         return -1;
     }
 
-    public static NetKit getInstance() {
-        return instance;
+    public static void getNewslistByPage(Object tag, int page, String type, BaseCallback baseCallback) {
+        HttpParams params = new HttpParams();
+        params.put("type", type);
+        params.put("page", page + "");
+        params.put("_", System.currentTimeMillis() + "");
+        OkHttpUtils.get(Configure.NEWS_LIST_URL)
+                .tag(tag)
+                .params(params)
+                .execute(baseCallback);
     }
 
-    public static AsyncHttpClient getAsyncClient() {
-        return instance.mAsyncHttpClient;
+    public static void getNewslistByTopic(Object tag, int page, String type, BaseCallback baseCallback) {
+        HttpParams params = new HttpParams();
+        params.put("id", type);
+        params.put("page", page + "");
+        params.put("_", System.currentTimeMillis() + "");
+        OkHttpUtils.get(Configure.TOPIC_NEWS_LIST)
+                .tag(tag)
+                .params(params)
+                .execute(baseCallback);
     }
 
-    public static SyncHttpClient getSyncClient() {
-        return instance.mSyncHttpClient;
+    public static void getNewsBySid(Object tag, String sid, BaseCallback baseCallback) {
+        OkHttpUtils.get(Configure.buildArticleUrl(sid))
+                .tag(tag)
+                .execute(baseCallback);
     }
 
-    public void getNewslistByPage(int page, String type, ResponseHandlerInterface handlerInterface) {
-        RequestParams params = new RequestParams();
-        params.add("type", type);
-        params.add("page", page + "");
-        params.add("_", System.currentTimeMillis() + "");
-        mAsyncHttpClient.get(null, Configure.NEWS_LIST_URL, getAuthHeader(), params, handlerInterface);
+    public static Response getNewsBySidSync(String sid) throws IOException {
+        return OkHttpUtils.get(Configure.buildArticleUrl(sid)).execute();  //不传callback即为同步请求
     }
 
-    public void getNewslistByTopic(int page, String type, ResponseHandlerInterface handlerInterface) {
-        RequestParams params = new RequestParams();
-        params.add("id", type);
-        params.add("page", page + "");
-        params.add("_", System.currentTimeMillis() + "");
-        mAsyncHttpClient.get(null, Configure.TOPIC_NEWS_LIST, getAuthHeader(), params, handlerInterface);
+    public static void getCommentBySnAndSid(Object tag,String sn, String sid, BaseCallback baseCallback) {
+        HttpParams params = new HttpParams();
+        params.put("op", "1," + sid + "," + sn);
+        OkHttpUtils.post(Configure.COMMENT_URL)
+                .tag(tag)
+                .params(params)
+                .execute(baseCallback);
     }
 
-    public void getNewsBySid(String sid, ResponseHandlerInterface handlerInterface) {
-        mAsyncHttpClient.get(Configure.buildArticleUrl(sid), handlerInterface);
+    public static void setCommentAction(Object tag,String op, String sid, String tid, String csrf_token, BaseCallback baseCallback) {
+        HttpParams params = new HttpParams();
+        params.put("op", op);
+        params.put("sid", sid);
+        params.put("tid", tid);
+        params.put("csrf_token", csrf_token);
+        OkHttpUtils.post(Configure.COMMENT_VIEW)
+                .tag(tag)
+                .params(params)
+                .execute(baseCallback);
     }
 
-    public void getNewsBySidSync(String sid, ResponseHandlerInterface handlerInterface) {
-        mSyncHttpClient.get(Configure.buildArticleUrl(sid), handlerInterface);
-    }
-
-    public void getCommentBySnAndSid(String sn, String sid, ResponseHandlerInterface handlerInterface) {
-        RequestParams params = new RequestParams();
-        params.add("op", "1," + sid + "," + sn);
-        mAsyncHttpClient.post(null, Configure.COMMENT_URL, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
-    }
-
-    public void setCommentAction(String op, String sid, String tid, String csrf_token, ResponseHandlerInterface handlerInterface) {
-        RequestParams params = new RequestParams();
-        params.add("op", op);
-        params.add("sid", sid);
-        params.add("tid", tid);
-        params.add("csrf_token", csrf_token);
-        mAsyncHttpClient.post(null, Configure.COMMENT_VIEW, getAuthHeader(), params, CONTENT_TYPE, handlerInterface);
-    }
-
-    public static Header[] getAuthHeader() {
-        return new Header[]{
-                new BasicHeader("Referer", "http://www.cnbeta.com/"),
-                new BasicHeader("Origin", "http://www.cnbeta.com"),
-                new BasicHeader("X-Requested-With", "XMLHttpRequest")
-        };
-    }
-
-    public boolean isNetworkConnected() {
+    public static boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) MyApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {

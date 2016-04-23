@@ -2,10 +2,10 @@ package com.ywwxhz.fragments;
 
 import android.os.Bundle;
 
-import com.loopj.android.http.ResponseHandlerInterface;
 import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.data.impl.NetNewsListDataProvider;
 import com.ywwxhz.entitys.TopicItem;
+import com.ywwxhz.lib.handler.BaseCallback;
 import com.ywwxhz.lib.kits.NetKit;
 
 /**
@@ -50,8 +50,8 @@ public class TopicNewsFragment extends BaseNewsListFragment {
             }
 
             @Override
-            public void makeRequest(int page, String type, ResponseHandlerInterface handlerInterface) {
-                NetKit.getInstance().getNewslistByTopic(page, type, handlerInterface);
+            public void makeRequest(int page, String type, BaseCallback handlerInterface) {
+                NetKit.getNewslistByTopic(getActivity(),page, type, handlerInterface);
             }
 
             @Override

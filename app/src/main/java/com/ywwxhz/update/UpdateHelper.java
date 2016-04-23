@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -19,8 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
-import com.loopj.android.http.TextHttpResponseHandler;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.callback.FileCallback;
+import com.lzy.okhttputils.request.BaseRequest;
+import com.ywwxhz.lib.handler.BaseCallback;
 import com.ywwxhz.lib.kits.FileKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -29,7 +32,9 @@ import com.ywwxhz.update.pojo.UpdateInfo;
 
 import java.io.File;
 
-import cz.msebera.android.httpclient.Header;
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class UpdateHelper {
 
@@ -102,20 +107,34 @@ public class UpdateHelper {
         }
         if (!running) {
             running = true;
-            NetKit.getAsyncClient().get(url, versionCheckHandler);
+            OkHttpUtils.get(url).execute(versionCheckHandler);
         }
     }
 
-    private TextHttpResponseHandler versionCheckHandler = new TextHttpResponseHandler() {
+    private BaseCallback<String> versionCheckHandler = new BaseCallback<String>() {
+
         @Override
-        public void onStart() {
+        public void onBefore(BaseRequest request) {
             if (updateListener != null) {
                 updateListener.onStartCheck();
             }
         }
 
         @Override
-        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+        protected String parseResponse(Response response) throws Exception {
+            return response.body().string();
+        }
+
+        @Override
+        protected void onError(int httpCode, Response response, Exception cause) {
+            running = false;
+            if (options.hintVersion && mContext != null) {
+                Toast.makeText(mContext, "当前已是最新版", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onResponse(String responseString) {
             System.out.println(responseString);
             updateInfo = new Gson().fromJson(responseString, UpdateInfo.class);
             if (mContext != null && updateInfo != null) {
@@ -137,14 +156,6 @@ public class UpdateHelper {
             }
             if (UpdateHelper.this.updateListener != null) {
                 UpdateHelper.this.updateListener.onFinishCheck(updateInfo);
-            }
-        }
-
-        @Override
-        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-            running = false;
-            if (options.hintVersion && mContext != null) {
-                Toast.makeText(mContext, "当前已是最新版", Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -223,23 +234,9 @@ public class UpdateHelper {
             }
             return;
         }
-        FileAsyncHttpResponseHandler downLoadFileHandler = new FileAsyncHttpResponseHandler(apkFile) {
-            int oldProgress;
-
+        FileCallback downLoadFileHandler = new FileCallback(options.savePath.getAbsolutePath(), apkName) {
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                NotificationCompat.Builder ntfBuilder = new NotificationCompat.Builder(mContext)
-                        .setSmallIcon(mContext.getApplicationInfo().icon)
-                        .setContentTitle("更新失败")
-                        .setContentText("更新下载失败")
-                        .setTicker("更新下载失败");
-                notificationManager.notify(DOWNLOAD_NOTIFICATION_ID,
-                        ntfBuilder.build());
-                running = false;
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, File file) {
+            public void onResponse(boolean isFromCache, File file, Request request, @Nullable Response response) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -258,21 +255,33 @@ public class UpdateHelper {
                         }
                     }
                 }).start();
-
             }
 
             @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-                int progress = (int) ((bytesWritten / (float) totalSize) * 100);
-                if (progress != oldProgress) {
-                    showDownloadNotificationUI(progress, bytesWritten, totalSize);
+            public void downloadProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
+                int progress1 = (int) ((currentSize / (float) totalSize) * 100);
+                if (progress1 != oldProgress) {
+                    showDownloadNotificationUI(progress1, currentSize, totalSize);
                     if (UpdateHelper.this.updateListener != null) {
-                        UpdateHelper.this.updateListener.onDownloading(progress);
+                        UpdateHelper.this.updateListener.onDownloading(progress1);
                     }
-                    oldProgress = progress;
+                    oldProgress = progress1;
                 }
-
             }
+
+            @Override
+            public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
+                NotificationCompat.Builder ntfBuilder = new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(mContext.getApplicationInfo().icon)
+                        .setContentTitle("更新失败")
+                        .setContentText("更新下载失败")
+                        .setTicker("更新下载失败");
+                notificationManager.notify(DOWNLOAD_NOTIFICATION_ID,
+                        ntfBuilder.build());
+                running = false;
+            }
+
+            int oldProgress;
         };
         ntfBuilder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mContext.getApplicationInfo().icon)
@@ -282,7 +291,7 @@ public class UpdateHelper {
                 .setProgress(100, 0, true);
         notificationManager.notify(DOWNLOAD_NOTIFICATION_ID,
                 ntfBuilder.build());
-        NetKit.getAsyncClient().get(updateInfo.getApkUrl(), downLoadFileHandler);
+        OkHttpUtils.get(updateInfo.getApkUrl()).execute(downLoadFileHandler);
     }
 
     /**
@@ -309,7 +318,6 @@ public class UpdateHelper {
      * 获取当前app版本
      *
      * @return PackageInfo
-     *
      */
     private PackageInfo getPackageInfo() {
         PackageInfo pinfo = null;

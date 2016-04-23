@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.cache.CacheMode;
+import com.lzy.okhttputils.model.HttpHeaders;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -42,6 +45,7 @@ public class MyApplication extends Application {
         super.onCreate();
         instance = this;
         debug = PrefKit.getBoolean(this, R.string.pref_debug_key, false);
+        initOKHttpClient();
         FileCacheKit.getInstance(this);
         CustomActivityOnCrash.install(this);
         initImageLoader(getApplicationContext());
@@ -104,5 +108,22 @@ public class MyApplication extends Application {
     public String getUpdateUrl() {
         return "http://ywwxhz.byethost31.com/projects/cnBetaPlus/api/update-" +
                 PrefKit.getString(this, R.string.pref_release_channel_key, BuildConfig.BUILD_TYPE) + ".php?ckattempt=1";
+    }
+
+    public void initOKHttpClient(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Referer", "http://www.cnbeta.com/");
+        headers.put("Origin", "http://www.cnbeta.com");
+        headers.put("X-Requested-With", "XMLHttpRequest");
+        //必须调用初始化
+        OkHttpUtils.init(this);
+        //以下都不是必须的，根据需要自行选择
+        OkHttpUtils.getInstance()//
+                .debug("cnBeta Plus")                  //是否打开调试
+                .setCacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .setConnectTimeout(3000)               //全局的连接超时时间
+                .setReadTimeOut(6000)                  //全局的读取超时时间
+                .setWriteTimeOut(6000)                 //全局的写入超时时间
+                .addCommonHeaders(headers);            //设置全局公共头
     }
 }
