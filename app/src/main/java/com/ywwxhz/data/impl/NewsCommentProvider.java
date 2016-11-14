@@ -26,8 +26,8 @@ import com.ywwxhz.lib.kits.Toolkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import de.keyboardsurfer.android.widget.crouton.Style;
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -57,29 +57,19 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
             return NewsCommentProvider.this.getActivity();
         }
 
-//        @Override
-//        protected void onError(int httpCode, Response response, Exception cause) {
-//            if (!callOnFailure(false, false)) {
-//                super.onFailure(statusCode, headers, responseString, throwable);
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//            if (!callOnFailure(false, false)) {
-//                super.onFailure(statusCode, headers, responseString, throwable);
-//            }
-//        }
-//
-//        @Override
-//        protected void onError(int statusCode, Header[] headers, String responseString, Throwable cause) {
-//            super.onError(statusCode, headers, responseString, cause);
-//            callOnFailure(true, true);
-//        }
 
         @Override
-        public void onAfter(boolean isFromCache, @Nullable ResponseObject<CommentListObject> commentListObjectResponseObject, Call call, @Nullable Response response, @Nullable Exception e) {
-            if (callback != null) callback.onLoadFinish(1);
+        protected void onError(int httpCode, Response response, Exception cause) {
+            if (!callOnFailure(false, false)) {
+                super.onError(httpCode, response, cause);
+            }
+        }
+
+
+        @Override
+        public void onAfter(@Nullable ResponseObject<CommentListObject> commentListObjectResponseObject, @Nullable Exception e) {
+            if (callback != null)
+                callback.onLoadFinish(1);
         }
 
     };
@@ -105,7 +95,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
 
     @Override
     public void loadNewData() {
-        NetKit.getCommentBySnAndSid(getActivity(),sn, sid + "", handler);
+        NetKit.getCommentBySnAndSid(getActivity(), sn, sid + "", handler);
     }
 
     @Override
@@ -248,7 +238,8 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
             if (!isWebChange && !isCommentClose) {
                 Toolkit.showCrouton(getActivity(), R.string.message_load_from_cache, Style.ALERT);
                 return true;
-            } else return !isCommentClose;
+            } else
+                return !isCommentClose;
         } else {
             if (!isCommentClose) {
                 this.message.setText(R.string.message_no_network);

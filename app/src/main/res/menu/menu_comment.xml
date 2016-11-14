@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/comment_support"
-        android:title="支持"/>
-    <item
-        android:id="@+id/comment_against"
-        android:title="反对"/>
-    <item
         android:id="@+id/comment_replay"
         android:title="回复"/>
     <item

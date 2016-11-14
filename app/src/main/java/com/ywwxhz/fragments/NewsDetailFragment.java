@@ -102,7 +102,7 @@ public class NewsDetailFragment extends Fragment {
 
     @Override
     public void onPause() {
-        super.onStop();
+        super.onPause();
         processer.onPause();
     }
 

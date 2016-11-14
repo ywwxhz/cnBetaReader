@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -20,9 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.lzy.okhttputils.OkHttpUtils;
-import com.lzy.okhttputils.callback.FileCallback;
-import com.lzy.okhttputils.request.BaseRequest;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.FileCallback;
+import com.lzy.okgo.request.BaseRequest;
 import com.ywwxhz.lib.handler.BaseCallback;
 import com.ywwxhz.lib.kits.FileKit;
 import com.ywwxhz.lib.kits.NetKit;
@@ -33,7 +32,6 @@ import com.ywwxhz.update.pojo.UpdateInfo;
 import java.io.File;
 
 import okhttp3.Call;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class UpdateHelper {
@@ -107,7 +105,7 @@ public class UpdateHelper {
         }
         if (!running) {
             running = true;
-            OkHttpUtils.get(url).execute(versionCheckHandler);
+            OkGo.get(url).execute(versionCheckHandler);
         }
     }
 
@@ -121,8 +119,12 @@ public class UpdateHelper {
         }
 
         @Override
-        protected String parseResponse(Response response) throws Exception {
-            return response.body().string();
+        public String convertSuccess(Response response) throws Exception {
+            try {
+                return response.body().string();
+            }finally {
+                response.body().close();
+            }
         }
 
         @Override
@@ -235,8 +237,9 @@ public class UpdateHelper {
             return;
         }
         FileCallback downLoadFileHandler = new FileCallback(options.savePath.getAbsolutePath(), apkName) {
+
             @Override
-            public void onResponse(boolean isFromCache, File file, Request request, @Nullable Response response) {
+            public void onSuccess(File file, Call call, Response response) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -270,7 +273,7 @@ public class UpdateHelper {
             }
 
             @Override
-            public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
+            public void onError(Call call, Response response, Exception e) {
                 NotificationCompat.Builder ntfBuilder = new NotificationCompat.Builder(mContext)
                         .setSmallIcon(mContext.getApplicationInfo().icon)
                         .setContentTitle("更新失败")
@@ -291,7 +294,7 @@ public class UpdateHelper {
                 .setProgress(100, 0, true);
         notificationManager.notify(DOWNLOAD_NOTIFICATION_ID,
                 ntfBuilder.build());
-        OkHttpUtils.get(updateInfo.getApkUrl()).execute(downLoadFileHandler);
+        OkGo.get(updateInfo.getApkUrl()).execute(downLoadFileHandler);
     }
 
     /**

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -24,8 +25,8 @@ import com.ywwxhz.lib.kits.Toolkit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -36,22 +37,29 @@ import okhttp3.Response;
 public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<NewsListAdapter> {
 
     private int topSid;
+    private int secondSid;
+    private int thirdSid;
     private int current;
 
-    private BaseResponseObjectResponse newsPage = new BaseResponseObjectResponse<NewsListObject>(new TypeToken<ResponseObject<NewsListObject>>() {
-    }) {
+    private BaseResponseObjectResponse newsPage = new BaseResponseObjectResponse<NewsListObject>(
+            new TypeToken<ResponseObject<NewsListObject>>() {
+            }) {
         private int size = 0;
-        private boolean find = false;
         private List<NewsItem> itemList;
 
         @Override
-        protected ResponseObject<NewsListObject> parseResponse(Response response) throws Exception {
-            ResponseObject<NewsListObject> responseObject = super.parseResponse(response);
+        public ResponseObject<NewsListObject> convertSuccess(Response response) throws Exception {
+            int offsetFirst = -1;
+            int offsetSecond = -1;
+            int offsetThird = -1;
+            boolean findFirst = false;
+            boolean findSecond = false;
+            boolean findThird = false;
+            ResponseObject<NewsListObject> responseObject = super.convertSuccess(response);
+            boolean calNew = responseObject.getResult().getPage() == 1;
             itemList = responseObject.getResult().getList();
-
-            for (int i = 0; i < itemList.size(); i++) {
-                NewsItem item = itemList.get(i);
-                if (itemList.get(i).getCounter() != null && item.getComments() != null) {
+            for (NewsItem item : itemList) {
+                if (item.getCounter() != null && item.getComments() != null) {
                     int num = Integer.parseInt(item.getCounter());
                     if (num > 9999) {
                         item.setCounter("9999+");
@@ -65,37 +73,89 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
                     item.setComments("0");
                 }
                 item.setTitle(item.getTitle().replaceAll("<.*?>", ""));
-                StringBuilder sb = new StringBuilder(Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
+                StringBuilder sb = new StringBuilder(
+                        Html.fromHtml(item.getHometext().replaceAll("<.*?>|[\\r|\\n]", "")));
                 if (sb.length() > 140) {
                     item.setSummary(sb.replace(140, sb.length(), "...").toString());
                 } else {
                     item.setSummary(sb.toString());
                 }
                 if (item.getThumb().contains("thumb")) {
-                    item.setLargeImage(item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""));
+                    item.setLargeImage(
+                            item.getThumb().replaceAll("(\\.\\w{3,4})?_100x100|thumb/mini/", ""));
                 }
-                if (!find && item.getSid() != topSid) {
-                    size++;
-                } else if (!find) {
-                    find = true;
+                if (calNew) {
+                    if (!findFirst) {
+                        if (item.getSid() == topSid) {
+                            findFirst = true;
+                        }
+                        offsetFirst++;
+                    }
+                    if (!findSecond) {
+                        if (item.getSid() == secondSid) {
+                            findSecond = true;
+                        }
+                        offsetSecond++;
+                    }
+                    if (!findThird) {
+                        if (item.getSid() == thirdSid) {
+                            findThird = true;
+                        }
+                        offsetThird++;
+                    }
                 }
             }
-            if (!find) {
-                size++;
+            if (calNew) {
+                /**
+                 * 判断新增新闻逻辑<br/>
+                 * 如果topSid为0，列表为首次加载，新增新闻数量为加载的数量<br/>
+                 * 如果topSid不为0，程序不是首次加载<br/>
+                 *      topSid的偏移量大于0则判断新闻数量通过offsetFirst和findFirst决定<br/>
+                 *      topSid的偏移量为0有两种可能，第一种是有新闻置顶，还有一种是没有新的新闻。
+                 *      需要通过offsetThird和offsetSecond决定新闻的数量
+                 */
+                if (topSid != 0) {
+                    if (offsetFirst > 0) {
+                        if (findFirst) {
+                            size = offsetFirst;
+                        } else {
+                            size = itemList.size();
+                        }
+                    } else {
+                        if (offsetThird - offsetSecond > 1) {
+                            size = offsetThird - 1;
+                        } else {
+                            size = offsetSecond - 1;
+                        }
+                    }
+                } else {
+                    size = itemList.size();
+                }
+                Log.d(NetNewsListDataProvider.class.getName(),
+                      String.format(Locale.CHINA, "topSid:%d\tsecondSid:%d\tthirdSid:%d"
+                              , topSid, secondSid, thirdSid));
+                Log.d(NetNewsListDataProvider.class.getName(),
+                      String.format(Locale.CHINA, "offsetFirst:%d\toffsetSecond:%d\toffsetThird:%d"
+                              , offsetFirst, offsetSecond, offsetThird));
             }
             return responseObject;
         }
 
+        /**
+         * @param result
+         */
         @Override
         protected void onSuccess(NewsListObject result) {
             List<NewsItem> dataSet = getAdapter().getDataSet();
             if (!hasCached || result.getPage() == 1) {
                 hasCached = true;
                 getAdapter().setDataSet(itemList);
-                if (itemList.size() > 2) {
-                    topSid = itemList.get(1).getSid();
+                if (itemList.size() > 3) {
+                    topSid = itemList.get(0).getSid();
+                    secondSid = itemList.get(1).getSid();
+                    thirdSid = itemList.get(2).getSid();
                 }
-                showToastAndCache(itemList, size - 1);
+                showToastAndCache(itemList, size);
             } else {
                 dataSet.addAll(itemList);
             }
@@ -108,12 +168,13 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         }
 
         @Override
-        public void onAfter(boolean isFromCache, @Nullable ResponseObject<NewsListObject> newsListObjectResponseObject, Call call, @Nullable Response response, @Nullable Exception e) {
+        public void onAfter(
+                @Nullable ResponseObject<NewsListObject> newsListObjectResponseObject,
+                @Nullable Exception e) {
             if (callback != null) {
                 callback.onLoadFinish(40);
             }
         }
-
     };
 
     public NetNewsListDataProvider(Activity mActivity) {
@@ -158,11 +219,15 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
 
     @Override
     public void loadData(boolean startup) {
-        ArrayList<NewsItem> newsList = FileCacheKit.getInstance().getAsObject(getTypeKey().hashCode() + "", "list", new TypeToken<ArrayList<NewsItem>>() {
-        });
+        ArrayList<NewsItem> newsList = FileCacheKit.getInstance()
+                .getAsObject(getTypeKey().hashCode() + "", "list",
+                             new TypeToken<ArrayList<NewsItem>>() {
+                             });
         if (newsList != null && newsList.size() > 2) {
             hasCached = true;
-            topSid = newsList.get(1).getSid();
+            topSid = newsList.get(0).getSid();
+            secondSid = newsList.get(1).getSid();
+            thirdSid = newsList.get(2).getSid();
             getAdapter().setDataSet(newsList);
             getAdapter().notifyDataSetChanged();
         } else {
@@ -171,12 +236,22 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         this.current = 1;
     }
 
+    /**
+     * 显示提示并缓存数据
+     *
+     * @param itemList
+     * @param size
+     */
     private void showToastAndCache(List<NewsItem> itemList, int size) {
         if (size < 1) {
-            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_no_new_news), CroutonStyle.CONFIRM);
+            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_no_new_news),
+                                CroutonStyle.CONFIRM);
         } else {
-            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_new_news, size), CroutonStyle.INFO);
+            Toolkit.showCrouton(getActivity(), getActivity().getString(R.string.message_new_news, size),
+                                CroutonStyle.INFO);
         }
-        FileCacheKit.getInstance().putAsync(getTypeKey().hashCode() + "", Toolkit.getGson().toJson(itemList), "list", null);
+        FileCacheKit.getInstance()
+                .putAsync(getTypeKey().hashCode() + "", Toolkit.getGson().toJson(itemList), "list",
+                          null);
     }
 }

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     def buildDate
     def verName
@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId "com.ywwxhz.cnbetareader"
         archivesBaseName = "cnBeta_Plus"
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion 19
+        targetSdkVersion 25
         resConfigs "zh-rCN"
     }
 
@@ -126,10 +126,10 @@ dependencies {
     compile project(':SubSamplingScaleImageView')
     compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.lzy.net:okhttputils:1.4.0'
+    compile 'com.lzy.net:okgo:2.0.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
     compile project(':SuperSaiyanScrollView')

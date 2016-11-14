@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.lzy.okhttputils.OkHttpUtils;
-import com.lzy.okhttputils.model.HttpParams;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.handler.BaseCallback;
@@ -40,7 +40,7 @@ public class NetKit {
         params.put("type", type);
         params.put("page", page + "");
         params.put("_", System.currentTimeMillis() + "");
-        OkHttpUtils.get(Configure.NEWS_LIST_URL)
+        OkGo.get(Configure.NEWS_LIST_URL)
                 .tag(tag)
                 .params(params)
                 .execute(baseCallback);
@@ -51,26 +51,26 @@ public class NetKit {
         params.put("id", type);
         params.put("page", page + "");
         params.put("_", System.currentTimeMillis() + "");
-        OkHttpUtils.get(Configure.TOPIC_NEWS_LIST)
+        OkGo.get(Configure.TOPIC_NEWS_LIST)
                 .tag(tag)
                 .params(params)
                 .execute(baseCallback);
     }
 
     public static void getNewsBySid(Object tag, String sid, BaseCallback baseCallback) {
-        OkHttpUtils.get(Configure.buildArticleUrl(sid))
+        OkGo.get(Configure.buildArticleUrl(sid))
                 .tag(tag)
                 .execute(baseCallback);
     }
 
     public static Response getNewsBySidSync(String sid) throws IOException {
-        return OkHttpUtils.get(Configure.buildArticleUrl(sid)).execute();  //不传callback即为同步请求
+        return OkGo.get(Configure.buildArticleUrl(sid)).execute();  //不传callback即为同步请求
     }
 
     public static void getCommentBySnAndSid(Object tag,String sn, String sid, BaseCallback baseCallback) {
         HttpParams params = new HttpParams();
         params.put("op", "1," + sid + "," + sn);
-        OkHttpUtils.post(Configure.COMMENT_URL)
+        OkGo.post(Configure.COMMENT_URL)
                 .tag(tag)
                 .params(params)
                 .execute(baseCallback);
@@ -82,7 +82,9 @@ public class NetKit {
         params.put("sid", sid);
         params.put("tid", tid);
         params.put("csrf_token", csrf_token);
-        OkHttpUtils.post(Configure.COMMENT_VIEW)
+        OkGo.post(Configure.COMMENT_VIEW)
+                .headers("Accept","application/json, text/javascript, */*; q=0.01")
+                .headers("Content-Type","application/x-www-form-urlencoded; charset=UTF-8")
                 .tag(tag)
                 .params(params)
                 .execute(baseCallback);

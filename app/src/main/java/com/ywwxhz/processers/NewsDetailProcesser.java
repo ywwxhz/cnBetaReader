@@ -32,7 +32,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okgo.OkGo;
 import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
@@ -84,7 +84,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     private boolean fromDB = false;
     private NewsDetailFragment.NewsDetailCallBack callBack;
 
-    private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
+    private String webTemplate = "<!DOCTYPE html><html><head><base href=\"http://www.cnbeta.com/\" /><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
             "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};</script>" +
             "<script src=\"file:///android_asset/js/BaseTool.js\"></script>" +
@@ -127,7 +127,11 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         this.hascontent = false;
         this.myHandler = new Handler();
         initView(view);
-        showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
+        if(!PrefKit.getBoolean(mActivity, R.string.pref_auto_image_key, true)) {
+            showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
+        }else{
+            showImage = NetKit.isWifiConnected();
+        }
         convertFlashToHtml5 = PrefKit.getBoolean(mActivity, R.string.pref_flash_to_html5_key, true);
     }
 
@@ -269,7 +273,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         mActivity.setTitle(mNewsItem.getTitle());
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
                 add, showImage, convertFlashToHtml5, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent());
-        mWebView.loadDataWithBaseURL(Configure.BASE_URL, data, "text/html", "utf-8", null);
+        mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
 
         mActionButtom.postDelayed(new Runnable() {
             @Override
@@ -475,7 +479,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    OkHttpUtils.get(requestUrl).execute(new BaseJsonCallback() {
+                    OkGo.get(requestUrl).execute(new BaseJsonCallback() {
                         @Override
                         protected void onError(int httpCode, Response response, Exception cause) {
                             Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);

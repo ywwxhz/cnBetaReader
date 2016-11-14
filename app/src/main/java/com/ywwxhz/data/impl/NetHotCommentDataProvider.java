@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -44,8 +43,8 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
     private BaseResponseObjectResponse<List<HotCommentItem>> newsPage = new BaseResponseObjectResponse<List<HotCommentItem>>(new TypeToken<ResponseObject<List<HotCommentItem>>>() {
     }){
         @Override
-        protected ResponseObject<List<HotCommentItem>> parseResponse(Response response) throws Exception {
-            ResponseObject<List<HotCommentItem>> responseObject = super.parseResponse(response);
+        public ResponseObject<List<HotCommentItem>> convertSuccess(Response response) throws Exception {
+            ResponseObject<List<HotCommentItem>> responseObject = super.convertSuccess(response);
             for (HotCommentItem item:responseObject.getResult()){
                 Matcher hotMatcher = Configure.HOT_COMMENT_PATTERN.matcher(item.getDescription());
                 if (hotMatcher.find()) {
@@ -74,8 +73,9 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
             return NetHotCommentDataProvider.this.getActivity();
         }
 
+
         @Override
-        public void onAfter(boolean isFromCache, @Nullable ResponseObject<List<HotCommentItem>> listResponseObject, Call call, @Nullable Response response, @Nullable Exception e) {
+        public void onAfter(@Nullable ResponseObject<List<HotCommentItem>> listResponseObject, @Nullable Exception e) {
             if (callback != null) {
                 callback.onLoadFinish(10);
             }

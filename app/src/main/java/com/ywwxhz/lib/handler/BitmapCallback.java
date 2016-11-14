@@ -3,7 +3,7 @@ package com.ywwxhz.lib.handler;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.lzy.okhttputils.callback.AbsCallback;
+import com.lzy.okgo.callback.AbsCallback;
 
 import okhttp3.Response;
 
@@ -19,7 +19,7 @@ import okhttp3.Response;
 public abstract class BitmapCallback extends AbsCallback<Bitmap> {
 
     @Override
-    public Bitmap parseNetworkResponse(Response response) {
+    public Bitmap convertSuccess(Response response) throws Exception {
         return BitmapFactory.decodeStream(response.body().byteStream());
     }
 }

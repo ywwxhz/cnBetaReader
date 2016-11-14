@@ -16,7 +16,7 @@
     <string name="message_no_new_news">暂时没有新的新闻 (๑•́ ₃ •̀๑) </string>
     <string name="message_no_network">无网络或连接超时   ( &gt;﹏&lt;。)～</string>
     <string name="message_load_from_cache">无可用网络，加载之前的缓存  ( &gt;﹏&lt;。)～</string>
-    <string name="message_data_structure_change"> ლ(°Д°ლ) 网站又改版啦。。快联系联系开发者吧。 </string>
+    <string name="message_data_structure_change"> ლ(°Д°ლ) 数据解析异常，也许网站改版了吧 ~~ </string>
     <string name="message_no_subscribe" >还没有关注任何新闻主题。\n\n 左滑界面开始关注吧。</string>
     <string name="message_no_favorite">还没有收藏任何新闻呢</string>
 
@@ -53,7 +53,7 @@
     <string name="pref_advience_categroy">高级</string>
     <string name="pref_show_large_image_key">largeImage</string>
     <string name="pref_show_large_image_title">新闻列表显示大图</string>
-    <string name="pref_show_large_image_summary">开启后将会消耗大量流量,平均消耗大于 2M, 推荐在Wifi下使用。</string>
+    <string name="pref_show_large_image_summary">开启后将会消耗大量流量，平均消耗大于 2M, 推荐在Wifi下使用。</string>
     <string name="pref_swipeback_key">swipeback</string>
     <string name="pref_swipeback_title">启用滑动返回</string>
     <string name="pref_swipeback_summary">启用后从屏幕左侧滑向右侧可以返回上一级</string>
@@ -103,5 +103,9 @@
     <string name="pref_release_channel_key">pref_release_chinnal_key</string>
     <string name="pref_release_channel_title">更新频道</string>
 
+
+    <string name="pref_auto_image_key">auto_image</string>
+    <string name="pref_auto_image_summary">开启后在WIFI条件下正文加载图片，非WIFI条件下点击加载图片</string>
+    <string name="pref_auto_image_title">智能加载正文图片</string>
 
 </resources>

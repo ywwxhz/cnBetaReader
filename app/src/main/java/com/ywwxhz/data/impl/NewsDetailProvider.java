@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import com.lzy.okhttputils.request.BaseRequest;
+import com.lzy.okgo.request.BaseRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.data.BaseDataProvider;
@@ -52,7 +52,7 @@ public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
         }
 
         @Override
-        protected NewsItem parseResponse(Response response) throws Exception {
+        public NewsItem convertSuccess(Response response) throws Exception {
             String resp = response.body().string();
             if (Configure.STANDRA_PATTERN.matcher(resp).find()) {
                 handleResponceString(mNewsItem, resp, true);

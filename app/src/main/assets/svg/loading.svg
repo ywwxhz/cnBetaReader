@@ -1,32 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" fill="#777">
-  <rect x="272.5" y="167.5" width="6" height="40" rx="2">
-    <animate attributeName="height" begin="0.5s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
-    calcMode="linear" repeatCount="indefinite" />
-    <animate attributeName="y" begin="0.5s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
-    calcMode="linear" repeatCount="indefinite" />
-  </rect>
-  <rect x="282.5" y="167.5" width="6" height="40" rx="2">
-    <animate attributeName="height" begin="0.25s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
-    calcMode="linear" repeatCount="indefinite" />
-    <animate attributeName="y" begin="0.25s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
-    calcMode="linear" repeatCount="indefinite" />
-  </rect>
-  <rect x="292.5" y="167.5" width="6" height="40" rx="2">
-    <animate attributeName="height" begin="0s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
-    calcMode="linear" repeatCount="indefinite" />
-    <animate attributeName="y" begin="0s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
-    calcMode="linear" repeatCount="indefinite" />
-  </rect>
-  <rect x="302.5" y="167.5" width="6" height="40" rx="2">
-    <animate attributeName="height" begin="0.25s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
-    calcMode="linear" repeatCount="indefinite" />
-    <animate attributeName="y" begin="0.25s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
-    calcMode="linear" repeatCount="indefinite" />
-  </rect>
-  <rect x="312.5" y="167.5" width="6" height="40" rx="2">
-    <animate attributeName="height" begin="0.5s" dur="0.8s" values="40;35;30;25;20;15;10;5;45;40"
-    calcMode="linear" repeatCount="indefinite" />
-    <animate attributeName="y" begin="0.5s" dur="0.8s" values="167.5;170;172.5;175;177.5;180;182.5;185;165;167.5"
-    calcMode="linear" repeatCount="indefinite" />
-  </rect>
+<svg width="600" height="375" xmlns="http://www.w3.org/2000/svg">
+ <style type="text/css">.st0{fill:none;stroke:#888888;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+        .st1{fill:none;stroke:#888888;stroke-width:2;}</style>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="377" width="602" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_6">
+   <polygon class="st0" points="32.20000076293945,328.5999755859375 25.600000381469727,317 32.20000076293945,305.5 45.5,305.5 52.20000076293945,317 45.5,328.5999755859375 " id="svg_2"/>
+   <polygon class="st0" points="55,342.29998779296875 48.400001525878906,330.79998779296875 55,319.29998779296875 68.30000305175781,319.29998779296875 75,330.79998779296875 68.30000305175781,342.29998779296875 " id="svg_3"/>
+   <polygon class="st0" points="32,355.9000244140625 25.399999618530273,344.4000244140625 32,332.70001220703125 45.29999923706055,332.70001220703125 52,344.4000244140625 45.29999923706055,355.9000244140625 " id="svg_4"/>
+   <text transform="matrix(1,0,0,1,89.3,571.3701) " font-size="12pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#AAAAAA" id="svg_5" y="-236" x="-5">cnBeta Plus</text>
+  </g>
+  <g id="svg_1">
+   <circle class="st1" cx="300" cy="187.500006" r="1" id="svg_7">
+   	<animate accumulate="none" additive="replace" attributeName="r" begin="0s" calcMode="spline"
+                     dur="1.8s" fill="remove" keySplines="0.165, 0.84, 0.44, 1" keyTimes="0; 1"
+                     repeatCount="indefinite" restart="always" values="1; 20">
+            </animate>
+            <animate accumulate="none" additive="replace" attributeName="stroke-opacity" begin="0s"
+                     calcMode="spline" dur="1.8s" fill="remove"
+                     keySplines="0.3, 0.61, 0.355, 1" keyTimes="0; 1" repeatCount="indefinite" restart="always"
+                     values="1; 0">
+            </animate>
+   </circle>
+   <circle class="st1" cx="300" cy="187.500006" r="1" id="svg_8">
+   	<animate accumulate="none" additive="replace" attributeName="r" begin="-0.9s" calcMode="spline"
+                     dur="1.8s" fill="remove" keySplines="0.165, 0.84, 0.44, 1" keyTimes="0; 1"
+                     repeatCount="indefinite" restart="always" values="1; 20">
+            </animate>
+            <animate accumulate="none" additive="replace" attributeName="stroke-opacity" begin="-0.9s"
+                     calcMode="spline" dur="1.8s" fill="remove"
+                     keySplines="0.3, 0.61, 0.355, 1" keyTimes="0; 1" repeatCount="indefinite" restart="always"
+                     values="1; 0">
+            </animate>
+   </circle>
+  </g>
+  <text x="263.296875" y="245" font-size="18pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#888888" id="svg_9">加载中</text>
+ </g>
 </svg>

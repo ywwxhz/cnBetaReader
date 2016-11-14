@@ -17,10 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.lzy.okhttputils.OkHttpUtils;
-import com.lzy.okhttputils.callback.BitmapCallback;
-import com.lzy.okhttputils.model.HttpParams;
-import com.lzy.okhttputils.request.BaseRequest;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.BitmapCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.request.BaseRequest;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.Configure;
@@ -31,7 +31,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import okhttp3.Call;
-import okhttp3.Request;
 import okhttp3.Response;
 
 /**
@@ -134,7 +133,9 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
             HttpParams params = new HttpParams();
             params.put("refresh", "1");
             params.put("_", System.currentTimeMillis() + "");
-            OkHttpUtils.get(Configure.SECOND_VIEW).tag(getActivity()).execute(new BaseJsonCallback() {
+            OkGo.get(Configure.SECOND_VIEW).headers("X-Requested-With", "XMLHttpRequest")
+                    .headers("Referer", "http://www.cnbeta.com/")
+                    .params(params).tag(getActivity()).execute(new BaseJsonCallback() {
 
                 @Override
                 public void onBefore(BaseRequest request) {
@@ -154,26 +155,28 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
                 protected void onResponse(JSONObject response) {
                     try {
                         String url = response.getString("url");
-                        OkHttpUtils.get(Configure.BASE_URL + url).tag(getActivity()).execute(new BitmapCallback() {
+                        OkGo.get(Configure.BASE_URL + url).tag(getActivity()).execute(new BitmapCallback() {
+
                             @Override
-                            public void onResponse(boolean isFromCache, Bitmap bitmap, Request request, @Nullable Response response) {
+                            public void onSuccess(Bitmap bitmap, Call call, Response response) {
                                 seccodeImage.setImageBitmap(bitmap);
                             }
 
                             @Override
-                            public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
+                            public void onError(Call call, Response response, Exception e) {
                                 seccodeImage.setImageBitmap(null);
                                 showToast("获取验证码失败");
                             }
 
                             @Override
-                            public void onAfter(boolean isFromCache, @Nullable Bitmap bitmap, Call call, @Nullable Response response, @Nullable Exception e) {
+                            public void onAfter(@Nullable Bitmap bitmap, @Nullable Exception e) {
                                 flushing = false;
                                 seccodeImage.setVisibility(View.VISIBLE);
                                 progress.setVisibility(View.GONE);
                             }
+
                         });
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         showToast("获取验证码失败了");
                         flushing = false;
@@ -206,7 +209,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
                 params.put("pid", tid);
                 params.put("seccode", seccode.getText().toString());
                 params.put("csrf_token", token);
-                OkHttpUtils.post(Configure.COMMENT_VIEW).tag(getActivity()).execute(new BaseJsonCallback() {
+                OkGo.post(Configure.COMMENT_VIEW).tag(getActivity()).execute(new BaseJsonCallback() {
                     @Override
                     protected void onError(int httpCode, Response response, Exception cause) {
                         if (cause != null) {
@@ -239,7 +242,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
                                 throw new JSONException("response error");
                             }
                         } catch (JSONException e) {
-                            onError(200,null,e);
+                            onError(200, null, e);
                         }
                     }
                 });

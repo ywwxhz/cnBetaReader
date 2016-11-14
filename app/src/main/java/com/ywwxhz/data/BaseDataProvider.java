@@ -16,13 +16,33 @@ public abstract class BaseDataProvider<T> {
         mActivity = activity;
     }
 
+    /**
+     * 设置回调
+     * @param callback
+     */
     public void setCallback(DataProviderCallback<T> callback) {
         this.callback = callback;
     }
+
+    /**
+     * 获取Activity
+     * @return
+     */
     public Activity getActivity() {
         return mActivity;
     }
-    public void setActivity(Activity activity){this.mActivity = activity;}
 
+    /**
+     * 设置 Activity
+     * @param activity
+     */
+    public void setActivity(Activity activity) {
+        this.mActivity = activity;
+    }
+
+    /**
+     * 加载数据操作
+     * @param startup 是否第一次加载
+     */
     public abstract void loadData(boolean startup);
 }

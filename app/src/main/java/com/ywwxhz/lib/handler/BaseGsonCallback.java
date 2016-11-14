@@ -21,7 +21,7 @@ public abstract class BaseGsonCallback<T> extends BaseCallback<T> {
     }
 
     @Override
-    protected T parseResponse(Response response) throws Exception {
+    public T convertSuccess(Response response) throws Exception {
         return Toolkit.getGson().fromJson(response.body().string(),type);
     }
 }

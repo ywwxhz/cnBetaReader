@@ -1,12 +1,8 @@
 package com.ywwxhz.lib.handler;
 
-import android.support.annotation.Nullable;
-
-import com.lzy.okhttputils.OkHttpUtils;
-import com.lzy.okhttputils.callback.AbsCallback;
+import com.lzy.okgo.callback.AbsCallback;
 
 import okhttp3.Call;
-import okhttp3.Request;
 import okhttp3.Response;
 
 /**
@@ -16,34 +12,13 @@ import okhttp3.Response;
  */
 public abstract class BaseCallback<T> extends AbsCallback<T> {
 
-
     @Override
-    public final T parseNetworkResponse(final Response response) {
-        try {
-            return parseResponse(response);
-        } catch (final Exception e) {
-            OkHttpUtils.getInstance().getDelivery().post(new Runnable() {
-                @Override
-                public void run() {
-                    onError(response.code(), response, e);
-                }
-            });
-        }
-        return null;
-    }
-
-    protected abstract T parseResponse(Response response) throws Exception;
-
-
-    @Override
-    public final void onResponse(boolean isFromCache, T t, Request request, @Nullable Response response) {
+    public void onSuccess(T t, Call call, Response response) {
         onResponse(t);
     }
 
-    /**
-     * 请求失败，响应错误，数据解析错误等，都会回调该方法， UI线程
-     */
-    public final void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
+    @Override
+    public final void onError(Call call, Response response, Exception e) {
         if (response == null) {
             onError(0, null, e);
         } else {
@@ -51,7 +26,21 @@ public abstract class BaseCallback<T> extends AbsCallback<T> {
         }
     }
 
+    /**
+     * 失败响应回调
+     * 用于兼容旧版接口
+     *
+     * @param httpCode http状态码
+     * @param response 响应对象
+     * @param cause    错误原因
+     */
     protected abstract void onError(int httpCode, Response response, Exception cause);
 
+    /**
+     * 调用成功回调<br/>
+     * 用于兼容旧版接口，如使用该方法请不要覆写 onSuccess(T t, Call call, Response response)
+     *
+     * @param t
+     */
     protected abstract void onResponse(T t);
 }

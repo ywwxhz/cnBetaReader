@@ -16,10 +16,10 @@ import com.ywwxhz.lib.kits.Toolkit;
 import java.util.List;
 
 /**
- * cnBetaReader
- * Created by 远望の无限(ywwxhz) on 2014/11/1 17:46.
+ * cnBetaReader Created by 远望の无限(ywwxhz) on 2014/11/1 17:46.
  */
-public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem,? extends BaseAdapter<NewsItem>>> extends BaseListProcesser<NewsItem,DataProvider> {
+public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem, ? extends BaseAdapter<NewsItem>>>
+        extends BaseListProcesser<NewsItem, DataProvider> {
 
     private NewsCacheHandler handler;
 
@@ -29,8 +29,8 @@ public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem,? 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.menu_cache){
-            if(handler==null) {
+        if (item.getItemId() == R.id.menu_cache) {
+            if (handler == null) {
                 handler = new NewsCacheHandler(getActivity());
             }
             handler.setCacheList(getProvider().getAdapter().getDataSet());
@@ -41,12 +41,12 @@ public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem,? 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_news_list,menu);
+        inflater.inflate(R.menu.menu_news_list, menu);
     }
 
     @Override
     public void onDestroy() {
-        if(handler!=null){
+        if (handler != null) {
             handler.stop();
             handler.cleanNotification();
         }
@@ -55,17 +55,19 @@ public class NewsListProcesser<DataProvider extends ListDataProvider<NewsItem,? 
     @Override
     public void onResume() {
         super.onResume();
-        if(MyApplication.getInstance().isListImageShowStatusChange()) {
+        if (MyApplication.getInstance().isListImageShowStatusChange()) {
             provider.getAdapter().notifyDataSetChanged(true);
-        }else{
-            if(FileCacheKit.getInstance().isCached(provider.getTypeKey().hashCode()+"","list")) {
+        } else {
+            if (FileCacheKit.getInstance().isCached(provider.getTypeKey().hashCode() + "", "list")) {
                 provider.getAdapter().notifyDataSetChanged();
                 List<NewsItem> dataSet = provider.getAdapter().getDataSet();
                 if (dataSet.size() > 0) {
                     if (dataSet.size() > 40) {
                         dataSet = dataSet.subList(0, 39);
                     }
-                    FileCacheKit.getInstance().putAsync(provider.getTypeKey().hashCode() + "", Toolkit.getGson().toJson(dataSet), "list", null);
+                    FileCacheKit.getInstance()
+                            .putAsync(provider.getTypeKey().hashCode() + "", Toolkit.getGson().toJson(dataSet), "list",
+                                      null);
                 }
             }
         }

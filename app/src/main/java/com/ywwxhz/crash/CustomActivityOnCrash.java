@@ -58,9 +58,6 @@ public final class CustomActivityOnCrash {
     private static final String CAOC_HANDLER_PACKAGE_NAME = "com.ywwxhz.crash";
     private static final String DEFAULT_HANDLER_PACKAGE_NAME = "com.android.internal.os";
     private static final int MAX_STACK_TRACE_SIZE = 131071; //128 KB - 1
-
-    //Internal variables
-    private static Application application;
     private static WeakReference<Activity> lastActivityCreated = new WeakReference<>(null);
     private static boolean isInBackground = false;
 
@@ -95,7 +92,7 @@ public final class CustomActivityOnCrash {
                         Log.e(TAG, "IMPORTANT WARNING! You already have an UncaughtExceptionHandler, are you sure this is correct? If you use ACRA, Crashlytics or similar libraries, you must initialize them AFTER CustomActivityOnCrash! Installing anyway, but your original handler will not be called.");
                     }
 
-                    application = (Application) context.getApplicationContext();
+                    final Application application = (Application) context.getApplicationContext();
 
                     //We define a default exception handler that does what we want so it can be called from Crashlytics/ACRA
                     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

@@ -37,8 +37,8 @@ var BaseTool = (function(){
         }
         target.width = width;
         target.height = width * 10 / 16 ;
-        //target.style.maxWidth = width + "px";
-        //target.style.maxHeight = width * 10 / 16 + "px";
+        target.style.maxWidth = width + "px";
+        target.style.maxHeight = width * 10 / 16 + "px";
 	}
 	
 	var _updateWidth = function(){

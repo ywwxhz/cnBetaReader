@@ -1,8 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375"
-preserveAspectRatio="none">
-  <g>
-    <text x="177.65625" y="200.7" style="fill:#AAAAAA;font-weight:bold;font-family:Arial, Helvetica, Open Sans, sans-serif, monospace;font-size:30pt">
-      点击加载图片
-    </text>
+<svg width="600" height="375" xmlns="http://www.w3.org/2000/svg">
+ <style type="text/css">.st0{fill:none;stroke:#888888;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+        .st1{fill:none;stroke:#888888;stroke-width:2;}</style>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="377" width="602" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_6">
+   <polygon class="st0" points="32.20000076293945,328.5999755859375 25.600000381469727,317 32.20000076293945,305.5 45.5,305.5 52.20000076293945,317 45.5,328.5999755859375 " id="svg_2"/>
+   <polygon class="st0" points="55,342.29998779296875 48.400001525878906,330.79998779296875 55,319.29998779296875 68.30000305175781,319.29998779296875 75,330.79998779296875 68.30000305175781,342.29998779296875 " id="svg_3"/>
+   <polygon class="st0" points="32,355.9000244140625 25.399999618530273,344.4000244140625 32,332.70001220703125 45.29999923706055,332.70001220703125 52,344.4000244140625 45.29999923706055,355.9000244140625 " id="svg_4"/>
+   <text transform="matrix(1,0,0,1,89.3,571.3701) " font-size="12pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#AAAAAA" id="svg_5" y="-236" x="-5">cnBeta Plus</text>
   </g>
+  <g id="svg_7">
+   <path id="svg_2" fill="#888888" d="m282.1,169.6l0,35.8l35.8,0l0,-35.8l-35.8,0zm33.40608,33.40608l-30.95775,0l0,-31.01216l30.95775,0l0,31.01216z" stroke="null"/>
+   <polygon id="svg_3" fill="#888888" points="313.220947265625,194.07781982421875 306.4745178222656,189.9972686767578 300.816162109375,192.55442810058594 293.1446838378906,185.6990966796875 286.7790222167969,190.26930236816406 286.7790222167969,199.3009033203125 313.220947265625,199.3009033203125 " stroke="null"/>
+  </g>
+  <text x="250.796875" y="245" font-size="18pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#888888" id="svg_9">点击加载</text>
+ </g>
 </svg>

@@ -39,7 +39,7 @@ public abstract class BaseResponseObjectResponse<T> extends BaseGsonCallback<Res
     }
 
     @Override
-    protected void onResponse(ResponseObject<T> object) {
+    protected final void onResponse(ResponseObject<T> object) {
         if (object != null) {
             if ("success".equals(object.getState())) {
                 onSuccess(object.getResult());
@@ -49,7 +49,15 @@ public abstract class BaseResponseObjectResponse<T> extends BaseGsonCallback<Res
         }
     }
 
+    /**
+     * 成功调用
+     * @param result
+     */
     protected abstract void onSuccess(T result);
 
+    /**
+     * 获取Activity
+     * @return  {@link Activity}
+     */
     protected abstract Activity getActivity();
 }

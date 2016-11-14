@@ -72,20 +72,20 @@ public class Emoticons{
 
 	static {
 
-		EMOTICONS.put("[s:爱心]", "love.png");
-		EMOTICONS.put("[s:汗]", "han.png");
-		EMOTICONS.put("[s:黑]", "hei.png");
-		EMOTICONS.put("[s:加班]", "jiaban.png");
-		EMOTICONS.put("[s:贱笑]", "jianxiao.png");
-		EMOTICONS.put("[s:惊讶]", "jingya.png");
-		EMOTICONS.put("[s:抠鼻]", "koubi.png");
-		EMOTICONS.put("[s:哭]", "ku.png");
-		EMOTICONS.put("[s:喷]", "pen.png");
-		EMOTICONS.put("[s:沙发]", "safa.png");
-		EMOTICONS.put("[s:生气]", "angry.png");
-		EMOTICONS.put("[s:双负五]", "fuwu.png");
-		EMOTICONS.put("[s:笑]", "xiao.png");
-		EMOTICONS.put("[s:晕]", "yun.png");
+		EMOTICONS.put("[s:爱心]", "emoji/love.png");
+		EMOTICONS.put("[s:汗]", "emoji/han.png");
+		EMOTICONS.put("[s:黑]", "emoji/hei.png");
+		EMOTICONS.put("[s:加班]", "emoji/jiaban.png");
+		EMOTICONS.put("[s:贱笑]", "emoji/jianxiao.png");
+		EMOTICONS.put("[s:惊讶]", "emoji/jingya.png");
+		EMOTICONS.put("[s:抠鼻]", "emoji/koubi.png");
+		EMOTICONS.put("[s:哭]", "emoji/ku.png");
+		EMOTICONS.put("[s:喷]", "emoji/pen.png");
+		EMOTICONS.put("[s:沙发]", "emoji/safa.png");
+		EMOTICONS.put("[s:生气]", "emoji/angry.png");
+		EMOTICONS.put("[s:双负五]", "emoji/fuwu.png");
+		EMOTICONS.put("[s:笑]", "emoji/xiao.png");
+		EMOTICONS.put("[s:晕]", "emoji/yun.png");
 
 	}
 

@@ -1,6 +1,6 @@
 package com.ywwxhz.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +22,7 @@ import com.ywwxhz.processers.BaseProcesserImpl;
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/3/25 18:06.
  */
-public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<DataType>,Provider extends ListDataProvider<DataType,Adapter>,Processer extends BaseListProcesser<DataType,Provider>>
+public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<DataType>, Provider extends ListDataProvider<DataType, Adapter>, Processer extends BaseListProcesser<DataType, Provider>>
         extends Fragment {
 
     protected Processer processer;
@@ -37,18 +37,18 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if(processer==null) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (processer == null) {
             processer = createProcesser(getProvider());
         }
         processer.setMenuCallBack(menuCallBack);
-        processer.setActivity((AppCompatActivity) activity);
+        processer.setActivity((AppCompatActivity) context);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_layout,container,false);
+        View view = inflater.inflate(R.layout.list_layout, container, false);
         processer.assumeView(view);
         return view;
     }
@@ -76,7 +76,7 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
         return processer.onOptionsItemSelected(item);
     }
 
-    public boolean hasMenu(){
+    public boolean hasMenu() {
         return false;
     }
 
@@ -86,8 +86,8 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
         super.onDestroy();
     }
 
-    public BaseListFragment setMenuCallBack(BaseProcesserImpl.onOptionMenuSelect menuCallBack){
-        this.menuCallBack= menuCallBack;
+    public BaseListFragment setMenuCallBack(BaseProcesserImpl.onOptionMenuSelect menuCallBack) {
+        this.menuCallBack = menuCallBack;
         return this;
     }
 }

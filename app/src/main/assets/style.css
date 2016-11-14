@@ -123,6 +123,10 @@ a {
 	margin-left:.1em;
 	vertical-align:-.4em;
 }
+#content pre {
+    word-wrap: break-word;
+    word-break: break-all;
+}
 
 .clear {
 	clear:both;

@@ -1,5 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375"
-preserveAspectRatio="none">
-    <text x="245.546875" y="200.7" style="fill:#AAAAAA;font-weight:bold;font-family:Arial,Helvetica, Open Sans, sans-serif, monospace;font-size:30pt ">Video</text>
+<svg width="600" height="375" xmlns="http://www.w3.org/2000/svg">
+ <style type="text/css">.st0{fill:none;stroke:#888888;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+        .st1{fill:none;stroke:#888888;stroke-width:2;}</style>
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="602" height="377" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_6">
+   <polygon id="svg_2" points="32.20000076293945,328.5999755859375 25.600000381469727,317 32.20000076293945,305.5 45.5,305.5 52.20000076293945,317 45.5,328.5999755859375 " class="st0"/>
+   <polygon id="svg_3" points="55,342.29998779296875 48.400001525878906,330.79998779296875 55,319.29998779296875 68.30000305175781,319.29998779296875 75,330.79998779296875 68.30000305175781,342.29998779296875 " class="st0"/>
+   <polygon id="svg_4" points="32,355.9000244140625 25.399999618530273,344.4000244140625 32,332.70001220703125 45.29999923706055,332.70001220703125 52,344.4000244140625 45.29999923706055,355.9000244140625 " class="st0"/>
+   <text x="-5" y="-236" id="svg_5" fill="#AAAAAA" font-weight="bold" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-size="12pt" transform="matrix(1,0,0,1,89.3,571.3701) ">cnBeta Plus</text>
+  </g>
+  <path id="svg_1" d="m312,171.5l4,8l-6,0l-4,-8l-4,0l4,8l-6,0l-4,-8l-4,0l4,8l-6,0l-4,-8l-2,0c-2.21,0 -3.98,1.79 -3.98,4l-0.02,24c0,2.21 1.79,4 4,4l32,0c2.21,0 4,-1.79 4,-4l0,-28l-8,0z" fill="#888888"/>
+  <text id="svg_9" fill="#888" font-weight="bold" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-size="18pt" y="245" x="250.796875">点击加载</text>
+ </g>
 </svg>

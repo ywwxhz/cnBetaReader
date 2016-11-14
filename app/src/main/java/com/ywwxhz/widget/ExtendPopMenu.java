@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -19,14 +18,10 @@ import org.json.JSONObject;
 import okhttp3.Response;
 
 public class ExtendPopMenu extends PopupMenu {
-    public int SUPPORT = 1;
-    public int AGAINST = 2;
-    public int REPORT = 3;
-    private int action;
-    private CommentItem citem;
     private Context mContext;
-    private BaseAdapter adapter;
     private String token;
+    private int sid;
+    private String tid;
 
     public ExtendPopMenu(Context context, View anchor) {
         super(context, anchor);
@@ -36,21 +31,12 @@ public class ExtendPopMenu extends PopupMenu {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.comment_support:
-                        action = SUPPORT;
-                        NetKit.setCommentAction(mContext, "support", citem.getSid() + "", citem.getTid(), token, chandler);
-                        break;
-                    case R.id.comment_against:
-                        action = AGAINST;
-                        NetKit.setCommentAction(mContext, "against", citem.getSid() + "", citem.getTid(), token, chandler);
-                        break;
                     case R.id.comment_report:
-                        action = REPORT;
-                        NetKit.setCommentAction(mContext, "report", citem.getSid() + "", citem.getTid(), token, chandler);
+                        NetKit.setCommentAction(mContext, "report", sid + "", tid, token, chandler);
                         break;
                     case R.id.comment_replay:
                         if (mContext instanceof Activity) {
-                            AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(citem.getSid(), citem.getTid(), token);
+                            AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(sid, tid, token);
                             fragment.show(((Activity) mContext).getFragmentManager(), "new comment");
                         } else {
                             Toast.makeText(mContext, "function not impletment", Toast.LENGTH_SHORT).show();
@@ -64,29 +50,17 @@ public class ExtendPopMenu extends PopupMenu {
     }
 
     private BaseJsonCallback chandler = new BaseJsonCallback() {
-        @Override
+
         protected void onError(int httpCode, Response response, Exception cause) {
             Toast.makeText(mContext, "操作失败", Toast.LENGTH_LONG).show();
             if (cause != null)
                 cause.printStackTrace();
         }
 
-        @Override
         protected void onResponse(JSONObject jsonObject) {
             try {
                 if ("success".equals(jsonObject.getString("state"))) {
-                    String actionString;
-                    if (action == SUPPORT) {
-                        actionString = "支持";
-                        citem.setScore(citem.getScore() + 1);
-                    } else if (action == AGAINST) {
-                        actionString = "反对";
-                        citem.setReason(citem.getReason() + 1);
-                    } else {
-                        actionString = "举报";
-                    }
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(mContext, actionString + "成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "举报成功", Toast.LENGTH_SHORT).show();
                 } else {
                     throw new Exception();
                 }
@@ -97,7 +71,8 @@ public class ExtendPopMenu extends PopupMenu {
     };
 
     public void setCitem(CommentItem citem) {
-        this.citem = citem;
+        sid = citem.getSid();
+        tid = citem.getTid();
     }
 
     public void setToken(String token) {
@@ -106,9 +81,5 @@ public class ExtendPopMenu extends PopupMenu {
 
     public String getToken() {
         return token;
-    }
-
-    public void setAdapter(BaseAdapter adapter) {
-        this.adapter = adapter;
     }
 }

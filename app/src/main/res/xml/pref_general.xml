@@ -31,9 +31,18 @@
             android:title="@string/pref_show_large_image_title" />
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="@string/pref_show_detail_image_key"
+            android:key="@string/pref_auto_image_key"
+            android:summary="@string/pref_auto_image_summary"
+            android:title="@string/pref_auto_image_title"
+            android:disableDependentsState="true"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="check_box_preference_1"
             android:summary="@string/pref_show_detail_image_summary"
-            android:title="@string/pref_show_detail_image_title" />
+            android:title="@string/pref_show_detail_image_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:dependency="@string/pref_auto_image_key"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_preload_image_key"
@@ -89,17 +98,17 @@
             android:title="@string/pref_crash_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_update_categroy" android:enabled="false">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/pref_auto_update_key"
-            android:summary="@string/pref_auto_update_summary"
-            android:title="@string/pref_auto_update_title" />
-        <com.ywwxhz.preference.UpdateChannelPreference />
-        <Preference
-            android:key="@string/pref_check_update_key"
-            android:title="@string/pref_check_updat_title" />
-    </PreferenceCategory>
+    <!--<PreferenceCategory android:title="@string/pref_update_categroy" android:enabled="false">-->
+        <!--<CheckBoxPreference-->
+            <!--android:defaultValue="false"-->
+            <!--android:key="@string/pref_auto_update_key"-->
+            <!--android:summary="@string/pref_auto_update_summary"-->
+            <!--android:title="@string/pref_auto_update_title" />-->
+        <!--<com.ywwxhz.preference.UpdateChannelPreference />-->
+        <!--<Preference-->
+            <!--android:key="@string/pref_check_update_key"-->
+            <!--android:title="@string/pref_check_updat_title" />-->
+    <!--</PreferenceCategory>-->
 
     <PreferenceCategory android:title="@string/pref_about_title">
         <Preference

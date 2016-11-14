@@ -4,9 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
-import com.lzy.okhttputils.OkHttpUtils;
-import com.lzy.okhttputils.cache.CacheMode;
-import com.lzy.okhttputils.model.HttpHeaders;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.cookie.store.MemoryCookieStore;
+import com.lzy.okgo.model.HttpHeaders;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -116,11 +117,12 @@ public class MyApplication extends Application {
         headers.put("Origin", "http://www.cnbeta.com");
         headers.put("X-Requested-With", "XMLHttpRequest");
         //必须调用初始化
-        OkHttpUtils.init(this);
+        OkGo.init(this);
         //以下都不是必须的，根据需要自行选择
-        OkHttpUtils.getInstance()//
+        OkGo.getInstance()//
                 .debug("cnBeta Plus")                  //是否打开调试
-                .setCacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .setCacheMode(CacheMode.NO_CACHE)
+                .setCookieStore(new MemoryCookieStore())
                 .setConnectTimeout(3000)               //全局的连接超时时间
                 .setReadTimeOut(6000)                  //全局的读取超时时间
                 .setWriteTimeOut(6000)                 //全局的写入超时时间
