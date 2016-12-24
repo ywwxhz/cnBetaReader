@@ -1,20 +1,14 @@
 <svg width="600" height="375" xmlns="http://www.w3.org/2000/svg">
- <style type="text/css">.st0{fill:none;stroke:#888888;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-        .st1{fill:none;stroke:#888888;stroke-width:2;}</style>
-
+ <style type="text/css">.st0{fill:none;stroke:#AAAAAA;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+        .st1{fill:none;stroke:#AAAAAA;stroke-width:2;}</style>
  <g>
-  <title>background</title>
-  <rect fill="none" id="canvas_background" height="377" width="602" y="-1" x="-1"/>
+  <polygon class="st0" points="32.20000076293945,328.5999755859375 25.600000381469727,317 32.20000076293945,305.5 45.5,305.5 52.20000076293945,317 45.5,328.5999755859375 "/>
+  <polygon class="st0" points="55,342.29998779296875 48.400001525878906,330.79998779296875 55,319.29998779296875 68.30000305175781,319.29998779296875 75,330.79998779296875 68.30000305175781,342.29998779296875 "/>
+  <polygon class="st0" points="32,355.9000244140625 25.399999618530273,344.4000244140625 32,332.70001220703125 45.29999923706055,332.70001220703125 52,344.4000244140625 45.29999923706055,355.9000244140625 "/>
+  <text transform="matrix(1,0,0,1,89.3,571.3701) " font-size="12pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#AAAAAA" y="-236" x="-5">cnBeta Plus</text>
  </g>
  <g>
-  <title>Layer 1</title>
-  <g id="svg_6">
-   <polygon class="st0" points="32.20000076293945,328.5999755859375 25.600000381469727,317 32.20000076293945,305.5 45.5,305.5 52.20000076293945,317 45.5,328.5999755859375 " id="svg_2"/>
-   <polygon class="st0" points="55,342.29998779296875 48.400001525878906,330.79998779296875 55,319.29998779296875 68.30000305175781,319.29998779296875 75,330.79998779296875 68.30000305175781,342.29998779296875 " id="svg_3"/>
-   <polygon class="st0" points="32,355.9000244140625 25.399999618530273,344.4000244140625 32,332.70001220703125 45.29999923706055,332.70001220703125 52,344.4000244140625 45.29999923706055,355.9000244140625 " id="svg_4"/>
-   <text transform="matrix(1,0,0,1,89.3,571.3701) " font-size="12pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#AAAAAA" id="svg_5" y="-236" x="-5">cnBeta Plus</text>
-  </g>
-  <path fill="#888888" d="m299.99,167.5c-11.05,0 -19.99,8.95 -19.99,20s8.94,20 19.99,20s20.01,-8.95 20.01,-20s-8.96,-20 -20.01,-20zm0.01,36c-8.84,0 -16,-7.16 -16,-16s7.16,-16 16,-16s16,7.16 16,16s-7.16,16 -16,16zm7,-18c1.66,0 3,-1.34 3,-3s-1.34,-3 -3,-3s-3,1.34 -3,3s1.34,3 3,3zm-14,0c1.66,0 3,-1.34 3,-3s-1.34,-3 -3,-3s-3,1.34 -3,3s1.34,3 3,3zm17.21,13c-1.6,-4.09 -5.55,-7 -10.21,-7s-8.61,2.91 -10.21,7" id="svg_1"/>
-  <text x="250.796875" y="245" font-size="18pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#888" id="svg_9">点击重试</text>
+  <path fill="#888888" d="m299.99,167.5c-11.05,0 -19.99,8.95 -19.99,20s8.94,20 19.99,20s20.01,-8.95 20.01,-20s-8.96,-20 -20.01,-20zm0.01,36c-8.84,0 -16,-7.16 -16,-16s7.16,-16 16,-16s16,7.16 16,16s-7.16,16 -16,16zm7,-18c1.66,0 3,-1.34 3,-3s-1.34,-3 -3,-3s-3,1.34 -3,3s1.34,3 3,3zm-14,0c1.66,0 3,-1.34 3,-3s-1.34,-3 -3,-3s-3,1.34 -3,3s1.34,3 3,3zm17.21,13c-1.6,-4.09 -5.55,-7 -10.21,-7s-8.61,2.91 -10.21,7"/>
+  <text x="250.796875" y="245" font-size="18pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#888">点击重试</text>
  </g>
 </svg>

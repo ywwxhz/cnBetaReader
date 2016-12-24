@@ -15,6 +15,9 @@ import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
+/**
+ * 含有 ToolBar 的 Activity
+ */
 public abstract class BaseToolBarActivity extends AppCompatActivity {
     protected TranslucentStatusHelper helper;
     protected FrameLayout content;
@@ -23,27 +26,24 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
     protected int colorPrimaryDark;
     protected int colorAccent;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(shouldChangeTheme()) {
+        if (shouldChangeTheme()) {
             ThemeManger.onActivityCreateSetTheme(this);
         }
         super.onCreate(savedInstanceState);
         super.setContentView(getBasicContentLayout());
-        TypedArray array = obtainStyledAttributes(new int[]{R.attr.colorPrimary,R.attr.colorPrimaryDark,R.attr.colorAccent});
+        TypedArray array = obtainStyledAttributes(
+                new int[] { R.attr.colorPrimary, R.attr.colorPrimaryDark, R.attr.colorAccent });
         colorPrimary = array.getColor(0, 0xFF1473AF);
         colorPrimaryDark = array.getColor(1, 0xFF11659A);
         colorAccent = array.getColor(2, 0xFF3C69CE);
         CroutonStyle.buildStyleInfo(colorPrimaryDark);
         CroutonStyle.buildStyleConfirm(colorAccent);
         array.recycle();
-        helper = TranslucentStatusHelper.from(this)
-                .setStatusView(findViewById(R.id.statusView))
-                .setActionBarSizeAttr(R.attr.actionBarSize)
-                .setStatusColor(colorPrimaryDark)
-                .setTranslucentProxy(TranslucentStatusHelper.TranslucentProxy.AUTO)
-                .builder();
+        helper = TranslucentStatusHelper.from(this).setStatusView(findViewById(R.id.statusView))
+                .setActionBarSizeAttr(R.attr.actionBarSize).setStatusColor(colorPrimaryDark)
+                .setTranslucentProxy(TranslucentStatusHelper.TranslucentProxy.AUTO).builder();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         content = (FrameLayout) findViewById(R.id.content);
@@ -55,18 +55,10 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
         getLayoutInflater().inflate(layoutResID, content);
     }
 
-    public void setContentViewSuper(int layoutResID) {
-        super.setContentView(layoutResID);
-    }
-
     @Override
     public void setContentView(View view) {
         content.removeAllViews();
         content.addView(view);
-    }
-
-    public void setContentViewUseSuper(View view) {
-        super.setContentView(view);
     }
 
     @Override
@@ -75,25 +67,37 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
         content.addView(view, params);
     }
 
-    public void setContentViewsSuper(View view, ViewGroup.LayoutParams params) {
-        super.setContentView(view, params);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 清空关联到此 Activity 的通知条
         Crouton.clearCroutonsForActivity(this);
     }
 
+    /**
+     * 获取基本的布局
+     * 
+     * @return 布局ID
+     */
     protected int getBasicContentLayout() {
         return R.layout.activity_basetoolbar;
     }
 
-    protected boolean shouldChangeTheme(){
+    /**
+     * 是否允许使用主题
+     * 
+     * @return
+     */
+    protected boolean shouldChangeTheme() {
         return true;
     }
 
-    protected FrameLayout getRootView(){
+    /**
+     * 获取根视图
+     * 
+     * @return 根节点视图
+     */
+    protected FrameLayout getRootView() {
         return content;
     }
 }

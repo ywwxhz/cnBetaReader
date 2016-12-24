@@ -8,6 +8,12 @@ public abstract class BaseJsonCallback extends BaseCallback<JSONObject> {
 
     @Override
     public JSONObject convertSuccess(Response response) throws Exception {
-        return new JSONObject(response.body().string());
+        String resp = response.body().string();
+        try{
+            return new JSONObject(resp);
+        }catch (Exception e){
+            System.out.println(resp);
+            throw e;
+        }
     }
 }

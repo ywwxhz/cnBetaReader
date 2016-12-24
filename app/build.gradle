@@ -120,20 +120,24 @@ android {
 
 dependencies {
     compile project(':Crouton')
-    compile project(':FloatingActionButton')
     compile project(':materialish-progress')
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.0.12'
     compile project(':SubSamplingScaleImageView')
     compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.lzy.net:okgo:2.0.0'
+    compile 'com.lzy.net:okgo:2.1.3'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
     compile project(':SuperSaiyanScrollView')
     compile project(':FilterMenu')
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 //    compile project(':MaterialRipple')
-    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.google.code.gson:gson:2.7'
 }

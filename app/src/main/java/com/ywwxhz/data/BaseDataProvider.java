@@ -9,8 +9,8 @@ import android.app.Activity;
  */
 public abstract class BaseDataProvider<T> {
 
-    private Activity mActivity;
     protected DataProviderCallback<T> callback;
+    private Activity mActivity;
 
     public BaseDataProvider(Activity activity) {
         mActivity = activity;
@@ -18,6 +18,7 @@ public abstract class BaseDataProvider<T> {
 
     /**
      * 设置回调
+     * 
      * @param callback
      */
     public void setCallback(DataProviderCallback<T> callback) {
@@ -26,6 +27,7 @@ public abstract class BaseDataProvider<T> {
 
     /**
      * 获取Activity
+     * 
      * @return
      */
     public Activity getActivity() {
@@ -34,6 +36,7 @@ public abstract class BaseDataProvider<T> {
 
     /**
      * 设置 Activity
+     * 
      * @param activity
      */
     public void setActivity(Activity activity) {
@@ -42,7 +45,9 @@ public abstract class BaseDataProvider<T> {
 
     /**
      * 加载数据操作
-     * @param startup 是否第一次加载
+     * 
+     * @param startup
+     *            是否第一次加载
      */
     public abstract void loadData(boolean startup);
 }

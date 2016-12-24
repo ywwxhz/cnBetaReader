@@ -43,6 +43,9 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * 定制全局异常处理
+ */
 @SuppressLint("NewApi")
 public final class CustomActivityOnCrash {
     //Extras passed to the error activity
@@ -131,7 +134,7 @@ public final class CustomActivityOnCrash {
                                         //In case someone sets the activity and then decides to not restart
                                         restartActivityClass = null;
                                     }
-                                    intent.putExtra(EXTRA_LOG_FILE_PATH, new CrashLogWriter(application).writeLogToFile(thread, throwable));
+                                    intent.putExtra(EXTRA_LOG_FILE_PATH, new CrashLogWriter(application).writeLogToFile(throwable));
                                     intent.putExtra(EXTRA_STACK_TRACE, stackTraceString);
                                     intent.putExtra(EXTRA_RESTART_ACTIVITY_CLASS, restartActivityClass);
                                     intent.putExtra(EXTRA_SHOW_ERROR_DETAILS, showErrorDetails);

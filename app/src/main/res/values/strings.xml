@@ -105,7 +105,13 @@
 
 
     <string name="pref_auto_image_key">auto_image</string>
-    <string name="pref_auto_image_summary">开启后在WIFI条件下正文加载图片，非WIFI条件下点击加载图片</string>
+    <string name="pref_auto_image_summary">开启后在WIFI条件下正文加载图片\n非WIFI条件下点击加载图片</string>
     <string name="pref_auto_image_title">智能加载正文图片</string>
+
+    <string name="pref_block_list_key">block_list</string>
+    <string name="pref_block_list_summary">配置新闻正文屏蔽内容，每行一条记录</string>
+    <string name="pref_block_list_title">正文屏蔽配置</string>
+    <string name="menu_show_block_ad">显示屏蔽元素</string>
+    <string name="menu_hide_block_ad">隐藏屏蔽元素</string>
 
 </resources>

@@ -1,5 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
        android:layout_width="fill_parent"
        android:layout_height="fill_parent">
 
@@ -29,16 +28,13 @@
             android:scrollbarStyle="outsideOverlay"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.melnykov.fab.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="20dp"
         android:alpha="0.8"
+        android:layout_gravity="bottom|right"
         android:visibility="gone"
-        app:fab_colorNormal="?colorPrimary"
-        app:fab_colorPressed="?colorPrimaryDark"
-        app:fab_shadow="true"/>
+        android:layout_margin="20dp"/>
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

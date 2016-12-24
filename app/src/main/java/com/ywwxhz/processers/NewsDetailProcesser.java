@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,7 +34,6 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
-import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
@@ -68,10 +68,10 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import okhttp3.Response;
 
 /**
- * cnBetaReader
- * Created by 远望の无限(ywwxhz) on 2014/11/1 17:48.
+ * cnBetaReader Created by 远望の无限(ywwxhz) on 2014/11/1 17:48.
  */
-public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailProvider> implements DataProviderCallback<NewsItem> {
+public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailProvider>
+        implements DataProviderCallback<NewsItem> {
     private View loadFail;
     private WebView mWebView;
     private boolean hascontent;
@@ -84,26 +84,28 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     private boolean fromDB = false;
     private NewsDetailFragment.NewsDetailCallBack callBack;
 
-    private String webTemplate = "<!DOCTYPE html><html><head><base href=\"http://www.cnbeta.com/\" /><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
-            "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
-            "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};</script>" +
-            "<script src=\"file:///android_asset/js/BaseTool.js\"></script>" +
-            "<script src=\"file:///android_asset/js/ImageTool.js\"></script>" +
-            "<script src=\"file:///android_asset/js/VideoTool.js\"></script></head>" +
-            "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right;margin-top: 3pt;\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
-            "<script src=\"file:///android_asset/js/loder.js\"></script></body></html>";
-    private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
-    private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
+    private String webTemplate = "<!DOCTYPE html><html><head><base href=\"http://www.cnbeta.com/\" /><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>"
+            + "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}</style>"
+            + "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s,staticLoading:false};</script>"
+            + "<script src=\"file:///android_asset/js/BaseTool.js\"></script>"
+            + "<script src=\"file:///android_asset/js/ImageTool.js\"></script>"
+            + "<script src=\"file:///android_asset/js/VideoTool.js\"></script></head>"
+            + "<body class='%s'><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right;margin-top: 3pt;\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>"
+            + "<script src=\"file:///android_asset/js/loder.js\"></script></body></html>";
     private Handler myHandler;
     private WebSettings settings;
     private boolean shouldLoadCache;
-
-    private void hideProgressBar() {
-        mProgressBar.setVisibility(View.GONE);
-    }
+    private boolean showBlockAd = false;
 
     public NewsDetailProcesser(NewsDetailProvider provider) {
         super(provider);
+    }
+
+    /**
+     * 隐藏进度条
+     */
+    private void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -127,15 +129,15 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         this.hascontent = false;
         this.myHandler = new Handler();
         initView(view);
-        if(!PrefKit.getBoolean(mActivity, R.string.pref_auto_image_key, true)) {
+        if (!PrefKit.getBoolean(mActivity, R.string.pref_auto_image_key, true)) {
             showImage = PrefKit.getBoolean(mActivity, R.string.pref_show_detail_image_key, true);
-        }else{
+        } else {
             showImage = NetKit.isWifiConnected();
         }
         convertFlashToHtml5 = PrefKit.getBoolean(mActivity, R.string.pref_flash_to_html5_key, true);
     }
 
-    @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
+    @SuppressLint({ "AddJavascriptInterface", "SetJavaScriptEnabled" })
     private void initView(View view) {
         this.loadFail = view.findViewById(R.id.message);
         this.mWebView = (WebView) view.findViewById(R.id.webview);
@@ -153,17 +155,21 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         mActionButtom.setScaleX(0);
         mActionButtom.setScaleY(0);
         settings = mWebView.getSettings();
-        //android 5.0 以上版本Webview设置允许使用第三方COOKIE
+        // android 5.0 以上版本Webview设置允许使用第三方COOKIE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptCookie(true);
             CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         settings.setSupportZoom(false);
+        settings.setAllowContentAccess(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setAllowFileAccess(true);
         settings.setPluginState(WebSettings.PluginState.ON_DEMAND);
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+        settings.setAppCacheEnabled(true);
+        settings.setDatabaseEnabled(true);
         settings.setLoadsImagesAutomatically(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
@@ -212,7 +218,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     public void loadData(boolean startup) {
         String title = mNewsItem.getTitle();
         shouldLoadCache = !title.contains("直播") || title.contains("已完结");
-        NewsItem mNews = mNewsItem.getSN() == null ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
+        NewsItem mNews = mNewsItem.getSN() == null
+                ? FileCacheKit.getInstance().getAsObject(mNewsItem.getSid() + "", NewsItem.class) : mNewsItem;
         if (mNews == null || !shouldLoadCache) {
             makeRequest();
         } else {
@@ -266,13 +273,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         String colorString = Integer.toHexString(titleColor);
         String add;
         if (ThemeManger.isNightTheme(getActivity())) {
-            add = night;
+            add = "night";
         } else {
-            add = light;
+            add = "light";
         }
         mActivity.setTitle(mNewsItem.getTitle());
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
-                add, showImage, convertFlashToHtml5, mNewsItem.getTitle(), mNewsItem.getFrom(), mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent());
+                showImage, convertFlashToHtml5, add, mNewsItem.getTitle(), mNewsItem.getFrom(),
+                mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent());
         mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
 
         mActionButtom.postDelayed(new Runnable() {
@@ -288,7 +296,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
                     }
                 }
                 mActionButtom.setVisibility(View.VISIBLE);
-                mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
+                mActionButtom.animate().scaleX(1).scaleY(1).setDuration(500)
+                        .setInterpolator(new AccelerateDecelerateInterpolator()).start();
                 hideProgressBar();
                 mWebView.setVisibility(View.VISIBLE);
             }
@@ -310,35 +319,59 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                mActivity.finish();
-                break;
-            case R.id.menu_share:
-                shareAction();
-                break;
-            case R.id.menu_view_in_browser:
-                viewInBrowser();
-                break;
-            case R.id.menu_reflush:
-                makeRequest();
-                break;
-            case R.id.menu_font_size:
-                handleFontSize();
-                break;
-            case R.id.menu_book_mark:
-                doBookmark(item);
-                break;
-            case 0:
-                showAllImage();
-                break;
+        case android.R.id.home:
+            mActivity.finish();
+            break;
+        case R.id.menu_share:
+            shareAction();
+            break;
+        case R.id.menu_view_in_browser:
+            viewInBrowser();
+            break;
+        case R.id.menu_reflush:
+            makeRequest();
+            break;
+        case R.id.menu_font_size:
+            handleFontSize();
+            break;
+        case R.id.menu_book_mark:
+            doBookmark(item);
+            break;
+        case R.id.menu_block_ad:
+            traggerBlock(item);
+            break;
+        case 0:
+            showAllImage();
+            break;
         }
         return false;
     }
 
+    /**
+     * 是否显示屏蔽的元素
+     * 
+     * @param item
+     */
+    private void traggerBlock(MenuItem item) {
+        showBlockAd = !showBlockAd;
+        if (showBlockAd) {
+            item.setTitle(R.string.menu_hide_block_ad);
+        } else {
+            item.setTitle(R.string.menu_show_block_ad);
+        }
+        mWebView.loadUrl("javascript:BaseTool.traggleBlock(" + showBlockAd + ")");
+    }
+
+    /**
+     * 显示所有图片
+     */
     private void showAllImage() {
         mWebView.loadUrl("javascript:ImageTool.showAllImage()");
     }
 
+    /**
+     * 切换夜间模式
+     */
     private void nightMode() {
         mWebView.loadUrl("javascript:BaseTool.setNight(true)");
     }
@@ -356,8 +389,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     public void shareAction() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_templates
-                , mNewsItem.getTitle(), Configure.buildArticleUrl(mNewsItem.getSid() + "")));
+        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_templates, mNewsItem.getTitle(),
+                Configure.buildArticleUrl(mNewsItem.getSid() + "")));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.menu_share)));
     }
@@ -371,20 +404,21 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     }
 
     public void handleFontSize() {
-        final DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) LayoutInflater.from(mActivity).inflate(R.layout.fragment_font_size, null);
+        final DiscreteSeekBar discreteSeekBar = (DiscreteSeekBar) LayoutInflater.from(mActivity)
+                .inflate(R.layout.fragment_font_size, null);
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case AlertDialog.BUTTON_POSITIVE:
-                        PrefKit.writeInt(getActivity(), "font_size", discreteSeekBar.getProgress());
-                        break;
-                    case AlertDialog.BUTTON_NEUTRAL:
-                        break;
-                    case AlertDialog.BUTTON_NEGATIVE:
-                        settings.setTextZoom(100);
-                        PrefKit.delete(getActivity(), "font_size");
-                        break;
+                case AlertDialog.BUTTON_POSITIVE:
+                    PrefKit.writeInt(getActivity(), "font_size", discreteSeekBar.getProgress());
+                    break;
+                case AlertDialog.BUTTON_NEUTRAL:
+                    break;
+                case AlertDialog.BUTTON_NEGATIVE:
+                    settings.setTextZoom(100);
+                    PrefKit.delete(getActivity(), "font_size");
+                    break;
                 }
                 dialog.dismiss();
             }
@@ -408,13 +442,15 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
             }
         });
-        new AlertDialog.Builder(mActivity).setTitle("字体大小")
-                .setView(discreteSeekBar)
-                .setPositiveButton("保存", listener)
-                .setNegativeButton("默认", listener)
-                .setNeutralButton("取消", listener).create().show();
+        new AlertDialog.Builder(mActivity).setTitle("字体大小").setView(discreteSeekBar).setPositiveButton("保存", listener)
+                .setNegativeButton("默认", listener).setNeutralButton("取消", listener).create().show();
     }
 
+    /**
+     * 收藏新闻
+     * 
+     * @param item
+     */
     public void doBookmark(MenuItem item) {
         if (hascontent) {
             String message;
@@ -448,6 +484,37 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         return false;
     }
 
+    private void onShowHtmlVideoView(View html5VideoView) {
+
+        if (callBack != null) {
+            callBack.onVideoFullScreen(true);
+            callBack.onShowHtmlVideoView(html5VideoView);
+        } else {
+            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
+            parent.addView(html5VideoView);
+        }
+        mWebView.setVisibility(View.GONE);
+        mActionButtom.setVisibility(View.GONE);
+    }
+
+    private void onHideHtmlVideoView(View html5VideoView) {
+        if (callBack != null) {
+            callBack.onVideoFullScreen(false);
+            callBack.onHideHtmlVideoView(html5VideoView);
+        } else {
+            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
+            parent.removeView(html5VideoView);
+        }
+        mWebView.setVisibility(View.VISIBLE);
+        mActionButtom.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mWebView.loadUrl("javascript:BaseTool.updateWidth()");
+    }
+
     private class JavaScriptInterface {
         Context mContext;
 
@@ -474,6 +541,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             }
         }
 
+        /**
+         * 加载搜狐视屏
+         * 
+         * @param hoder_id
+         *            位置
+         * @param requestUrl
+         *            请求地址
+         */
         @JavascriptInterface
         public void loadSohuVideo(final String hoder_id, final String requestUrl) {
             myHandler.post(new Runnable() {
@@ -493,8 +568,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
                         @Override
                         protected void onResponse(JSONObject jsonObject) {
                             try {
-                                mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id
-                                        + "\",\"" + jsonObject.getJSONObject("data").getString("url_high_mp4") + "\",\""
+                                mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id + "\",\""
+                                        + jsonObject.getJSONObject("data").getString("url_high_mp4") + "\",\""
                                         + jsonObject.getJSONObject("data").getString("hor_big_pic") + "\")");
                             } catch (Exception e) {
                                 Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
@@ -505,6 +580,14 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             });
         }
 
+        /**
+         * 显示消息
+         * 
+         * @param message
+         *            消息名称
+         * @param type
+         *            消息类型
+         */
         @JavascriptInterface
         public void showMessage(final String message, final String type) {
             myHandler.post(new Runnable() {
@@ -554,7 +637,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             if (url.startsWith("file")) {
                 return null;
             }
-            //屏蔽优酷广告
+            // 屏蔽优酷广告
             if (url.matches(".*((atm.youku.com)|(admaster.com.cn)).*")) {
                 System.out.println("MyWebViewClient.Block " + url);
                 try {
@@ -567,7 +650,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
                 if (mimeType != null && mimeType.startsWith("image")) {
-                    //                    if (finish || showImage) {
+                    // if (finish || showImage) {
                     File image = ImageLoader.getInstance().getDiskCache().get(url);
                     if (image != null) {
                         System.out.println("load Image From disk cache");
@@ -587,9 +670,8 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     }
 
     class VideoWebChromeClient extends WebChromeClient {
-        private View myView = null;
         CustomViewCallback myCallback = null;
-
+        private View myView = null;
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback customViewCallback) {
@@ -618,36 +700,5 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
                 myView = null;
             }
         }
-    }
-
-    private void onShowHtmlVideoView(View html5VideoView) {
-
-        if (callBack != null) {
-            callBack.onVideoFullScreen(true);
-            callBack.onShowHtmlVideoView(html5VideoView);
-        } else {
-            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
-            parent.addView(html5VideoView);
-        }
-        mWebView.setVisibility(View.GONE);
-        mActionButtom.setVisibility(View.GONE);
-    }
-
-    private void onHideHtmlVideoView(View html5VideoView) {
-        if (callBack != null) {
-            callBack.onVideoFullScreen(false);
-            callBack.onHideHtmlVideoView(html5VideoView);
-        } else {
-            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
-            parent.removeView(html5VideoView);
-        }
-        mWebView.setVisibility(View.VISIBLE);
-        mActionButtom.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mWebView.loadUrl("javascript:BaseTool.updateWidth()");
     }
 }

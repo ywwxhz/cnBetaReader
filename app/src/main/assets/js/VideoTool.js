@@ -1,3 +1,4 @@
+// 视频工具类
 var VideoTool = (function(){
 	var no_support = "file:///android_asset/svg/video_not_support.svg";
     var video_img = "file:///android_asset/svg/video.svg";

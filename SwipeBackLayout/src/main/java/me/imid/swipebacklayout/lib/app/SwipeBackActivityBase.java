@@ -9,13 +9,19 @@ public interface SwipeBackActivityBase {
     /**
      * @return the SwipeBackLayout associated with this activity.
      */
-    public abstract SwipeBackLayout getSwipeBackLayout();
+    SwipeBackLayout getSwipeBackLayout();
 
-    public abstract void setSwipeBackEnable(boolean enable);
+    /**
+     * 是否启用滑动返回
+     * 
+     * @param enable
+     *            true 启用 false 禁用
+     */
+    void setSwipeBackEnable(boolean enable);
 
     /**
      * Scroll out contentView and finish the activity
      */
-    public abstract void scrollToFinishActivity();
+    void scrollToFinishActivity();
 
 }

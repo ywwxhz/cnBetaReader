@@ -1,11 +1,6 @@
 <svg width="600" height="375" xmlns="http://www.w3.org/2000/svg">
- <style type="text/css">.st0{fill:none;stroke:#888888;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-        .st1{fill:none;stroke:#888888;stroke-width:2;}</style>
-
- <g>
-  <title>background</title>
-  <rect x="-1" y="-1" width="602" height="377" id="canvas_background" fill="none"/>
- </g>
+ <style type="text/css">.st0{fill:none;stroke:#AAAAAA;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+        .st1{fill:none;stroke:#AAAAAA;stroke-width:2;}</style>
  <g>
   <title>Layer 1</title>
   <g id="svg_6">

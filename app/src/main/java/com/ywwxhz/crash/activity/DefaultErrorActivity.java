@@ -28,6 +28,9 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.crash.CustomActivityOnCrash;
 
 
+/**
+ * 默认显示异常 Activity
+ */
 public final class DefaultErrorActivity extends BaseToolBarActivity {
 
     @Override

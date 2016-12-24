@@ -11,7 +11,7 @@ import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.kits.PrefKit;
 
 /**
- * cnBetaReader
+ * 主题管理器
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/4/6 15:48.
  */

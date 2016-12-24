@@ -13,20 +13,21 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 
 /**
- * cnBetaReader
- *
+ * 扩展 BaseToolBarActivity 支持滑动返回
+ * <p/>
  * Created by 远望の无限(ywwxhz) on 2014/11/3 17:51.
  */
 public abstract class ExtendBaseActivity extends BaseToolBarActivity implements SwipeBackActivityBase {
 
     private SwipeBackActivityHelper mSwipeBackActivityHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         mSwipeBackActivityHelper = new SwipeBackActivityHelper(this);
         mSwipeBackActivityHelper.onActivityCreate();
-        setSwipeBackEnable(PrefKit.getBoolean(this, R.string.pref_swipeback_key,true));
+        setSwipeBackEnable(PrefKit.getBoolean(this, R.string.pref_swipeback_key, true));
     }
 
     @Override

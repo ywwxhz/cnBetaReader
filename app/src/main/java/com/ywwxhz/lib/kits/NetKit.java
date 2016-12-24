@@ -38,8 +38,8 @@ public class NetKit {
     public static void getNewslistByPage(Object tag, int page, String type, BaseCallback baseCallback) {
         HttpParams params = new HttpParams();
         params.put("type", type);
-        params.put("page", page + "");
-        params.put("_", System.currentTimeMillis() + "");
+        params.put("page", page);
+        params.put("_", System.currentTimeMillis());
         OkGo.get(Configure.NEWS_LIST_URL)
                 .tag(tag)
                 .params(params)
@@ -49,8 +49,8 @@ public class NetKit {
     public static void getNewslistByTopic(Object tag, int page, String type, BaseCallback baseCallback) {
         HttpParams params = new HttpParams();
         params.put("id", type);
-        params.put("page", page + "");
-        params.put("_", System.currentTimeMillis() + "");
+        params.put("page", page);
+        params.put("_", System.currentTimeMillis());
         OkGo.get(Configure.TOPIC_NEWS_LIST)
                 .tag(tag)
                 .params(params)

@@ -1,5 +1,6 @@
 body {
 	word-break:break-all;
+    word-wrap:break-word;
 	font-size:11pt;
 }
 
@@ -131,9 +132,36 @@ a {
 .clear {
 	clear:both;
 }
+.blocked{
+    display:none;
+}
+
+.showBlocked{
+    border:1px dashed #ffeb3b;
+    background-color: #FFFFE0;
+    display:block;
+}
 
 .foot {
 	text-align:center;
 	padding-top:10pt;
 	padding-bottom:20pt;
+}
+
+body.night{
+    color:#9bafcb;
+}
+
+.night #introduce{
+    background-color:#262f3d;color:#616d80;
+}
+
+.night .content blockquote{
+    background-color:#262f3d;
+    color:#616d80;
+}
+
+.night .showBlocked{
+    border:1px dashed #FFF;
+    background-color: transparent;
 }

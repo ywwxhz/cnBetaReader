@@ -1,6 +1,6 @@
 package com.ywwxhz.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -61,18 +61,15 @@ public class NavigationDrawerFragment extends Fragment {
     private ListView mListView;
     private ColorStateList textColorStateList;
 
-    private static NavigationDrawerManger manger = new NavigationDrawerManger();
+    private NavigationDrawerManger manger = new NavigationDrawerManger();
 
-    static {
+    public NavigationDrawerFragment() {
         manger.registerFragment("全部资讯", new AllNewsListFragment());
         manger.registerFragment("人气推荐", new HotNewsListFragment());
         manger.registerFragment("精彩评论", new HotCommentFragment());
         manger.registerFragment("资讯主题", new SubscribeHostFragment());
         manger.registerFragment("收藏列表", new FavoriteNewsListFragment());
         manger.registerFragment("偏好设置", new SettingFragment());
-    }
-
-    public NavigationDrawerFragment() {
     }
 
     @Override
@@ -215,7 +212,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         try {
             mCallbacks = (NavigationDrawerCallbacks) activity;

@@ -10,21 +10,89 @@ import android.view.View;
 import com.ywwxhz.data.BaseDataProvider;
 
 /**
- * CnbetaReader
- * com.ywwxhz.lib.handler
- * Created by 远望の无限(ywwxhz) on 2015/3/18 15:45.
+ *
+ *
+ * @param <E>
+ * @param <DataProvider>
  */
-public interface BaseProcesser<E,DataProvider extends BaseDataProvider<E>> {
+public interface BaseProcesser<E, DataProvider extends BaseDataProvider<E>> {
 
+    /**
+     * 对应生命周期中的 onResume
+     */
     void onResume();
+
+    /**
+     * 对应生命周期中的 onPause
+     */
     void onPause();
+
+    /**
+     * 对应生命周期中的 onDestroy
+     */
     void onDestroy();
+
+    /**
+     * 关联视图
+     * 
+     * @param view
+     *            视图
+     */
     void assumeView(View view);
+
+    /**
+     * 加载数据
+     * 
+     * @param startup
+     *            是否初次加载
+     */
     void loadData(boolean startup);
+
+    /**
+     * 获取Activity
+     * 
+     * @return 关联的Activity
+     */
     AppCompatActivity getActivity();
-    void setProvider(DataProvider provider);
+
+    /**
+     * 设置关联的Activity
+     * 
+     * @param activity
+     *            关联的Activity
+     */
     void setActivity(AppCompatActivity activity);
+
+    /**
+     * 设置数据提供者
+     * 
+     * @param provider
+     *            数据提供者
+     */
+    void setProvider(DataProvider provider);
+
+    /**
+     * 菜单选择选中事件
+     * 
+     * @param item
+     *            菜单项
+     * @return
+     */
     boolean onOptionsItemSelected(MenuItem item);
+
+    /**
+     * 对应生命周期中的 onConfigurationChanged
+     * 
+     * @param newConfig
+     */
     void onConfigurationChanged(Configuration newConfig);
+
+    /**
+     * 对应生命周期中的 onCreateOptionsMenu
+     * 
+     * @param menu
+     *            菜单项
+     * @param inflater
+     */
     void onCreateOptionsMenu(Menu menu, MenuInflater inflater);
 }

@@ -18,4 +18,8 @@
     <item
         android:id="@+id/menu_view_in_browser"
         android:title="@string/menu_view_in_browser"/>
+
+    <item
+        android:id="@+id/menu_block_ad"
+        android:title="@string/menu_show_block_ad"/>
 </menu>

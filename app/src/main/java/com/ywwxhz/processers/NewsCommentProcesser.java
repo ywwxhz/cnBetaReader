@@ -1,12 +1,12 @@
 package com.ywwxhz.processers;
 
+import android.support.design.widget.FloatingActionButton;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.ywwxhz.adapters.CommentListAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.impl.NewsCommentProvider;
@@ -37,7 +37,7 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
         this.message = (TextView) view.findViewById(R.id.message);
         this.actionButton = (FloatingActionButton) view.findViewById(R.id.action);
         this.message.setClickable(true);
-        this.actionButton.attachToListView(getListView());
+        //this.actionButton.attachToListView(getListView());
         this.actionButton.setImageResource(R.mipmap.ic_edit);
         this.actionButton.setOnClickListener(new View.OnClickListener() {
             @Override

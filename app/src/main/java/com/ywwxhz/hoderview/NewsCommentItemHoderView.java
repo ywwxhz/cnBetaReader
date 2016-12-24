@@ -26,6 +26,7 @@ import com.ywwxhz.widget.textdrawable.util.ColorGenerator;
 
 import org.json.JSONObject;
 
+import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -69,18 +70,15 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
 
     private BaseJsonCallback chandler = new BaseJsonCallback() {
 
-        public void onError(int httpCode, Response response, Exception cause) {
-            OkGo.getInstance().getDelivery().post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), "操作失败", Toast.LENGTH_LONG).show();
-                }
-            });
-            if (cause != null)
-                cause.printStackTrace();
-        }
-
-        public void onResponse(JSONObject jsonObject) {
+        /**
+         * 对返回数据进行操作的回调， UI线程
+         *
+         * @param jsonObject
+         * @param call
+         * @param response
+         */
+        @Override
+        public void onSuccess(JSONObject jsonObject, Call call, Response response) {
             try {
                 if ("success".equals(jsonObject.getString("state"))) {
                     OkGo.getInstance().getDelivery().post(new Runnable() {
@@ -101,11 +99,35 @@ public class NewsCommentItemHoderView extends RelativeLayout implements View.OnC
                         }
                     });
                 } else {
-                    throw new Exception();
+                    throw new Exception(jsonObject.toString());
                 }
             } catch (Exception e) {
-                onError(200, null, e);
+                System.out.println(jsonObject);
+                onError(200, response, e);
             }
+        }
+
+        public void onError(int httpCode, Response response, Exception cause) {
+            OkGo.getInstance().getDelivery().post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), "操作失败", Toast.LENGTH_LONG).show();
+                }
+            });
+            if (cause != null){
+                cause.printStackTrace();
+            }
+        }
+
+        /**
+         * 调用成功回调<br/>
+         * 用于兼容旧版接口，如使用该方法请不要覆写 onSuccess(T t, Call call, Response response)
+         *
+         * @param jsonObject
+         */
+        @Override
+        protected void onResponse(JSONObject jsonObject) {
+            // do nothing
         }
     };
 
