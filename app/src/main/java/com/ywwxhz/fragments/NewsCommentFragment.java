@@ -11,7 +11,7 @@ import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.processers.NewsCommentProcesser;
 
 /**
- * cnBetaReader
+ * 新闻评论 Fragment
  * <p/>
  * Created by 远望の无限(ywwxhz) on 2015/4/27 15:31.
  */

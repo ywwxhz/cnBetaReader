@@ -2,7 +2,6 @@ package com.ywwxhz.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +22,7 @@ import com.ywwxhz.processers.BaseProcesserImpl;
  * Created by 远望の无限(ywwxhz) on 2015/3/25 18:06.
  */
 public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<DataType>, Provider extends ListDataProvider<DataType, Adapter>, Processer extends BaseListProcesser<DataType, Provider>>
-        extends Fragment {
+        extends BaseFragment {
 
     protected Processer processer;
     private BaseProcesserImpl.onOptionMenuSelect menuCallBack;
@@ -82,10 +81,17 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
 
     @Override
     public void onDestroy() {
-        processer.onDestroy();
         super.onDestroy();
+        processer.onDestroy();
     }
 
+    /**
+     * 设置点击菜单项回调
+     * 
+     * @param menuCallBack
+     *            回调
+     * @return 当前对象
+     */
     public BaseListFragment setMenuCallBack(BaseProcesserImpl.onOptionMenuSelect menuCallBack) {
         this.menuCallBack = menuCallBack;
         return this;

@@ -132,7 +132,6 @@ public class TranslucentStatusHelper {
                     a.recycle();
                 }
 
-                ViewGroup decorViewGroup = (ViewGroup) win.getDecorView();
                 // check window flags
                 if ((win.getAttributes().flags & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) != 0) {
                     mTranslucentEnable = true;

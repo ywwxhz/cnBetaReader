@@ -382,7 +382,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
     public void commentAction() {
         if (callBack != null) {
-            callBack.CommentAction(mNewsItem.getSid(), mNewsItem.getSN(), mNewsItem.getTitle());
+            callBack.commentAction(mNewsItem.getSid(), mNewsItem.getSN(), mNewsItem.getTitle());
         }
     }
 

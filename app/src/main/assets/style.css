@@ -1,5 +1,4 @@
 body {
-	word-break:break-all;
     word-wrap:break-word;
 	font-size:11pt;
 }
@@ -97,6 +96,12 @@ ol,ul,li {
 }
 
 #content img {
+	display:block;
+	max-width:100% !important;
+	height:auto !important;
+	margin:0 auto;
+}
+#content object {
 	display:block;
 	max-width:100% !important;
 	height:auto !important;

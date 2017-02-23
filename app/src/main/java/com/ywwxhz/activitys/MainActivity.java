@@ -13,42 +13,33 @@ import com.ywwxhz.fragments.NavigationDrawerFragment;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-public class MainActivity extends BaseToolBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+/**
+ * 主界面
+ */
+public class MainActivity extends BaseToolBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    public boolean changeTheme;
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Fragment managing the behaviors, interactions and presentation of the
+     * navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private int current = -1;
     private long lastpress;
-    public boolean changeTheme;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.navigation_drawer);
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-               R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         changeTheme = false;
-//        if(PrefKit.getBoolean(this,R.string.pref_auto_update_key,false)) {
-//            toolbar.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    UpdateHelper.build(MainActivity.this, MyApplication.getInstance().getUpdateUrl())
-//                            .check();
-//                }
-//            }, 500);
-//        }
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(Fragment fragment,int pos) {
-        if(fragment!=null&&current!=pos){
+    public void onNavigationDrawerItemSelected(Fragment fragment, int pos) {
+        if (fragment != null && current != pos) {
             Crouton.clearCroutonsForActivity(this);
             getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
             current = pos;
@@ -57,17 +48,17 @@ public class MainActivity extends BaseToolBarActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){
-            if(mNavigationDrawerFragment.isDrawerOpen()){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mNavigationDrawerFragment.isDrawerOpen()) {
                 mNavigationDrawerFragment.closeDrawer();
                 return true;
-            }else if(current != 0){
+            } else if (current != 0) {
                 mNavigationDrawerFragment.onBackPassed();
                 return true;
             }
-            if(System.currentTimeMillis() - lastpress < 1000) {
+            if (System.currentTimeMillis() - lastpress < 1000) {
                 this.finish();
-            }else {
+            } else {
                 lastpress = System.currentTimeMillis();
                 Toast.makeText(this, "再按一次返回退出程序", Toast.LENGTH_SHORT).show();
                 return true;
@@ -84,7 +75,7 @@ public class MainActivity extends BaseToolBarActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(!changeTheme) {
+        if (!changeTheme) {
             this.finish();
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
             System.exit(0);
