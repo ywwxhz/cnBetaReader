@@ -9,9 +9,9 @@ import java.util.HashMap;
  * Created by 远望の无限(ywwxhz) on 2014/11/2 17:53.
  */
 public class CommentListObject {
-    private ArrayList<CommentItem> hotlist = new ArrayList<CommentItem>();
-    private ArrayList<CommentItem> cmntlist = new ArrayList<CommentItem>();
-    private HashMap<String, CommentItem> cmntstore = new HashMap<String, CommentItem>();
+    private ArrayList<CommentItem> hotlist = new ArrayList<>();
+    private ArrayList<CommentItem> cmntlist = new ArrayList<>();
+    private HashMap<String, CommentItem> cmntstore = new HashMap<>();
     private int comment_num;
     private String token;
     private int page;

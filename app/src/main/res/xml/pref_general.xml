@@ -79,6 +79,11 @@
             android:title="@string/pref_block_list_title" />
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="@string/pref_svg_loading_key"
+            android:summary="@string/pref_svg_loading_summary"
+            android:title="@string/pref_svg_loading_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/pref_debug_key"
             android:summary="@string/pref_debug_summary"
             android:title="@string/pref_debug_title" />

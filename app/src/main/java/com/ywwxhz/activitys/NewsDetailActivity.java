@@ -49,7 +49,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             this.finish();
             return;
         }
@@ -114,7 +114,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
 
     @Override
     public void onNewsLoadFinish(NewsItem item, boolean success) {
-        if (success && adapter.getCount() == 1) {
+        if (success && adapter != null && adapter.getCount() == 1) {
             adapter.add(NewsCommentFragment.getInstance(item.getSid(), item.getSN())
                     .setMenuCallBack(new BaseProcesserImpl.onOptionMenuSelect() {
                         @Override

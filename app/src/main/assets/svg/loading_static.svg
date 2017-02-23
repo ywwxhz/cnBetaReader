@@ -14,30 +14,6 @@
    <polygon class="st0" points="32,355.9000244140625 25.399999618530273,344.4000244140625 32,332.70001220703125 45.29999923706055,332.70001220703125 52,344.4000244140625 45.29999923706055,355.9000244140625 " id="svg_4"/>
    <text transform="matrix(1,0,0,1,89.3,571.3701) " font-size="12pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#AAAAAA" id="svg_5" y="-236" x="-5">cnBeta Plus</text>
   </g>
-  <g id="svg_1">
-   <circle class="st1" cx="300" cy="187.500006" r="1" id="svg_7">
-   	<animate accumulate="none" additive="replace" attributeName="r" begin="0s" calcMode="spline"
-                     dur="1.8s" fill="remove" keySplines="0.165, 0.84, 0.44, 1" keyTimes="0; 1"
-                     repeatCount="indefinite" restart="always" values="1; 20">
-            </animate>
-            <animate accumulate="none" additive="replace" attributeName="stroke-opacity" begin="0s"
-                     calcMode="spline" dur="1.8s" fill="remove"
-                     keySplines="0.3, 0.61, 0.355, 1" keyTimes="0; 1" repeatCount="indefinite" restart="always"
-                     values="1; 0">
-            </animate>
-   </circle>
-   <circle class="st1" cx="300" cy="187.500006" r="1" id="svg_8">
-   	<animate accumulate="none" additive="replace" attributeName="r" begin="-0.9s" calcMode="spline"
-                     dur="1.8s" fill="remove" keySplines="0.165, 0.84, 0.44, 1" keyTimes="0; 1"
-                     repeatCount="indefinite" restart="always" values="1; 20">
-            </animate>
-            <animate accumulate="none" additive="replace" attributeName="stroke-opacity" begin="-0.9s"
-                     calcMode="spline" dur="1.8s" fill="remove"
-                     keySplines="0.3, 0.61, 0.355, 1" keyTimes="0; 1" repeatCount="indefinite" restart="always"
-                     values="1; 0">
-            </animate>
-   </circle>
-  </g>
-  <text x="263.296875" y="245" font-size="18pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#888888" id="svg_9">加载中</text>
+  <text x="263.296875" y="200" font-size="18pt" font-family="Arial, Helvetica, Open Sans, sans-serif, monospace" font-weight="bold" fill="#888888" id="svg_9">加载中</text>
  </g>
 </svg>

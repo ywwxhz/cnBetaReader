@@ -86,7 +86,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
     private String webTemplate = "<!DOCTYPE html><html><head><base href=\"http://www.cnbeta.com/\" /><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>"
             + "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}</style>"
-            + "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s,staticLoading:false};</script>"
+            + "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s,staticLoading:%s};</script>"
             + "<script src=\"file:///android_asset/js/BaseTool.js\"></script>"
             + "<script src=\"file:///android_asset/js/ImageTool.js\"></script>"
             + "<script src=\"file:///android_asset/js/VideoTool.js\"></script></head>"
@@ -96,6 +96,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     private WebSettings settings;
     private boolean shouldLoadCache;
     private boolean showBlockAd = false;
+    private boolean svgLoading = false;
 
     public NewsDetailProcesser(NewsDetailProvider provider) {
         super(provider);
@@ -134,6 +135,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         } else {
             showImage = NetKit.isWifiConnected();
         }
+        svgLoading = PrefKit.getBoolean(mActivity, R.string.pref_svg_loading_key, false);
         convertFlashToHtml5 = PrefKit.getBoolean(mActivity, R.string.pref_flash_to_html5_key, true);
     }
 
@@ -279,7 +281,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         }
         mActivity.setTitle(mNewsItem.getTitle());
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
-                showImage, convertFlashToHtml5, add, mNewsItem.getTitle(), mNewsItem.getFrom(),
+                showImage, convertFlashToHtml5,!svgLoading, add, mNewsItem.getTitle(), mNewsItem.getFrom(),
                 mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent());
         mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
 
