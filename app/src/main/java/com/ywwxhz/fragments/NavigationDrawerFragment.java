@@ -65,7 +65,8 @@ public class NavigationDrawerFragment extends Fragment {
 
     public NavigationDrawerFragment() {
         manger.registerFragment("全部资讯", new AllNewsListFragment());
-        manger.registerFragment("人气推荐", new HotNewsListFragment());
+        // 暂未找到相关 API 关闭此功能
+        //manger.registerFragment("人气推荐", new HotNewsListFragment());
         manger.registerFragment("精彩评论", new HotCommentFragment());
         manger.registerFragment("资讯主题", new SubscribeHostFragment());
         manger.registerFragment("收藏列表", new FavoriteNewsListFragment());

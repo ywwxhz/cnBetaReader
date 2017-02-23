@@ -24,6 +24,10 @@ import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.Toolkit;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,6 +49,19 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
     private View mSwipeLayout;
     private final BaseResponseObjectResponse handler = new BaseResponseObjectResponse<CommentListObject>(new TypeToken<ResponseObject<CommentListObject>>() {
     }) {
+
+        @Override
+        protected String beforeConvertSuccess(String body) throws Exception {
+            // 针对 cnBeta 新版 如果没有热门评论就会加载精彩评论造成程序异常，通过此方法替换此项为空列表
+            // 2017-02-23
+            JSONObject object = new JSONObject(body);
+            try{
+                object.getJSONObject("result").getJSONArray("hotlist");
+            }catch (JSONException e){
+                object.getJSONObject("result").put("hotlist", new JSONArray());
+            }
+            return object.toString();
+        }
 
         @Override
         protected void onSuccess(CommentListObject result) {

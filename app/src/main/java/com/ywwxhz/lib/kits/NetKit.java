@@ -48,10 +48,10 @@ public class NetKit {
 
     public static void getNewslistByTopic(Object tag, int page, String type, BaseCallback baseCallback) {
         HttpParams params = new HttpParams();
-        params.put("id", type);
+        params.put("type", "topic|"+type);
         params.put("page", page);
         params.put("_", System.currentTimeMillis());
-        OkGo.get(Configure.TOPIC_NEWS_LIST)
+        OkGo.get(Configure.NEWS_LIST_URL)
                 .tag(tag)
                 .params(params)
                 .execute(baseCallback);
@@ -81,7 +81,7 @@ public class NetKit {
         params.put("op", op);
         params.put("sid", sid);
         params.put("tid", tid);
-        params.put("csrf_token", csrf_token);
+        params.put("_csrf", csrf_token);
         OkGo.post(Configure.COMMENT_VIEW)
                 .headers("Accept","application/json, text/javascript, */*; q=0.01")
                 .headers("Content-Type","application/x-www-form-urlencoded; charset=UTF-8")
