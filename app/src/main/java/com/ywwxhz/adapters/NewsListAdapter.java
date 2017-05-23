@@ -36,7 +36,6 @@ import java.util.List;
 public class NewsListAdapter extends BaseAdapter<NewsItem> {
 
     private static final String TAG = NewsListAdapter.class.getSimpleName();
-    private boolean showLarge;
     private boolean showImage;
     private DisplayImageOptions optionsLarge;
     private DisplayImageOptions optionsSmall;
@@ -46,7 +45,6 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
     public NewsListAdapter(Context context, List<NewsItem> items) {
         super(context, items);
         bitmapProcessor = new NightBitmapProcessor();
-        showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
         showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true);
         optionsLarge = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
@@ -72,14 +70,13 @@ public class NewsListAdapter extends BaseAdapter<NewsItem> {
             view = (NewsListItemHoderView) infater.inflate(R.layout.news_list_item,parent,false);
         }
         NewsItem item = getDataSetItem(position);
-        view.showNews(item, showImage, showLarge, optionsLarge, optionsSmall, listener);
+        view.showNews(item, showImage, optionsLarge, optionsSmall, listener);
         return view;
     }
 
     @Override
     public void notifyDataSetChanged(boolean changeConfig) {
         if(changeConfig){
-            showLarge = PrefKit.getBoolean(context, context.getString(R.string.pref_show_large_image_key), false);
             showImage = PrefKit.getBoolean(context, context.getString(R.string.pref_show_list_news_image_key), true);
             bitmapProcessor.setEnable(ThemeManger.isNightTheme(context));
         }

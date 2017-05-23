@@ -206,7 +206,7 @@ public class AddNewCommentFragment extends DialogFragment implements View.OnClic
 				params.put("sid", sid + "");
 				params.put("pid", tid);
 				params.put("seccode", seccode.getText().toString());
-				params.put("csrf_token", token);
+				params.put("_csrf", token);
 				//
 				OkGo.post(Configure.COMMENT_VIEW).headers("Accept", "application/json, text/javascript, */*; q=0.01")
 						.headers("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8").params(params).tag(getActivity())
