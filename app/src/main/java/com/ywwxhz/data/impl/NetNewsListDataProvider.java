@@ -16,6 +16,7 @@ import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.entitys.NewsListObject;
 import com.ywwxhz.entitys.ResponseObject;
 import com.ywwxhz.fragments.NewsDetailFragment;
+import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.handler.BaseCallback;
 import com.ywwxhz.lib.handler.BaseResponseObjectResponse;
@@ -209,7 +210,11 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 NewsItem item = getAdapter().getDataSetItem(i - 1);
                 //                item.setCache(true);
-                intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, item.getSid());
+                if(item.getUrl_show()==null){
+                    intent.putExtra(NewsDetailFragment.NEWS_URL_KEY, Configure.buildArticleUrl(String.valueOf(item.getSid())));
+                }else{
+                    intent.putExtra(NewsDetailFragment.NEWS_URL_KEY, item.getUrl_show());
+                }
                 intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY, item.getTitle());
 
                 getActivity().startActivity(intent);

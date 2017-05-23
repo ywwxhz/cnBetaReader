@@ -55,7 +55,7 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
         }
         Log.i(TAG, "onCreate: " + toString() + " " + getIntent().getExtras());
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null && bundle.containsKey(NewsDetailFragment.NEWS_SID_KEY)
+        if (bundle != null && bundle.containsKey(NewsDetailFragment.NEWS_URL_KEY)
                 && bundle.containsKey(NewsDetailFragment.NEWS_TITLE_KEY)) {
             oldSystemUIVisuablity = getRootView().getSystemUiVisibility();
             title = bundle.getString(NewsDetailFragment.NEWS_TITLE_KEY);
@@ -89,8 +89,8 @@ public class NewsDetailActivity extends ExtendBaseActivity implements NewsDetail
                 }
             });
             pager.setAdapter(adapter);
-            adapter.add(
-                    NewsDetailFragment.getInstance(bundle.getInt(NewsDetailFragment.NEWS_SID_KEY), title.toString()));
+            adapter.add(NewsDetailFragment.getInstance(bundle.getString(NewsDetailFragment.NEWS_URL_KEY),
+                    title.toString()));
         } else {
             Toast.makeText(this, "缺少必要参数", Toast.LENGTH_SHORT).show();
             finish();

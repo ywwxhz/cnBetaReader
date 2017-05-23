@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -45,6 +46,7 @@ import com.ywwxhz.entitys.NewsItem;
 import com.ywwxhz.fragments.NewsDetailFragment;
 import com.ywwxhz.lib.Configure;
 import com.ywwxhz.lib.CroutonStyle;
+import com.ywwxhz.lib.ScrollToTopCliclListiner;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.database.exception.DbException;
 import com.ywwxhz.lib.handler.BaseJsonCallback;
@@ -97,6 +99,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     private boolean shouldLoadCache;
     private boolean showBlockAd = false;
     private boolean svgLoading = false;
+    private View.OnClickListener scrollToTop = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mWebView.scrollTo(0, 0);
+        }
+    };
 
     public NewsDetailProcesser(NewsDetailProvider provider) {
         super(provider);
@@ -197,12 +205,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         });
     }
 
-    public void setNewsItem(int sid, String title) {
+    public void setNewsItem(int sid, String title, String url) {
         try {
             mNewsItem = MyApplication.getInstance().getDbUtils().findById(NewsItem.class, sid);
             if (mNewsItem == null) {
                 fromDB = false;
-                this.mNewsItem = new NewsItem(sid, title);
+                this.mNewsItem = new NewsItem(sid, title, url);
             } else {
                 if (title.length() > 0) {
                     mNewsItem.setTitle(title);
@@ -211,7 +219,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             }
         } catch (DbException e) {
             fromDB = false;
-            this.mNewsItem = new NewsItem(sid, title);
+            this.mNewsItem = new NewsItem(sid, title, url);
         }
 
     }
@@ -257,6 +265,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     }
 
     @Override
+    public void setActivity(AppCompatActivity activity) {
+        super.setActivity(activity);
+        setUserVisibleHint(true);
+    }
+
+    @Override
     public void onLoadFailure() {
         if (!hascontent) {
             loadFail.setVisibility(View.VISIBLE);
@@ -281,7 +295,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         }
         mActivity.setTitle(mNewsItem.getTitle());
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
-                showImage, convertFlashToHtml5,!svgLoading, add, mNewsItem.getTitle(), mNewsItem.getFrom(),
+                showImage, convertFlashToHtml5, !svgLoading, add, mNewsItem.getTitle(), mNewsItem.getFrom(),
                 mNewsItem.getInputtime(), mNewsItem.getHometext(), mNewsItem.getContent());
         mWebView.loadDataWithBaseURL(null, data, "text/html", "utf-8", null);
 
@@ -517,6 +531,13 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         mWebView.loadUrl("javascript:BaseTool.updateWidth()");
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (getActivity() != null && getActivity() instanceof ScrollToTopCliclListiner && isVisibleToUser) {
+            ((ScrollToTopCliclListiner) getActivity()).attachCallBack(scrollToTop);
+        }
+    }
+
     private class JavaScriptInterface {
         Context mContext;
 
@@ -545,7 +566,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
         /**
          * 加载搜狐视屏
-         * 
+         *
          * @param hoder_id
          *            位置
          * @param requestUrl
@@ -584,7 +605,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
         /**
          * 显示消息
-         * 
+         *
          * @param message
          *            消息名称
          * @param type
@@ -611,7 +632,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
                 Matcher sidMatcher = Configure.ARTICLE_PATTERN.matcher(url);
                 if (sidMatcher.find()) {
                     intent = new Intent(mActivity, NewsDetailActivity.class);
-                    intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, Integer.parseInt(sidMatcher.group(1)));
+                    intent.putExtra(NewsDetailFragment.NEWS_URL_KEY, url);
                     intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY, "");
                     mActivity.startActivity(intent);
                     mActivity.finish();

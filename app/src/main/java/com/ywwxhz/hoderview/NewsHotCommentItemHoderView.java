@@ -56,7 +56,7 @@ public class NewsHotCommentItemHoderView extends RelativeLayout {
             mCommentContent.setText(item.getTitle());
         }
         mCommentFrom.setText(item.getFrom());
-        mCommentImage.setImageDrawable(mDrawableBuilder.build(String.valueOf(item.getDescription().charAt(0)), mColorGenerator.getColor(item.getSid())));
+        mCommentImage.setImageDrawable(mDrawableBuilder.build(String.valueOf(item.getDescription().charAt(0)), mColorGenerator.getColor(item.getTitle())));
         mCommentName.setText(item.getDescription());
         mNewsTitle.setText(item.getNewstitle());
     }

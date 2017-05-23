@@ -18,7 +18,6 @@ import com.ywwxhz.data.ListDataProvider;
 import com.ywwxhz.entitys.CommentItem;
 import com.ywwxhz.entitys.CommentListObject;
 import com.ywwxhz.entitys.ResponseObject;
-import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.handler.BaseResponseObjectResponse;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
@@ -217,12 +216,10 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
                     }
                 }, 200);
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
-                Toolkit.showCrouton(getActivity(), R.string.message_flush_success, CroutonStyle.INFO);
             } else {
                 this.getAdapter().setEnable(false);
             }
         } else if (commentListObject.getOpen() == 0) { //针对关平的新闻评论
-            Toolkit.showCrouton(getActivity(), R.string.message_comment_close, Style.ALERT);
             this.getAdapter().setEnable(false);
             this.mSwipeLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
@@ -231,7 +228,6 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
                 this.message.setVisibility(View.VISIBLE);
             }
         } else {//针对暂时无评论的情况
-            Toolkit.showCrouton(getActivity(), R.string.message_no_comment, CroutonStyle.INFO);
             if (getAdapter().getCount() != 0) {
                 this.listView.setVisibility(View.GONE);
             }

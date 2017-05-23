@@ -9,7 +9,7 @@ public class HotCommentItem {
     private String title;
     private String description;
     private String from;
-    private int sid;
+    private String url;
     private String newstitle;
 
     public String getTitle() {
@@ -36,12 +36,12 @@ public class HotCommentItem {
         this.from = from;
     }
 
-    public int getSid() {
-        return sid;
+    public String getUrl() {
+        return url;
     }
 
-    public void setSid(int sid) {
-        this.sid = sid;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getNewstitle() {

@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -50,7 +51,8 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
                 if (hotMatcher.find()) {
                     item.setFrom(hotMatcher.group(1));
                     item.setDescription(hotMatcher.group(2));
-                    item.setSid(Integer.parseInt(hotMatcher.group(3)));
+                    item.setUrl(hotMatcher.group(3));
+                    item.setTitle(Html.fromHtml(item.getTitle().replaceAll("<.*?>","")).toString());
                     item.setNewstitle(hotMatcher.group(4));
                 }
             }
@@ -121,7 +123,7 @@ public class NetHotCommentDataProvider extends ListDataProvider<HotCommentItem,H
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 HotCommentItem commentItem = getAdapter().getDataSetItem(i - 1);
-                intent.putExtra(NewsDetailFragment.NEWS_SID_KEY, commentItem.getSid());
+                intent.putExtra(NewsDetailFragment.NEWS_URL_KEY, commentItem.getUrl());
                 intent.putExtra(NewsDetailFragment.NEWS_TITLE_KEY,commentItem.getNewstitle());
                 getActivity().startActivity(intent);
             }

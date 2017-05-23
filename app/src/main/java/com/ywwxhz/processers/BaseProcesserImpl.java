@@ -80,6 +80,10 @@ public abstract class BaseProcesserImpl<E, DataProvider extends BaseDataProvider
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return menuCallBack != null && menuCallBack.onMenuSelect(item);
     }

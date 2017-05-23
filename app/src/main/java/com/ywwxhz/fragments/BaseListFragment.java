@@ -55,6 +55,9 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         processer.loadData(true);
+        if (getUserVisibleHint()) {
+            setUserVisibleHint(getUserVisibleHint());
+        }
     }
 
     @Override
@@ -83,6 +86,14 @@ public abstract class BaseListFragment<DataType, Adapter extends BaseAdapter<Dat
     public void onDestroy() {
         super.onDestroy();
         processer.onDestroy();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (processer != null) {
+            processer.setUserVisibleHint(isVisibleToUser);
+        }
     }
 
     /**
