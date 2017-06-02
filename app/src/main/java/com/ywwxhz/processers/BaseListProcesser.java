@@ -1,5 +1,6 @@
 package com.ywwxhz.processers;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class BaseListProcesser<DataType, DataProvider extends ListDataProvider<D
     private ListView listView;
     private PagedLoader mLoader;
     private SwipeRefreshLayout mSwipeLayout;
+    protected FloatingActionButton actionButton;
     private TextView headView;
     private View.OnClickListener scrollToTop = new View.OnClickListener() {
         @Override
@@ -46,6 +48,14 @@ public class BaseListProcesser<DataType, DataProvider extends ListDataProvider<D
         this.mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         this.mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         this.mSwipeLayout.setOnRefreshListener(this);
+        this.actionButton = (FloatingActionButton) view.findViewById(R.id.action);
+        this.actionButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                scrollToTop.onClick(v);
+                return true;
+            }
+        });
         this.mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark, colorAccent);
         this.headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
         this.headView.setText("类型：" + provider.getTypeName());

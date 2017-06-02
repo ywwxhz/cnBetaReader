@@ -1,7 +1,6 @@
 package com.ywwxhz.fragments;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 
 /**
@@ -11,10 +10,6 @@ import android.view.KeyEvent;
  */
 
 public abstract class BaseFragment extends Fragment {
-
-    public BaseFragment() {
-        Log.wtf(getClass().getSimpleName(), "onCreate " + toString(), new Throwable());
-    }
 
     /**
      * 按键事件

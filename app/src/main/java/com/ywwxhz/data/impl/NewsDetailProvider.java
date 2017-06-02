@@ -2,6 +2,7 @@ package com.ywwxhz.data.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
@@ -203,6 +204,10 @@ public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
 
 	public void loadNewsAsync(NewsItem mNewsItem) {
 		this.mNewsItem = mNewsItem;
-		NetKit.getNewsBySid(getActivity(), mNewsItem.getSid() + "", handler);
+		if(TextUtils.isEmpty(mNewsItem.getUrl_show())){
+			NetKit.getNewsBySid(getActivity(), mNewsItem.getSid() + "", handler);
+		}else{
+			NetKit.getNewsByUrl(getActivity(), mNewsItem.getUrl_show(), handler);
+		}
 	}
 }

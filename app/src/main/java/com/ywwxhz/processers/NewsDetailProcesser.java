@@ -164,6 +164,13 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
         });
         mActionButtom.setScaleX(0);
         mActionButtom.setScaleY(0);
+        mActionButtom.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                scrollToTop.onClick(v);
+                return true;
+            }
+        });
         settings = mWebView.getSettings();
         // android 5.0 以上版本Webview设置允许使用第三方COOKIE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -405,8 +412,10 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     public void shareAction() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_templates, mNewsItem.getTitle(),
-                Configure.buildArticleUrl(mNewsItem.getSid() + "")));
+        intent.putExtra(Intent.EXTRA_TEXT,
+                mActivity.getString(R.string.share_templates, mNewsItem.getTitle(),
+                        TextUtils.isEmpty(mNewsItem.getUrl_show()) ? Configure.buildArticleUrl(mNewsItem.getSid() + "")
+                                : mNewsItem.getUrl_show()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.menu_share)));
     }

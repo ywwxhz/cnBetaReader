@@ -57,10 +57,20 @@ public class NetKit {
                 .execute(baseCallback);
     }
 
+    public static void getNewsByUrl(Object tag, String url, BaseCallback baseCallback) {
+        OkGo.get(url)
+                .tag(tag)
+                .execute(baseCallback);
+    }
+
     public static void getNewsBySid(Object tag, String sid, BaseCallback baseCallback) {
         OkGo.get(Configure.buildArticleUrl(sid))
                 .tag(tag)
                 .execute(baseCallback);
+    }
+
+    public static Response getNewsByUrlSync(String url) throws IOException {
+        return OkGo.get(url).execute();  //不传callback即为同步请求
     }
 
     public static Response getNewsBySidSync(String sid) throws IOException {
