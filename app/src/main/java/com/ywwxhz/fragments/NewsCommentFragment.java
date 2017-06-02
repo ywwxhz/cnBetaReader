@@ -1,9 +1,7 @@
 package com.ywwxhz.fragments;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ywwxhz.adapters.CommentListAdapter;
 import com.ywwxhz.data.impl.NewsCommentProvider;
@@ -53,30 +51,9 @@ public class NewsCommentFragment extends BaseListFragment<CommentItem,CommentLis
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        hasinit = false;
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if(getUserVisibleHint()&&!hasinit){
-            loadData(true);
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser&&!hasinit){
-            loadData(false);
-        }
-    }
-
-    private void loadData(boolean startup){
         processer.setParams(sid,sn);
-        processer.loadData(startup);
-        hasinit = true;
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

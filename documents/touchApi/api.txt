@@ -1,0 +1,20 @@
+获取首页新闻列表 get
+http://m.cnbeta.com/touch/default/timeline.json?page=1
+
+获取新闻详情 get
+news_sid 新闻的sid
+http://m.cnbeta.com/touch/articles/${news_sid}.htm
+
+获取验证码json get
+http://m.cnbeta.com/touch/comment/captcha?refresh=1
+
+发布评论 post
+content 评论内容
+seccode 验证码
+news_sid 新闻的sid
+http://m.cnbeta.com/touch/comment/do
+op:publish
+content:${content}
+seccode:${seccode}
+sid:${news_sid}
+pid:0

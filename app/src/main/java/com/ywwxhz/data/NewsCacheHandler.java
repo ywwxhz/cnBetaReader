@@ -1,16 +1,11 @@
 package com.ywwxhz.data;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.widget.Toast;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
@@ -21,11 +16,18 @@ import com.ywwxhz.lib.kits.LogKits;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import okhttp3.Response;
 
@@ -183,7 +185,12 @@ public class NewsCacheHandler extends Handler {
                         }
                     }
                     try {
-                        Response response = NetKit.getNewsBySidSync(item.getSid() + "");
+                        Response response ;
+                        if(TextUtils.isEmpty(item.getUrl_show())){
+                            response = NetKit.getNewsBySidSync(item.getSid() + "");
+                        }else{
+                            response = NetKit.getNewsByUrlSync(item.getUrl_show());
+                        }
                         NewsDetailProvider.handleResponceString(item, response.body().string(),true,cacheImage);
                         successCount++;
                     } catch (IOException e) {

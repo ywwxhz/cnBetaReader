@@ -32,7 +32,9 @@ public class VersionPreference extends Preference {
         setTitle(R.string.pref_version_title);
         setSummary(getVersionName());
     }
+
     private String getVersionName() {
-        return "Ver. " + BuildConfig.VERSION_NAME + "\nBuildDate " +BuildConfig.buildDate+ "\n" + BuildConfig.BUILD_TYPE+ " Channel";
+        return "Ver. " + BuildConfig.VERSION_NAME + " " + BuildConfig.GIT_REVISION + "\nBuildDate "
+                + BuildConfig.buildDate + "\n" + BuildConfig.BUILD_TYPE + " Channel";
     }
 }

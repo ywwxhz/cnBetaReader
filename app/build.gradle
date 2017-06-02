@@ -29,8 +29,8 @@ android {
             && System.getenv("KEY_ALIAS_DEBUG") != null) {
         println "\nload signingConfigs form System Environment variables"
         def keyStoreFile = file(System.getenv("KEY_STROE_FILE"))
-        android.signingConfigs.release.storeFile =  keyStoreFile
-        android.signingConfigs.release.storePassword =  System.getenv("KEY_STROE_PASSWORD")
+        android.signingConfigs.release.storeFile = keyStoreFile
+        android.signingConfigs.release.storePassword = System.getenv("KEY_STROE_PASSWORD")
         android.signingConfigs.release.keyAlias = System.getenv("KEY_ALIAS_RELEASE")
         android.signingConfigs.release.keyPassword = System.getenv("KEY_PASSWORD")
         android.signingConfigs.debug.storeFile = keyStoreFile
@@ -95,7 +95,8 @@ android {
         defaultConfig {
             versionCode vercode
             versionName verName
-            buildConfigField  "String",  "buildDate" ,"\""+buildDate.toString()+"\""
+            buildConfigField "String", "buildDate", "\"" + buildDate.toString() + "\""
+            buildConfigField "String", "GIT_REVISION", "\"${getGitVersion()}\""
         }
 
     }
@@ -140,4 +141,8 @@ dependencies {
 //    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 //    compile project(':MaterialRipple')
     compile 'com.google.code.gson:gson:2.7'
+}
+
+def getGitVersion() {
+    return 'git rev-parse --short HEAD'.execute().text.trim()
 }

@@ -95,4 +95,10 @@ public interface BaseProcesser<E, DataProvider extends BaseDataProvider<E>> {
      * @param inflater
      */
     void onCreateOptionsMenu(Menu menu, MenuInflater inflater);
+
+    /**
+     *  对应生命周期中的 setUserVisibleHint
+     * @param isVisibleToUser
+     */
+    void setUserVisibleHint(boolean isVisibleToUser);
 }

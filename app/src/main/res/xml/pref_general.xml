@@ -24,12 +24,6 @@
             android:summary="@string/pref_show_list_news_image_summary"
             android:title="@string/pref_show_list_news_image_title" />
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:dependency="@string/pref_show_list_news_image_key"
-            android:key="@string/pref_show_large_image_key"
-            android:summary="@string/pref_show_large_image_summary"
-            android:title="@string/pref_show_large_image_title" />
-        <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_auto_image_key"
             android:summary="@string/pref_auto_image_summary"

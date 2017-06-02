@@ -24,26 +24,27 @@ import com.ywwxhz.processers.NewsDetailProcesser;
  * Created by 远望の无限(ywwxhz) on 2015/4/27 15:30.
  */
 public class NewsDetailFragment extends BaseFragment {
-    public static final String NEWS_SID_KEY = "key_news_sid";
     public static final String NEWS_TITLE_KEY = "key_news_title";
+    public static final String NEWS_URL_KEY = "key_news_url";
     private static final String TAG = "NewsDetailFragment";
     private NewsDetailProcesser processer;
     private int sid;
     private String title;
+    private String url;
 
     /**
      * 创建实例
      * 
-     * @param sid
-     *            新闻编号
+     * @param url
+     *            新闻地址
      * @param title
      *            新闻标题
      * @return
      */
-    public static NewsDetailFragment getInstance(int sid, String title) {
+    public static NewsDetailFragment getInstance(String url, String title) {
         NewsDetailFragment f = new NewsDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(NEWS_SID_KEY, sid);
+        args.putString(NEWS_URL_KEY, url);
         args.putString(NEWS_TITLE_KEY, title);
         f.setArguments(args);
         return f;
@@ -54,9 +55,14 @@ public class NewsDetailFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
-        if (args != null && args.containsKey(NEWS_SID_KEY) && args.containsKey(NEWS_TITLE_KEY)) {
-            sid = args.getInt(NEWS_SID_KEY);
+        if (args != null && args.containsKey(NEWS_URL_KEY) && args.containsKey(NEWS_TITLE_KEY)) {
+            url = args.getString(NEWS_URL_KEY);
             title = args.getString(NEWS_TITLE_KEY);
+            String tmp = url.substring(url.lastIndexOf("/") + 1);
+            sid = Integer.parseInt(tmp.substring(0, tmp.indexOf('.')));
+            if (!url.startsWith("http")) {
+                url = "http://www.cnbeta.com" + url;
+            }
         }
         Log.i(TAG, "onCreate: " + toString() + " " + args);
     }
@@ -79,14 +85,25 @@ public class NewsDetailFragment extends BaseFragment {
         Log.i(TAG, "onCreateView: " + toString() + " " + processer);
         View view = inflater.inflate(R.layout.activity_detail, container, false);
         processer.assumeView(view);
-        processer.setNewsItem(sid, title);
+        processer.setNewsItem(sid, title, url);
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (processer != null) {
+            processer.setUserVisibleHint(isVisibleToUser);
+        }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         processer.loadData(true);
+        if (getUserVisibleHint()) {
+            setUserVisibleHint(getUserVisibleHint());
+        }
     }
 
     @Override
@@ -128,12 +145,6 @@ public class NewsDetailFragment extends BaseFragment {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.i(TAG, "onKeyDown: " + toString() + " " + processer);
         return processer.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public String toString() {
-        return "NewsDetailFragment{" + "hashCode=" + hashCode() + ", processer=" + processer + ", sid=" + sid
-                + ", title='" + title + '\'' + '}';
     }
 
     /**

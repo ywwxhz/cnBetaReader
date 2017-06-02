@@ -19,7 +19,6 @@ import com.ywwxhz.lib.kits.Toolkit;
  */
 public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsCommentProvider> {
     private TextView message;
-    private FloatingActionButton actionButton;
     private boolean reverse;
 
     public NewsCommentProcesser(NewsCommentProvider provider) {
@@ -35,7 +34,6 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
     public void assumeView(View view) {
         super.assumeView(view);
         this.message = (TextView) view.findViewById(R.id.message);
-        this.actionButton = (FloatingActionButton) view.findViewById(R.id.action);
         this.message.setClickable(true);
         //this.actionButton.attachToListView(getListView());
         this.actionButton.setImageResource(R.mipmap.ic_edit);

@@ -2,6 +2,7 @@ package com.ywwxhz.data.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
@@ -91,18 +92,18 @@ public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
 
 	public static boolean handleResponceString(NewsItem item, String resp, boolean shouldCache, boolean cacheImage) {
 		Document doc = Jsoup.parse(resp);
-		Elements newsHeadlines = doc.select(".body");
-		item.setTitle(newsHeadlines.select("#news_title").html().replaceAll("<.*?>", ""));
-		item.setFrom(newsHeadlines.select(".where").html());
-		item.setInputtime(newsHeadlines.select(".date").html());
-		Elements introduce = newsHeadlines.select(".introduction");
+		Elements newsHeadlines = doc.select(".cnbeta-article");
+		item.setTitle(newsHeadlines.select(".title h1").html().replaceAll("<.*?>", ""));
+		item.setFrom(newsHeadlines.select(".source").html());
+		item.setInputtime(newsHeadlines.select(".meta span").get(0).html());
+		Elements introduce = newsHeadlines.select(".article-summary");
 		Elements thumb = introduce.select("img");
 		if (thumb.size() > 0) {
 			item.setThumb(thumb.get(0).attributes().get("src"));
 		}
 		introduce.select("div").remove();
 		item.setHometext(introduce.html());
-		Elements content = newsHeadlines.select(".content");
+		Elements content = newsHeadlines.select(".article-content");
 		Elements scripts = content.select("script");
 		for (int i = 0; i < scripts.size(); i++) {
 			Element script = scripts.get(i);
@@ -203,6 +204,10 @@ public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
 
 	public void loadNewsAsync(NewsItem mNewsItem) {
 		this.mNewsItem = mNewsItem;
-		NetKit.getNewsBySid(getActivity(), mNewsItem.getSid() + "", handler);
+		if(TextUtils.isEmpty(mNewsItem.getUrl_show())){
+			NetKit.getNewsBySid(getActivity(), mNewsItem.getSid() + "", handler);
+		}else{
+			NetKit.getNewsByUrl(getActivity(), mNewsItem.getUrl_show(), handler);
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.ywwxhz.processers;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.ywwxhz.adapters.BaseAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.ListDataProvider;
+import com.ywwxhz.lib.ScrollToTopCliclListiner;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
 import com.ywwxhz.widget.PagedLoader;
@@ -19,17 +21,22 @@ import com.ywwxhz.widget.PagedLoader;
 import java.util.List;
 
 /**
- * cnBetaReader
- * Created by 远望の无限(ywwxhz) on 2014/11/1 17:46.
+ * cnBetaReader Created by 远望の无限(ywwxhz) on 2014/11/1 17:46.
  */
-public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<DataType,? extends BaseAdapter<DataType>>>
-        extends BaseProcesserImpl<List<DataType>,DataProvider>
-        implements SwipeRefreshLayout.OnRefreshListener {
+public class BaseListProcesser<DataType, DataProvider extends ListDataProvider<DataType, ? extends BaseAdapter<DataType>>>
+        extends BaseProcesserImpl<List<DataType>, DataProvider> implements SwipeRefreshLayout.OnRefreshListener {
 
     private ListView listView;
     private PagedLoader mLoader;
     private SwipeRefreshLayout mSwipeLayout;
+    protected FloatingActionButton actionButton;
     private TextView headView;
+    private View.OnClickListener scrollToTop = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            listView.smoothScrollToPosition(0);
+        }
+    };
 
     public BaseListProcesser(DataProvider provider) {
         super(provider);
@@ -41,7 +48,15 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         this.mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         this.mSwipeLayout.setSize(SwipeRefreshLayout.DEFAULT);
         this.mSwipeLayout.setOnRefreshListener(this);
-        this.mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark,colorAccent);
+        this.actionButton = (FloatingActionButton) view.findViewById(R.id.action);
+        this.actionButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                scrollToTop.onClick(v);
+                return true;
+            }
+        });
+        this.mSwipeLayout.setColorSchemeColors(colorPrimary, colorPrimaryDark, colorAccent);
         this.headView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.type_head, listView, false);
         this.headView.setText("类型：" + provider.getTypeName());
         this.listView.addHeaderView(headView, null, false);
@@ -51,7 +66,8 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
                 BaseListProcesser.this.provider.loadNextData();
             }
         };
-        this.mLoader = PagedLoader.from(listView).setFinallyText(R.string.end).setOnLoadListener(loadListener).builder();
+        this.mLoader = PagedLoader.from(listView).setFinallyText(R.string.end).setOnLoadListener(loadListener)
+                .builder();
         this.mLoader.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
         this.mLoader.setAdapter(this.provider.getAdapter());
         this.listView.setOnItemClickListener(getOnItemClickListener());
@@ -72,7 +88,8 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
             @Override
             public void run() {
                 provider.loadData(startup);
-                if (!provider.isCached() || PrefKit.getBoolean(mActivity, mActivity.getString(R.string.pref_auto_reflush_key), false)) {
+                if (!provider.isCached()
+                        || PrefKit.getBoolean(mActivity, mActivity.getString(R.string.pref_auto_reflush_key), false)) {
                     mSwipeLayout.setRefreshing(true);
                     onRefresh();
                 }
@@ -90,7 +107,7 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
 
     @Override
     public void onRefresh() {
-        if(mLoader.getAdapter().getCount()>0) {
+        if (mLoader.getAdapter().getCount() > 0) {
             mLoader.setEnable(true);
         }
         provider.loadNewData();
@@ -105,11 +122,19 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
     public void onLoadSuccess(List<DataType> items) {
 
     }
+    
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getActivity() != null && getActivity() instanceof ScrollToTopCliclListiner && isVisibleToUser) {
+            ((ScrollToTopCliclListiner) getActivity()).attachCallBack(scrollToTop);
+        }
+    }
 
     @Override
     public void onLoadFinish(int size) {
         provider.getAdapter().notifyDataSetChanged();
-        if (provider.getAdapter().getCount()<provider.getPageSize()||size==0) {
+        if (provider.getAdapter().getCount() < provider.getPageSize() || size == 0) {
             mLoader.setFinally();
         } else {
             mLoader.setLoading(false);
@@ -140,8 +165,8 @@ public class BaseListProcesser<DataType,DataProvider extends ListDataProvider<Da
         return provider;
     }
 
-    public void setHeadViewText(String type){
-        if(headView!=null) {
+    public void setHeadViewText(String type) {
+        if (headView != null) {
             headView.setText(String.format("类型：%s", type));
         }
     }

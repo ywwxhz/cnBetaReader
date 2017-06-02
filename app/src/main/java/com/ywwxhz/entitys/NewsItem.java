@@ -1,5 +1,6 @@
 package com.ywwxhz.entitys;
 
+import com.google.gson.annotations.SerializedName;
 import com.ywwxhz.lib.database.annotation.Id;
 import com.ywwxhz.lib.database.annotation.NoAutoIncrement;
 
@@ -12,6 +13,8 @@ public class NewsItem {
     private String thumb;
     private String largeImage;
     private String from;
+    @SerializedName("url_show")
+    private String url_show;
     private String title;
     private String content;
     private String hometext;
@@ -23,8 +26,9 @@ public class NewsItem {
     public NewsItem() {
     }
 
-    public NewsItem(int sid, String title) {
-        this.sid = sid;
+    public NewsItem(int sid, String title,String url) {
+        this.sid =sid;
+        this.url_show = url;
         this.title = title;
     }
 
@@ -122,5 +126,14 @@ public class NewsItem {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getUrl_show() {
+        return url_show;
+    }
+
+    public NewsItem setUrl_show(String url_show) {
+        this.url_show = url_show;
+        return this;
     }
 }

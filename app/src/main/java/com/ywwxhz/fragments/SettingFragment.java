@@ -107,8 +107,6 @@ public class SettingFragment extends PreferenceFragment {
 		preference.setOnPreferenceClickListener(onPreferenceClickListener);
 		findPreference(getString(R.string.pref_crash_key)).setOnPreferenceClickListener(onPreferenceClickListener);
 		// findPreference(getString(R.string.pref_check_update_key)).setOnPreferenceClickListener(onPreferenceClickListener);
-		findPreference(getString(R.string.pref_show_large_image_key))
-				.setOnPreferenceChangeListener(onPreferenceChangeListener);
 		findPreference(getString(R.string.pref_show_list_news_image_key))
 				.setOnPreferenceChangeListener(onPreferenceChangeListener);
 		findPreference(getString(R.string.pref_block_list_key)).setOnPreferenceClickListener(onPreferenceClickListener);

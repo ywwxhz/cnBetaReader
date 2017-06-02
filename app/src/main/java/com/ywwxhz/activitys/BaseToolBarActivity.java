@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.lib.CroutonStyle;
+import com.ywwxhz.lib.ScrollToTopCliclListiner;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.widget.TranslucentStatus.TranslucentStatusHelper;
 
@@ -18,7 +19,7 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 /**
  * 含有 ToolBar 的 Activity
  */
-public abstract class BaseToolBarActivity extends AppCompatActivity {
+public abstract class BaseToolBarActivity extends AppCompatActivity implements ScrollToTopCliclListiner {
     protected TranslucentStatusHelper helper;
     protected FrameLayout content;
     protected Toolbar toolbar;
@@ -99,5 +100,10 @@ public abstract class BaseToolBarActivity extends AppCompatActivity {
      */
     protected FrameLayout getRootView() {
         return content;
+    }
+
+    @Override
+    public void attachCallBack(View.OnClickListener onClickListener) {
+        toolbar.setOnClickListener(onClickListener);
     }
 }
