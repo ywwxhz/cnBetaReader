@@ -21,7 +21,6 @@ import java.util.List;
  * Created by 远望の无限(ywwxhz) on 2014/11/2 17:52.
  */
 public class CommentListAdapter extends BaseAdapter<CommentItem> {
-    private boolean enable;
     private String token;
     private boolean reverse;
     private boolean showHot = false;
@@ -46,7 +45,7 @@ public class CommentListAdapter extends BaseAdapter<CommentItem> {
             view = (NewsCommentItemHoderView) convertView;
         }
         CommentItem item = getDataSetItem(position);
-        view.showComment(item, token, this, enable, mDrawableBuilder, mColorGenerator);
+        view.showComment(item, token, this, mDrawableBuilder, mColorGenerator);
         return view;
     }
 
@@ -78,10 +77,6 @@ public class CommentListAdapter extends BaseAdapter<CommentItem> {
         } else {
             return getDataSetItemExt(getCount() - 1 - postion);
         }
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
     }
 
     public void setToken(String token) {

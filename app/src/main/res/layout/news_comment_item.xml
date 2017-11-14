@@ -15,47 +15,32 @@
         android:layout_marginRight="6dp"
         />
 
-    <ImageView
-        android:id="@+id/comment_more"
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_more"/>
-
     <TextView
         android:id="@+id/comment_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/comment_image"
-        android:layout_toLeftOf="@+id/comment_more"
-        android:layout_toRightOf="@+id/comment_image"
-        android:layout_toStartOf="@+id/comment_more"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="title"
         android:textColor="?attr/titleColor"
-        android:textSize="17sp"/>
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/comment_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/comment_image"
+        android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/comment_image"
-        android:layout_toLeftOf="@+id/comment_more"
         android:layout_toRightOf="@+id/comment_image"
-        android:layout_toStartOf="@+id/comment_more"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="from"
         android:textColor="?attr/subTitleColor"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/comment_ref"

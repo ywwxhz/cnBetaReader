@@ -10,7 +10,6 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.cnbetareader.R;
@@ -18,7 +17,6 @@ import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.kits.FileKit;
 import com.ywwxhz.lib.kits.PrefKit;
 import com.ywwxhz.lib.kits.Toolkit;
-import com.ywwxhz.update.UpdateHelper;
 
 import java.io.File;
 
@@ -72,10 +70,6 @@ public class SettingFragment extends PreferenceFragment {
 					}.execute();
 				}
 				return false;
-			} else if (preference.getKey().equals(getString(R.string.pref_check_update_key))) {
-				Toast.makeText(getActivity(), "正在检查更新中", Toast.LENGTH_SHORT).show();
-				UpdateHelper.build(getActivity(), MyApplication.getInstance().getUpdateUrl(),
-						new UpdateHelper.Options().setShowIgnoreVersion(true).setHintVersion(true)).check();
 			} else if (preference.getKey().equals(getString(R.string.pref_block_list_key))) {
 				View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_block_list, null);
 				final EditText editText = (EditText) view.findViewById(R.id.editText);

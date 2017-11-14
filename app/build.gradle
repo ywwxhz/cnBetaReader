@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     def buildDate
     def verName
@@ -11,7 +11,7 @@ android {
         applicationId "com.ywwxhz.cnbetareader"
         archivesBaseName = "cnBeta_Plus"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         resConfigs "zh-rCN"
     }
 
@@ -64,12 +64,12 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        releasePreview {
-            signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+//        releasePreview {
+//            signingConfig signingConfigs.release
+//            minifyEnabled true
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
         debug {
 //            applicationIdSuffix '.debug'
             signingConfig signingConfigs.release
@@ -104,15 +104,20 @@ android {
     def runTasks = gradle.startParameter.taskNames
     if ('b' in runTasks || 'build' in runTasks) {
         applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def outputFile = output.outputFile
-                if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                    def fileName = outputFile.name.replace(".apk"
-                            , "-${defaultConfig.versionName}-${buildDate}-${defaultConfig.versionCode}.apk".replaceAll(" ", "-"))
-                    output.outputFile = new File(outputFile.parent, fileName)
-                }
+            variant.outputs.all {
+                outputFileName = "${variant.name}-${defaultConfig.versionName}-${buildDate}-${defaultConfig.versionCode}.apk"
             }
         }
+//        applicationVariants.all { variant ->
+//            variant.outputs.each { output ->
+//                def outputFile = output.outputFile
+//                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                    def fileName = outputFile.name.replace(".apk"
+//                            , "-${defaultConfig.versionName}-${buildDate}-${defaultConfig.versionCode}.apk".replaceAll(" ", "-"))
+//                    output.outputFile = new File(outputFile.parent, fileName)
+//                }
+//            }
+//        }
     }
     lintOptions {
         abortOnError false
@@ -126,12 +131,12 @@ dependencies {
     compile project(':SubSamplingScaleImageView')
     compile project(':discreteSeekBar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.lzy.net:okgo:2.1.3'
+    compile 'com.lzy.net:okgo:3.0.4'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
     compile project(':android-support-v4-preferencefragment')
     compile project(':SwipeBackLayout')
     compile project(':SuperSaiyanScrollView')
@@ -140,7 +145,7 @@ dependencies {
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 //    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 //    compile project(':MaterialRipple')
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.1'
 }
 
 def getGitVersion() {

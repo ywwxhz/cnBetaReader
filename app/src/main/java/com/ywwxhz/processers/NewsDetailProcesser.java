@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -35,6 +37,9 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.Callback;
+import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.request.base.Request;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.activitys.ImageViewActivity;
@@ -49,7 +54,6 @@ import com.ywwxhz.lib.CroutonStyle;
 import com.ywwxhz.lib.ScrollToTopCliclListiner;
 import com.ywwxhz.lib.ThemeManger;
 import com.ywwxhz.lib.database.exception.DbException;
-import com.ywwxhz.lib.handler.BaseJsonCallback;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.NetKit;
 import com.ywwxhz.lib.kits.PrefKit;
@@ -372,7 +376,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
     /**
      * 是否显示屏蔽的元素
-     * 
+     *
      * @param item
      */
     private void traggerBlock(MenuItem item) {
@@ -473,7 +477,7 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
 
     /**
      * 收藏新闻
-     * 
+     *
      * @param item
      */
     public void doBookmark(MenuItem item) {
@@ -586,26 +590,57 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    OkGo.get(requestUrl).execute(new BaseJsonCallback() {
+                    OkGo.get(requestUrl).execute(new Callback<Object>() {
                         @Override
-                        protected void onError(int httpCode, Response response, Exception cause) {
-                            Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
-                            if (cause != null) {
-                                if (MyApplication.getInstance().getDebug()) {
-                                    Toast.makeText(getActivity(), cause.toString(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
+                        public void onStart(Request<Object, ? extends Request> request) {
+
                         }
 
                         @Override
-                        protected void onResponse(JSONObject jsonObject) {
+                        public void onSuccess(com.lzy.okgo.model.Response<Object> response) {
                             try {
+                                JSONObject jsonObject = new JSONObject(response.body().toString());
                                 mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id + "\",\""
                                         + jsonObject.getJSONObject("data").getString("url_high_mp4") + "\",\""
                                         + jsonObject.getJSONObject("data").getString("hor_big_pic") + "\")");
                             } catch (Exception e) {
                                 Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
                             }
+                        }
+
+                        @Override
+                        public void onCacheSuccess(com.lzy.okgo.model.Response<Object> response) {
+
+                        }
+
+                        @Override
+                        public void onError(com.lzy.okgo.model.Response<Object> response) {
+                            Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
+                            if (response.getException() != null) {
+                                if (MyApplication.getInstance().getDebug()) {
+                                    Toast.makeText(getActivity(), response.getException().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void uploadProgress(Progress progress) {
+
+                        }
+
+                        @Override
+                        public void downloadProgress(Progress progress) {
+
+                        }
+
+                        @Override
+                        public Object convertResponse(Response response) throws Throwable {
+                            return response.body().toString();
                         }
                     });
                 }
@@ -633,6 +668,12 @@ public class NewsDetailProcesser extends BaseProcesserImpl<NewsItem, NewsDetailP
     }
 
     class MyWebViewClient extends WebViewClient {
+
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+        }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

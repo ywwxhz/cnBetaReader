@@ -2,7 +2,6 @@ package com.ywwxhz.lib.handler;
 
 import com.lzy.okgo.callback.AbsCallback;
 
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**
@@ -13,17 +12,13 @@ import okhttp3.Response;
 public abstract class BaseCallback<T> extends AbsCallback<T> {
 
     @Override
-    public void onSuccess(T t, Call call, Response response) {
-        onResponse(t);
+    public void onSuccess(com.lzy.okgo.model.Response<T> response) {
+        onResponse(response.body());
     }
 
     @Override
-    public final void onError(Call call, Response response, Exception e) {
-        if (response == null) {
-            onError(0, null, e);
-        } else {
-            onError(response.code(), response, e);
-        }
+    public void onError(com.lzy.okgo.model.Response<T> response) {
+        onError(response.code(), response.getRawResponse(), response.getException());
     }
 
     /**
@@ -34,7 +29,7 @@ public abstract class BaseCallback<T> extends AbsCallback<T> {
      * @param response 响应对象
      * @param cause    错误原因
      */
-    protected abstract void onError(int httpCode, Response response, Exception cause);
+    protected abstract void onError(int httpCode, Response response, Throwable cause);
 
     /**
      * 调用成功回调<br/>

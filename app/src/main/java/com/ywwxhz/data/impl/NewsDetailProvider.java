@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.request.BaseRequest;
+import com.lzy.okgo.request.base.Request;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ywwxhz.MyApplication;
 import com.ywwxhz.data.BaseDataProvider;
@@ -26,7 +26,6 @@ import org.jsoup.select.Elements;
 
 import java.util.regex.Matcher;
 
-import okhttp3.Response;
 
 /**
  * cnBetaReader
@@ -40,14 +39,7 @@ public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
 	private BaseCallback<NewsItem> handler = new BaseCallback<NewsItem>() {
 
 		@Override
-		public void onBefore(BaseRequest request) {
-			if (callback != null) {
-				callback.onLoadStart();
-			}
-		}
-
-		@Override
-		public NewsItem convertSuccess(Response response) throws Exception {
+		public NewsItem convertResponse(okhttp3.Response response) throws Throwable {
 			String resp = response.body().string();
 			if (Configure.STANDRA_PATTERN.matcher(resp).find()) {
 				handleResponceString(mNewsItem, resp, true);
@@ -63,7 +55,14 @@ public class NewsDetailProvider extends BaseDataProvider<NewsItem> {
 		}
 
 		@Override
-		protected void onError(int httpCode, Response response, Exception cause) {
+		public void onStart(Request<NewsItem, ? extends Request> request) {
+			if (callback != null) {
+				callback.onLoadStart();
+			}
+		}
+
+		@Override
+		protected void onError(int httpCode, okhttp3.Response response, Throwable cause) {
 			if (callback != null) {
 				callback.onLoadFailure();
 			}

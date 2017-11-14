@@ -24,7 +24,7 @@ public abstract class BaseResponseObjectResponse<T> extends BaseGsonCallback<Res
     }
 
     @Override
-    protected void onError(int httpCode, Response response, Exception cause) {
+    protected void onError(int httpCode, Response response, Throwable cause) {
         if (httpCode == 200) {
             Toolkit.showCrouton(getActivity(), R.string.message_data_structure_change, Style.ALERT);
         } else {

@@ -5,7 +5,6 @@ import com.ywwxhz.lib.kits.Toolkit;
 
 import java.lang.reflect.Type;
 
-import okhttp3.Response;
 
 /**
  * cnBetaReader
@@ -20,8 +19,9 @@ public abstract class BaseGsonCallback<T> extends BaseCallback<T> {
         this.type = typeToken.getType();
     }
 
+
     @Override
-    public T convertSuccess(Response response) throws Exception {
+    public T convertResponse(okhttp3.Response response) throws Throwable {
         return Toolkit.getGson().fromJson(beforeConvertSuccess(response.body().string()), type);
     }
 

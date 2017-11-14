@@ -6,8 +6,9 @@ import okhttp3.Response;
 
 public abstract class BaseJsonCallback extends BaseCallback<JSONObject> {
 
+
     @Override
-    public JSONObject convertSuccess(Response response) throws Exception {
+    public JSONObject convertResponse(Response response) throws Throwable {
         String resp = response.body().string();
         try{
             return new JSONObject(resp);

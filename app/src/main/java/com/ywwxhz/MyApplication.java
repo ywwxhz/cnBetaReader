@@ -6,7 +6,9 @@ import android.os.Environment;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.MemoryCookieStore;
+import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.model.HttpHeaders;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -21,9 +23,12 @@ import com.ywwxhz.lib.Emoticons;
 import com.ywwxhz.lib.database.DbUtils;
 import com.ywwxhz.lib.kits.FileCacheKit;
 import com.ywwxhz.lib.kits.PrefKit;
+import com.ywwxhz.lib.ssl.AuthImageDownloader;
 
 import java.io.File;
 import java.util.LinkedList;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by ywwxhz on 2014/11/1.
@@ -79,7 +84,7 @@ public class MyApplication extends Application {
 		ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
 				.threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
 				.diskCacheFileNameGenerator(new Md5FileNameGenerator()).diskCacheSize(50 * 1024 * 1024) // 50
-																										// Mb
+				.imageDownloader(new AuthImageDownloader(this))
 				.tasksProcessingOrder(QueueProcessingType.LIFO);
 		if (debug) {
 			builder.writeDebugLogs();
@@ -121,21 +126,18 @@ public class MyApplication extends Application {
 	}
 
 	public void initOKHttpClient() {
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+		builder.cookieJar(new CookieJarImpl(new MemoryCookieStore()));
+		HttpsUtils.SSLParams sslParams1 = HttpsUtils.getSslSocketFactory();
+		builder.sslSocketFactory(sslParams1.sSLSocketFactory, sslParams1.trustManager);
 		HttpHeaders headers = new HttpHeaders();
 		headers.put("Referer", "http://www.cnbeta.com/");
 		headers.put("Origin", "http://www.cnbeta.com");
 		headers.put("X-Requested-With", "XMLHttpRequest");
 		headers.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.10 Safari/537.36");
-		// 必须调用初始化
-		OkGo.init(this);
-		// 以下都不是必须的，根据需要自行选择
-		OkGo.getInstance()//
-				.debug("cnBeta Plus") // 是否打开调试
+		OkGo.getInstance().init(this)//
+				.setOkHttpClient(builder.build())
 				.setCacheMode(CacheMode.NO_CACHE)
-				.setCookieStore(new MemoryCookieStore())
-				.setConnectTimeout(3000) // 全局的连接超时时间
-				.setReadTimeOut(6000) // 全局的读取超时时间
-				.setWriteTimeOut(6000) // 全局的写入超时时间
 				.addCommonHeaders(headers); // 设置全局公共头
 	}
 

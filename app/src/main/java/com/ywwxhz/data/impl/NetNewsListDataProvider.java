@@ -2,7 +2,6 @@ package com.ywwxhz.data.impl;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -49,14 +48,14 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
         private List<NewsItem> itemList;
 
         @Override
-        public ResponseObject<NewsListObject> convertSuccess(Response response) throws Exception {
+        public ResponseObject<NewsListObject> convertResponse(Response response) throws Throwable {
             int offsetFirst = -1;
             int offsetSecond = -1;
             int offsetThird = -1;
             boolean findFirst = false;
             boolean findSecond = false;
             boolean findThird = false;
-            ResponseObject<NewsListObject> responseObject = super.convertSuccess(response);
+            ResponseObject<NewsListObject> responseObject = super.convertResponse(response);
             boolean calNew = responseObject.getResult().getPage() == 1;
             itemList = responseObject.getResult().getList();
             for (NewsItem item : itemList) {
@@ -168,10 +167,9 @@ public abstract class NetNewsListDataProvider extends BaseNewsListDataProvider<N
             return NetNewsListDataProvider.this.getActivity();
         }
 
+
         @Override
-        public void onAfter(
-                @Nullable ResponseObject<NewsListObject> newsListObjectResponseObject,
-                @Nullable Exception e) {
+        public void onFinish() {
             if (callback != null) {
                 callback.onLoadFinish(40);
             }

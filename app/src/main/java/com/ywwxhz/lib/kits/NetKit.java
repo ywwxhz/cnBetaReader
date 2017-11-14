@@ -86,20 +86,6 @@ public class NetKit {
                 .execute(baseCallback);
     }
 
-    public static void setCommentAction(Object tag,String op, String sid, String tid, String csrf_token, BaseCallback baseCallback) {
-        HttpParams params = new HttpParams();
-        params.put("op", op);
-        params.put("sid", sid);
-        params.put("tid", tid);
-        params.put("_csrf", csrf_token);
-        OkGo.post(Configure.COMMENT_VIEW)
-                .headers("Accept","application/json, text/javascript, */*; q=0.01")
-                .headers("Content-Type","application/x-www-form-urlencoded; charset=UTF-8")
-                .tag(tag)
-                .params(params)
-                .execute(baseCallback);
-    }
-
     public static boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) MyApplication.getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

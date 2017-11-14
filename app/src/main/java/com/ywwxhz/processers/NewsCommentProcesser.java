@@ -1,6 +1,5 @@
 package com.ywwxhz.processers;
 
-import android.support.design.widget.FloatingActionButton;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,7 +10,6 @@ import com.ywwxhz.adapters.CommentListAdapter;
 import com.ywwxhz.cnbetareader.R;
 import com.ywwxhz.data.impl.NewsCommentProvider;
 import com.ywwxhz.entitys.CommentItem;
-import com.ywwxhz.fragments.AddNewCommentFragment;
 import com.ywwxhz.lib.kits.Toolkit;
 
 /**
@@ -36,18 +34,18 @@ public class NewsCommentProcesser extends BaseListProcesser<CommentItem,NewsComm
         this.message = (TextView) view.findViewById(R.id.message);
         this.message.setClickable(true);
         //this.actionButton.attachToListView(getListView());
-        this.actionButton.setImageResource(R.mipmap.ic_edit);
-        this.actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(provider.getSid(), "0", provider.getToken());
-                fragment.show(mActivity.getFragmentManager(), "new comment");
-            }
-        });
-        this.actionButton.setScaleX(0);
-        this.actionButton.setScaleY(0);
+//        this.actionButton.setImageResource(R.mipmap.ic_edit);
+//        this.actionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(provider.getSid(), "0", provider.getToken());
+//                fragment.show(mActivity.getFragmentManager(), "new comment");
+//            }
+//        });
+//        this.actionButton.setScaleX(0);
+//        this.actionButton.setScaleY(0);
         provider.setMessage(message);
-        provider.setActionButton(actionButton);
+        //provider.setActionButton(actionButton);
         provider.setListView(getListView());
         provider.setSwipeLayout(getSwipeLayout());
     }

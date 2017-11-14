@@ -15,7 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
+-ignorewarnings
 -keep class com.ywwxhz.entitys.**{
     *;
 }

@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +40,6 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
     private int sid;
     private String sn;
     private String token;
-    private View actionButton;
     private TextView message;
     private View listView;
     private View mSwipeLayout;
@@ -75,18 +72,18 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
 
 
         @Override
-        protected void onError(int httpCode, Response response, Exception cause) {
+        protected void onError(int httpCode, Response response, Throwable cause) {
             if (!callOnFailure(false, false)) {
                 super.onError(httpCode, response, cause);
             }
         }
 
-
         @Override
-        public void onAfter(@Nullable ResponseObject<CommentListObject> commentListObjectResponseObject, @Nullable Exception e) {
+        public void onFinish() {
             if (callback != null)
                 callback.onLoadFinish(1);
         }
+
 
     };
 
@@ -207,20 +204,9 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
             this.getAdapter().setDataSet(cmntlist);
             this.getAdapter().setHotComment(hotcmntlist);
             if (!isClosed && !fromCache) {
-                this.getAdapter().setEnable(true);
-                this.actionButton.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        actionButton.setVisibility(View.VISIBLE);
-                        actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
-                    }
-                }, 200);
                 FileCacheKit.getInstance().putAsync(sid + "", Toolkit.getGson().toJson(commentListObject), "comment", null);
-            } else {
-                this.getAdapter().setEnable(false);
             }
         } else if (commentListObject.getOpen() == 0) { //针对关平的新闻评论
-            this.getAdapter().setEnable(false);
             this.mSwipeLayout.setEnabled(false);
             if (callOnFailure(false, true)) {
                 this.message.setText(R.string.message_comment_close);
@@ -231,13 +217,6 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
             if (getAdapter().getCount() != 0) {
                 this.listView.setVisibility(View.GONE);
             }
-            this.actionButton.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    actionButton.setVisibility(View.VISIBLE);
-                    actionButton.animate().scaleX(1).scaleY(1).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator()).start();
-                }
-            }, 200);
             this.message.setText(R.string.message_no_comment);
             this.message.setVisibility(View.VISIBLE);
         }
@@ -262,10 +241,6 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
                 return true;
             }
         }
-    }
-
-    public void setActionButton(View actionButton) {
-        this.actionButton = actionButton;
     }
 
     public void setListView(View listView) {

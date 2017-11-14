@@ -1,5 +1,7 @@
 package com.ywwxhz.entitys;
 
+import java.util.Map;
+
 /**
  * cnBetaReader
  *
@@ -11,6 +13,7 @@ public class HotCommentItem {
     private String from;
     private String url;
     private String newstitle;
+    private Map<String,String> user;
 
     public String getTitle() {
         return title;
@@ -50,5 +53,13 @@ public class HotCommentItem {
 
     public void setNewstitle(String newstitle) {
         this.newstitle = newstitle;
+    }
+
+    public Map<String, String> getUser() {
+        return user;
+    }
+
+    public void setUser(Map<String, String> user) {
+        this.user = user;
     }
 }
