@@ -10,12 +10,10 @@ import java.util.regex.Pattern;
  */
 public class Configure {
 
-    public static final String BASE_URL = "http://www.cnbeta.com";
+    public static final String BASE_URL = "https://www.cnbeta.com";
     public static final String NEWS_LIST_URL = BASE_URL + "/home/more";
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
-    public static final String COMMENT_URL = BASE_URL + "/comment/read";
-    public static final String COMMENT_VIEW = BASE_URL + "/comment/do";
-    public static final String SECOND_VIEW = BASE_URL + "/comment/captcha";
+    public static final String COMMENT_URL = "https://hot.cnbeta.com/comment/read";
     public static final Pattern ARTICLE_PATTERN = Pattern.compile("(.*)cnbeta.com(.*)");
     public static final Pattern FAVOR_NEWS_TITLE = Pattern.compile("^(\\[|《|”)?((.)?)");
     public static final Pattern STANDRA_PATTERN = Pattern.compile("cnBeta\\.COM_中文业界资讯站");

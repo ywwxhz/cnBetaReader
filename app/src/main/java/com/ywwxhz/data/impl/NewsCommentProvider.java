@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class NewsCommentProvider extends ListDataProvider<CommentItem, CommentLi
             try{
                 object.getJSONObject("result").getJSONArray("hotlist");
             }catch (JSONException e){
+                Log.e("error",body);
                 object.getJSONObject("result").put("hotlist", new JSONArray());
             }
             return object.toString();

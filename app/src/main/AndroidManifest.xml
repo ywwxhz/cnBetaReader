@@ -16,16 +16,16 @@
         android:theme="@style/Theme.Basic">
         <activity
             android:name="com.ywwxhz.activitys.NewsDetailActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation" />
+            android:configChanges="screenSize|smallestScreenSize|layoutDirection|screenLayout|keyboardHidden|orientation" />
         <activity
             android:name="com.ywwxhz.activitys.TopicNewsListActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation" />
+            android:configChanges="screenSize|smallestScreenSize|layoutDirection|screenLayout|keyboardHidden|orientation" />
         <activity
             android:name="com.ywwxhz.activitys.ImageViewActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation" />
+            android:configChanges="screenSize|smallestScreenSize|layoutDirection|screenLayout|keyboardHidden|orientation" />
         <activity
             android:name="com.ywwxhz.activitys.MainActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|smallestScreenSize|layoutDirection|screenLayout|keyboardHidden|orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme.Basic.NoAnim">
             <intent-filter>
@@ -39,8 +39,6 @@
             android:label="@string/crash_log"
             android:process=":crash"
             android:theme="@style/Theme.Basic.NoAnim" />
-
-        <receiver android:name="com.ywwxhz.update.UpdateHelper$UpdateReceiver" />
     </application>
 
 </manifest>
