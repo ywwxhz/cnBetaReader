@@ -1,6 +1,6 @@
 # cnBeta reader
 
-This is the third-party of cnbeta reader client for Android 4.0+
+This is the third-party of cnbeta reader client for Android 4.4+
 
 ## Quick Overview
 
@@ -20,15 +20,15 @@ This is the third-party of cnbeta reader client for Android 4.0+
 
 ## Pre-requisites
 
-Android Studio 2.2
+Android Studio 3.0.1
 
-gradle 3.0
+gradle 4.1
 
-Android SDK v24
+Android SDK v26
 
-Android Build Tool 24.0.2
+Android Build Tool 26.0.2
 
-Android Support v24.2.1
+Android Support v26.1.0
 
 
 
@@ -56,7 +56,7 @@ Android Support v24.2.1
 
 ##License
 
-Copyright 2016 远望の无限 (ywwxhz)
+Copyright 2018 远望の无限 (ywwxhz)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
